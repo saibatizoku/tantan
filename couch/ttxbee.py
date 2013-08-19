@@ -91,11 +91,11 @@ def broadcastToClients(data, msg=None, source=None, timestamp=False):
         if client != source:
             client.transport.write(data)
 
-class TantanZigBee(txXBee):
-    def __init__(self, escaped=True):
-        super(TantanZigBee, self).__init__(escaped=escaped)
-        self.lc = {}
-        #self.lc['zb_data'].task.LoopingCall(self.getSomeData)
+class TantanZB(txXBee):
+    def __init__(self, wsMcuFactory=None, escaped=True):
+        super(TantanZB, self).__init__(escaped=escaped)
+        self.wsMcuFactory = wsMcuFactory
+ 
         self.zb_net = task.LoopingCall(self.sendND)
         self.zb_dbvolt = task.LoopingCall(self.sendDB_Volt)
 
