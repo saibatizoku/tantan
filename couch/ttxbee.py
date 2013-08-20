@@ -127,7 +127,11 @@ class TantanZB(txXBee):
             rout = "RX:"
             for (key, item) in resp.items():
                 rout += "{0}-{1}:".format(key, item)
-            msg = "{0}:{1}:RX:".format(resp['name'], resp['addr'], resp['val']) + resp['val']
+            msg = "{0}:{1}:RX:".format(resp['name'], resp['addr'], resp['val']) + repr(resp['val'])
+            evt = {'id': resp['name'],
+                   'value': resp['val'],
+                  }
+            self.wsMcuFactory.dispatch("http://example.com/mcu#zb-rx", evt)
             #broadcastToClients(response, msg)
         elif response.get("status", "default") == "\x00":
             if response.get("command", "default") == "ND":
@@ -139,6 +143,15 @@ class TantanZB(txXBee):
                 devs = response["parameter"]["status"].encode('hex')
                 paddr = response["parameter"]["parent_address"].encode('hex')
                 msg = ":".join([nname, addr, "ND", laddr, devt, devs, paddr]) #, str(packet)])
+                evt = {'id': nname,
+                       'value': {'long': laddr,
+                                 'short': addr,
+                                 'device': devt,
+                                 'parent': paddr,
+                                 'status': devs,
+                                 }
+                      }
+                self.wsMcuFactory.dispatch("http://example.com/mcu#zb-nd", evt)
             elif response.get("command", "default") == "DB":
                 nname = ZB_reverse[response["source_addr_long"]]
                 laddr = response["source_addr_long"].encode('hex')
@@ -147,6 +160,8 @@ class TantanZB(txXBee):
                 if "parameter" in response:
                     val = int(response["parameter"].encode('hex'),16)
                 msg = ":".join([nname, addr, "DB", str(val)])
+                evt = {'id': nname, 'value': val}
+                self.wsMcuFactory.dispatch("http://example.com/mcu#zb-db", evt)
             elif response.get("command", "default") == "%V":
                 if response.get("id", "default") == "remote_at_response":
                     nname = ZB_reverse[response["source_addr_long"]]
@@ -156,9 +171,14 @@ class TantanZB(txXBee):
                     if "parameter" in response:
                         val = int(response["parameter"].encode('hex'),16) * 1200.0 / 1024 / 1000
                     msg = ":".join([nname, addr, "%V", str(val)])
+                    evt = {'id': nname, 'value': val}
+                    self.wsMcuFactory.dispatch("http://example.com/mcu#zb-volt", evt)
                 else:
                     val = int(response["parameter"].encode('hex'),16) * 1200.0 / 1024 / 1000
                     msg = "C0 %V:", str(val), "[mV]"
+                    evt = {'id': 'C0', 'value': val}
+                    self.wsMcuFactory.dispatch("http://example.com/mcu#zb-volt", evt)
+                    
         elif 'samples' in response:
             #print strftime("%Y-%m-%d %H:%M:%S").encode('utf8'), "<<< FROM:", response
             nname = ZB_reverse[response["source_addr_long"]]
