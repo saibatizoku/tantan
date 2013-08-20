@@ -67,6 +67,8 @@ class MyOptions(usage.Options):
             ['outfile', 'o', None, 'Logfile [default: sys.stdout]'],
             ['baudrate', 'b', 38400, 'Serial baudrate [default: 38400'],
             ['port', 'p', '/dev/ttyUSB0', 'Serial Port device'],
+            ['webport', 'w', 8080, 'Web port to use for embedded Web server'],
+            ['wsurl', 's', "ws://localhost:9000", 'WebSocket port to use for embedded WebSocket server']
     ]
 
 # REGEX   '  ND:(.*)|bat:(.*)\[V\]:(.*)\%carga:(.*):contador:(.*)|\%V:(.*)'
@@ -219,6 +221,33 @@ class TantanZB(txXBee):
                 )
 
 
+## WS-MCU protocol
+##
+class WsMcuProtocol(WampServerProtocol):
+ 
+    def onSessionOpen(self):
+        ## register topic prefix under which we will publish MCU measurements
+        ##
+        self.registerForPubSub("http://example.com/mcu#", True)
+ 
+        ## register methods for RPC
+        ##
+        self.registerForRpc(self.factory.mcuProtocol, "http://example.com/mcu-control#")
+
+
+## WS-MCU factory
+##
+class WsMcuFactory(WampServerFactory):
+
+    protocol = WsMcuProtocol
+
+    def __init__(self, url):
+        WampServerFactory.__init__(self, url)
+        self.mcuProtocol = TantanZB(wsMcuFactory=self)
+        self.serialport = SerialPort(self.mcuProtocol, o.opts['port'], reactor, baudrate=o.opts['baudrate'])
+
+
+
 if __name__ == '__main__':
     o = MyOptions()
     try:
@@ -235,7 +264,16 @@ if __name__ == '__main__':
 
     port = o.opts['port']
     log.msg('Attempting to open %s at %dbps as a %s device' % (port, o.opts['baudrate'], txXBee.__name__))
+    webport = int(o.opts['webport'])
+    wsurl = o.opts['wsurl']
 
-    s = SerialPort(TantanZB(escaped=True), o.opts['port'], reactor, baudrate=o.opts['baudrate'])
+    wsMcuFactory = WsMcuFactory(wsurl)
+    listenWS(wsMcuFactory)
+
+    ## create embedded web server for static files
+    ##
+    webdir = File(".")
+    web = Site(webdir)
+    reactor.listenTCP(webport, web)
 
     reactor.run()
