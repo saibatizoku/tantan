@@ -203,13 +203,23 @@ class TantanZB(txXBee):
         #            dest_addr="\xff\xfe",
         #            data="DATA2")
 
-    def sendND(self):
+    @exportRpc("send-nd")
+    def sendND(self, evt=None):
+        self._sendND()
+        return 'ND Sent'
+        
+    def _sendND(self):
         reactor.callFromThread(self.send,
                 "remote_at",
                 frame_id="\x01",
                 command="ND",
                 )
-    def sendDB_Volt(self):
+    @exportRpc("send-dbvolt")
+    def sendDB_Volt(self, evt=None):
+        self._sendDB_Volt()
+        return "DBVOLT Sent"
+    
+    def _sendDB_Volt(self):
         reactor.callFromThread(self.send,
                 "remote_at",
                 frame_id="\x02",
