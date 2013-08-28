@@ -254,7 +254,7 @@
             f1rx = document.getElementById('xbeeF1rx');
 
             var smoothie = new SmoothieChart({grid: {strokeStyle: 'rgb(125, 0, 0)',
-                                                     fillStyle: 'rgb(60, 0, 0)',
+                                                     fillStyle: 'rgb(171, 171, 255)',
                                                      lineWidth: 1,
                                                      //millisPerLine: 55000,
                                                      verticalSections: 6},
@@ -265,10 +265,10 @@
                                               //interpolation: "line"
                                               });
 
-            smoothie.addTimeSeries(line0, { strokeStyle: 'rgb(0, 255, 0)', fillStyle: 'rgba(0, 255, 0, 0.4)', lineWidth: 3 });
-            smoothie.addTimeSeries(line1, { strokeStyle: 'rgb(255, 0, 255)', fillStyle: 'rgba(255, 0, 255, 0.3)', lineWidth: 3 });
-            smoothie.addTimeSeries(line2, { strokeStyle: 'rgb(155, 50, 155)', fillStyle: 'rgba(155, 0, 155, 0.3)', lineWidth: 3 });
-            smoothie.addTimeSeries(line3, { strokeStyle: 'rgb(55, 0, 55)', fillStyle: 'rgba(55, 0, 55, 0.3)', lineWidth: 3 });
+            smoothie.addTimeSeries(line0, { strokeStyle: 'rgb(0, 115, 0)', lineWidth: 2 });
+            smoothie.addTimeSeries(line1, { strokeStyle: 'rgb(255, 0, 255)', lineWidth: 2 });
+            smoothie.addTimeSeries(line2, { strokeStyle: 'rgb(155, 50, 155)', lineWidth: 2 });
+            smoothie.addTimeSeries(line3, { strokeStyle: 'rgb(55, 0, 55)', lineWidth: 2 });
 
             smoothie.streamTo(document.getElementById("mycanvas"));
 
@@ -278,7 +278,7 @@
             f1v = document.getElementById('xbeeF1volt');
 
             var vsmoothie = new SmoothieChart({grid: {strokeStyle: 'rgb(125, 0, 0)',
-                                                     fillStyle: 'rgb(60, 0, 0)',
+                                                     fillStyle: 'rgb(171, 171, 255)',
                                                      lineWidth: 1,
                                                      verticalSections: 6},
                                               millisPerPixel: 1000,
@@ -288,10 +288,10 @@
                                               //interpolation: "line"
                                               });
 
-            vsmoothie.addTimeSeries(vline0, { strokeStyle: 'rgb(0, 255, 0)', fillStyle: 'rgba(0, 255, 0, 0.4)', lineWidth: 3 });
-            vsmoothie.addTimeSeries(vline1, { strokeStyle: 'rgb(255, 0, 255)', fillStyle: 'rgba(255, 0, 255, 0.3)', lineWidth: 3 });
-            vsmoothie.addTimeSeries(vline2, { strokeStyle: 'rgb(155, 50, 155)', fillStyle: 'rgba(155, 0, 155, 0.3)', lineWidth: 3 });
-            vsmoothie.addTimeSeries(vline3, { strokeStyle: 'rgb(55, 0, 55)', fillStyle: 'rgba(55, 0, 55, 0.3)', lineWidth: 3 });
+            vsmoothie.addTimeSeries(vline0, { strokeStyle: 'rgb(0, 255, 0)', lineWidth: 3 });
+            vsmoothie.addTimeSeries(vline1, { strokeStyle: 'rgb(255, 0, 255)', lineWidth: 3 });
+            vsmoothie.addTimeSeries(vline2, { strokeStyle: 'rgb(155, 50, 155)', lineWidth: 3 });
+            vsmoothie.addTimeSeries(vline3, { strokeStyle: 'rgb(55, 0, 55)', lineWidth: 3 });
 
             vsmoothie.streamTo(document.getElementById("volts"));
             connect();
