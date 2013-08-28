@@ -118,7 +118,7 @@ class TantanZB(txXBee):
         response = xbeePacketDictionary
         msg = None
         #if response.get("source_addr_long", "default") in ZB_reverse:
-        if response["id"] == "rx":
+        if response.get("id", "default") == "rx":
             resp = {}
             resp['name'] = ZB_reverse[response["source_addr_long"]]
             resp['laddr'] = response["source_addr_long"].encode('hex')
