@@ -203,6 +203,38 @@ class TantanZB(txXBee):
         #            dest_addr="\xff\xfe",
         #            data="DATA2")
 
+    @exportRpc("control-led")
+    def controlLed(self, evt=None):
+        if evt:
+            if evt == "RXTX":
+                reactor.callFromThread(self.send,
+                    "remote_at",
+                    frame_id="\x02",
+                    dest_addr_long="\x00\x00\x00\x00\x00\x00\xff\xff",
+                    dest_addr="\xff\xfe",
+                    command="D5",
+                    parameter="\x01"
+                    )
+            if evt == "ON":
+                reactor.callFromThread(self.send,
+                    "remote_at",
+                    frame_id="\x02",
+                    dest_addr_long="\x00\x00\x00\x00\x00\x00\xff\xff",
+                    dest_addr="\xff\xfe",
+                    command="D5",
+                    parameter="\x05"
+                    )
+            if evt == "OFF":
+                reactor.callFromThread(self.send,
+                    "remote_at",
+                    frame_id="\x02",
+                    dest_addr_long="\x00\x00\x00\x00\x00\x00\xff\xff",
+                    dest_addr="\xff\xfe",
+                    command="D5",
+                    parameter="\x04"
+                    )
+            return 'ASSOC LED Sent: {0}'.format(evt)
+
     @exportRpc("send-nd")
     def sendND(self, evt=None):
         self._sendND()

@@ -302,8 +302,15 @@
       <h1>TanTan Internet: ZigBee to WS Gateway Demo</h1>
 
       <h2>Broadcast commands</h2>
-      <button onclick="sendDBVOLT()">Get XBee voltage and decibes</button>
-      <button onclick="sendND()">Send Network Discovery</button>
+      <div>
+          <button onclick="sendDBVOLT()">Get XBee voltage and decibels</button>
+          <button onclick="sendND()">Send Network Discovery</button>
+      </div>
+      <div>
+          <button onclick="controlLed('RXTX')">ASSOC LED Rx/Tx</button>
+          <button onclick="controlLed('ON')">ASSOC LED On</button>
+          <button onclick="controlLed('OFF')">ASSOC LED Off</button>
+      </div>
 
       <div>
           <h2>ZigBee Network </h2>
