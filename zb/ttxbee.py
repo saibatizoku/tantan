@@ -1,8 +1,7 @@
 """
-Copyright (C) 2011 Wagner Sartori Junior <wsartori@gmail.com>
-http://www.wsartori.com
+Copyright (C) 2013 Joaquin Rosales <globojorro@gmail.com>
 
-This file is part of txXBee.
+This file is part of tantan.zb.
 
 txXBee program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
