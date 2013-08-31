@@ -2,6 +2,19 @@ body {
     padding-top: 60px;
     padding-bottom: 40px;
 }
+.hero-unit {
+    padding: 10px 15px;
+}
+.hero-unit h1 {
+    font-size: 40px;
+}
+.hero-unit .thumbnail {
+    background-color: #fff;
+    padding: 5px 15px 10px;
+}
+.granja.thumbnail {
+    margin-bottom: 10px;
+}
 .sidebar-nav {
     padding: 9px 0;
 }
@@ -13,9 +26,7 @@ body {
 #geninfo span {
     display: block;
 }
-.thumbnails li.active {
-    background-color: #999;
-}
+
 @media (max-width: 980px) {
     /* Enable use of floated navbar text */
     .navbar-text.pull-right {
