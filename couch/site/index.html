@@ -18,15 +18,16 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a class="brand" href="#">Project name</a>
+                    <a class="brand" href="#">TanTán</a>
                     <div class="nav-collapse collapse">
                         <p class="navbar-text pull-right">
-                        Logged in as <a href="#" class="navbar-link">Username</a>
+                        <a href="#" class="navbar-link">Ingresar</a>
                         </p>
                         <ul class="nav">
-                            <li class="active"><a href="#">Home</a></li>
-                            <li><a href="#about">About</a></li>
-                            <li><a href="#contact">Contact</a></li>
+                            <li class="active"><a href="#">Inicio</a></li>
+                            <li><a href="#cultivo">Cultivo</a></li>
+                            <li><a href="#reportes">Reportes</a></li>
+                            <li><a href="#contacto">Contáctanos</a></li>
                         </ul>
                     </div><!--/.nav-collapse -->
                 </div>
@@ -38,19 +39,21 @@
                 <div class="span3">
                     <div class="well sidebar-nav">
                         <ul class="nav nav-list">
-                            <li class="nav-header">Sidebar</li>
-                            <li class="active"><a href="#">Link</a></li>
+                            <li class="nav-header">Granjas</li>
+                            <li>
+                                <a href="#">Granja Uno</a>
+                            </li>
+                            <li class="active">
+                                <a href="#">Granja Xamapan</a>
+                            </li>
+                            <li>
+                                <a href="#">Granja Tres</a>
+                            </li>
+                            <li class="nav-header">Herramientas</li>
                             <li><a href="#">Link</a></li>
                             <li><a href="#">Link</a></li>
                             <li><a href="#">Link</a></li>
-                            <li class="nav-header">Sidebar</li>
-                            <li><a href="#">Link</a></li>
-                            <li><a href="#">Link</a></li>
-                            <li><a href="#">Link</a></li>
-                            <li><a href="#">Link</a></li>
-                            <li><a href="#">Link</a></li>
-                            <li><a href="#">Link</a></li>
-                            <li class="nav-header">Sidebar</li>
+                            <li class="nav-header">Información</li>
                             <li><a href="#">Link</a></li>
                             <li><a href="#">Link</a></li>
                             <li><a href="#">Link</a></li>
@@ -59,51 +62,130 @@
                 </div><!--/span-->
                 <div class="span9">
                     <div class="hero-unit">
-                        <h1>Hello, world!</h1>
-                        <p>This is a template for a simple marketing or informational website. It includes a large callout called the hero unit and three supporting pieces of content. Use it as a starting point to create something more unique.</p>
-                        <p><a href="#" class="btn btn-primary btn-large">Learn more &raquo;</a></p>
+                        <h1>Granja Xamapan</h1>
+                        <div class="btn-group">
+                            <span class="btn btn-mini btn-important" data-toggle="modal" data-target="#editar-granja">Modificar datos</span>
+                            <span class="btn btn-mini btn-info" data-toggle="modal" data-target="#nuevo-estanque">Nuevo estanque</span>
+                        </div>
+                        <div id="detalles">
+                            <h2>Info general</h2>
+                            <div id="geninfo">
+                                <span><strong>Nombre de la granja:</strong> Granja Xamapan</span>
+                                <span><strong>Contacto:</strong> Persona Uno</span>
+                                <span><strong>Dirección:</strong> En Xamapan</span>
+                                <span><strong>Localidad:</strong> Xamapan</span>
+                                <span><strong>Municipio:</strong> Xamapan</span>
+                                <span><strong>Estado:</strong> Costero</span>
+                                <span><strong>Razón social:</strong> Compañía de Xamapan</span>
+                            </div>
+                            <h2>Estanques</h2>
+                            <ul class="nav nav-pills">
+                                <li class=""><a class="estanque" data-id="fea96b46aeb02badb26b3a37460065cc" id="fea96b46aeb02badb26b3a3746006f6e" href="/tantan/_design/tantan/_list/index/granjas?granja=fea96b46aeb02badb26b3a37460065cc&amp;estanque=fea96b46aeb02badb26b3a3746006f6e">B1</a></li>
+                                <li><a class="estanque" data-id="fea96b46aeb02badb26b3a37460065cc" id="fea96b46aeb02badb26b3a374600786f" href="/tantan/_design/tantan/_list/index/granjas?granja=fea96b46aeb02badb26b3a37460065cc&amp;estanque=fea96b46aeb02badb26b3a374600786f">B2</a></li>
+                                <li><a class="estanque" data-id="fea96b46aeb02badb26b3a37460065cc" id="fea96b46aeb02badb26b3a374600820b" href="/tantan/_design/tantan/_list/index/granjas?granja=fea96b46aeb02badb26b3a37460065cc&amp;estanque=fea96b46aeb02badb26b3a374600820b">1</a></li>
+                                <li><a class="estanque" data-id="fea96b46aeb02badb26b3a37460065cc" id="fea96b46aeb02badb26b3a3746009047" href="/tantan/_design/tantan/_list/index/granjas?granja=fea96b46aeb02badb26b3a37460065cc&amp;estanque=fea96b46aeb02badb26b3a3746009047">2</a></li>
+                                <li><a class="estanque" data-id="fea96b46aeb02badb26b3a37460065cc" id="fea96b46aeb02badb26b3a3746009234" href="/tantan/_design/tantan/_list/index/granjas?granja=fea96b46aeb02badb26b3a37460065cc&amp;estanque=fea96b46aeb02badb26b3a3746009234">3</a></li>
+                                <li><a class="estanque" data-id="fea96b46aeb02badb26b3a37460065cc" id="fea96b46aeb02badb26b3a3746009802" href="/tantan/_design/tantan/_list/index/granjas?granja=fea96b46aeb02badb26b3a37460065cc&amp;estanque=fea96b46aeb02badb26b3a3746009802">4</a></li>
+                                <li><a class="estanque" data-id="fea96b46aeb02badb26b3a37460065cc" id="fea96b46aeb02badb26b3a3746009b9b" href="/tantan/_design/tantan/_list/index/granjas?granja=fea96b46aeb02badb26b3a37460065cc&amp;estanque=fea96b46aeb02badb26b3a3746009b9b">5</a></li>
+                                <li><a class="estanque" data-id="fea96b46aeb02badb26b3a37460065cc" id="fea96b46aeb02badb26b3a374600a066" href="/tantan/_design/tantan/_list/index/granjas?granja=fea96b46aeb02badb26b3a37460065cc&amp;estanque=fea96b46aeb02badb26b3a374600a066">6</a></li>
+                                <li><a class="estanque" data-id="fea96b46aeb02badb26b3a37460065cc" id="fea96b46aeb02badb26b3a374600adfd" href="/tantan/_design/tantan/_list/index/granjas?granja=fea96b46aeb02badb26b3a37460065cc&amp;estanque=fea96b46aeb02badb26b3a374600adfd">7</a></li>
+                                <li><a class="estanque" data-id="fea96b46aeb02badb26b3a37460065cc" id="fea96b46aeb02badb26b3a374600bc4d" href="/tantan/_design/tantan/_list/index/granjas?granja=fea96b46aeb02badb26b3a37460065cc&amp;estanque=fea96b46aeb02badb26b3a374600bc4d">8</a></li>
+                                <li><a class="estanque" data-id="fea96b46aeb02badb26b3a37460065cc" id="fea96b46aeb02badb26b3a374600c0b2" href="/tantan/_design/tantan/_list/index/granjas?granja=fea96b46aeb02badb26b3a37460065cc&amp;estanque=fea96b46aeb02badb26b3a374600c0b2">9</a></li>
+                                <li><a class="estanque" data-id="fea96b46aeb02badb26b3a37460065cc" id="fea96b46aeb02badb26b3a374600d022" href="/tantan/_design/tantan/_list/index/granjas?granja=fea96b46aeb02badb26b3a37460065cc&amp;estanque=fea96b46aeb02badb26b3a374600d022">10</a></li>
+                                <li><a class="estanque" data-id="fea96b46aeb02badb26b3a37460065cc" id="fea96b46aeb02badb26b3a374600db56" href="/tantan/_design/tantan/_list/index/granjas?granja=fea96b46aeb02badb26b3a37460065cc&amp;estanque=fea96b46aeb02badb26b3a374600db56">11</a></li>
+                                <li><a class="estanque" data-id="fea96b46aeb02badb26b3a37460065cc" id="fea96b46aeb02badb26b3a374600e1d2" href="/tantan/_design/tantan/_list/index/granjas?granja=fea96b46aeb02badb26b3a37460065cc&amp;estanque=fea96b46aeb02badb26b3a374600e1d2">12</a></li>
+                                <li><a class="estanque" data-id="fea96b46aeb02badb26b3a37460065cc" id="fea96b46aeb02badb26b3a374600f167" href="/tantan/_design/tantan/_list/index/granjas?granja=fea96b46aeb02badb26b3a37460065cc&amp;estanque=fea96b46aeb02badb26b3a374600f167">C</a></li>
+                                <li><a class="estanque" data-id="fea96b46aeb02badb26b3a37460065cc" id="fea96b46aeb02badb26b3a3746010007" href="/tantan/_design/tantan/_list/index/granjas?granja=fea96b46aeb02badb26b3a37460065cc&amp;estanque=fea96b46aeb02badb26b3a3746010007">M</a></li>
+                                <li><a class="estanque" data-id="fea96b46aeb02badb26b3a37460065cc" id="fea96b46aeb02badb26b3a3746010fb3" href="/tantan/_design/tantan/_list/index/granjas?granja=fea96b46aeb02badb26b3a37460065cc&amp;estanque=fea96b46aeb02badb26b3a3746010fb3">R</a></li>
+                                <li><a class="estanque" data-id="fea96b46aeb02badb26b3a37460065cc" id="fea96b46aeb02badb26b3a3746011d88" href="/tantan/_design/tantan/_list/index/granjas?granja=fea96b46aeb02badb26b3a37460065cc&amp;estanque=fea96b46aeb02badb26b3a3746011d88">N</a></li>
+                                <li class="active"><a class="estanque" data-id="fea96b46aeb02badb26b3a37460065cc" id="fea96b46aeb02badb26b3a37460128f6" href="/tantan/_design/tantan/_list/index/granjas?granja=fea96b46aeb02badb26b3a37460065cc&amp;estanque=fea96b46aeb02badb26b3a37460128f6">A</a></li>
+                                <li><a class="estanque" data-id="fea96b46aeb02badb26b3a37460065cc" id="fea96b46aeb02badb26b3a3746012d07" href="/tantan/_design/tantan/_list/index/granjas?granja=fea96b46aeb02badb26b3a37460065cc&amp;estanque=fea96b46aeb02badb26b3a3746012d07">V</a></li>
+                            </ul>
+                        </div>
                     </div>
+
                     <div class="row-fluid">
-                        <div class="span4">
-                            <h2>Heading</h2>
-                            <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-                            <p><a class="btn" href="#">View details &raquo;</a></p>
-                        </div><!--/span-->
-                        <div class="span4">
-                            <h2>Heading</h2>
-                            <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-                            <p><a class="btn" href="#">View details &raquo;</a></p>
-                        </div><!--/span-->
-                        <div class="span4">
-                            <h2>Heading</h2>
-                            <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-                            <p><a class="btn" href="#">View details &raquo;</a></p>
-                        </div><!--/span-->
-                    </div><!--/row-->
+                        <h2>Estanque</h2>
+                        <ul class="thumbnails">
+                            <li class="span4">
+                            <div class="thumbnail">
+                                <h3>B1</h3>
+                                <div class="sensores">
+                                    <div>pH: <span class="valor">7.20</span></div>
+                                    <div>Temp: <span class="valor">32.0</span> [°C]</div>
+                                </div>
+                                <a class="btn" href="#">Ver detalles &raquo;</a>
+                            </div>
+                            </li>
+                            <li class="span4">
+                            <div class="thumbnail">
+                                <h3>B2</h3>
+                                <div class="sensores">
+                                    <div>pH: <span class="valor">7.18</span></div>
+                                    <div>Temp: <span class="valor">32.2</span> [°C]</div>
+                                </div>
+                                <a class="btn" href="#">Ver detalles &raquo;</a>
+                            </div>
+                            </li>
+                            <li class="active span4">
+                            <div class="thumbnail">
+                                <h3>A</h3>
+                                <div class="sensores">
+                                    <div>pH: <span class="valor">7.18</span></div>
+                                    <div>Temp: <span class="valor">32.2</span> [°C]</div>
+                                </div>
+                                <a class="btn" href="#">Ver detalles &raquo;</a>
+                            </div>
+                            </li>
+                        </ul>
+                    </div>
+
                     <div class="row-fluid">
-                        <div class="span4">
-                            <h2>Heading</h2>
-                            <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-                            <p><a class="btn" href="#">View details &raquo;</a></p>
-                        </div><!--/span-->
-                        <div class="span4">
-                            <h2>Heading</h2>
-                            <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-                            <p><a class="btn" href="#">View details &raquo;</a></p>
-                        </div><!--/span-->
-                        <div class="span4">
-                            <h2>Heading</h2>
-                            <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-                            <p><a class="btn" href="#">View details &raquo;</a></p>
-                        </div><!--/span-->
-                    </div><!--/row-->
+                        <div class="span12">
+                            <div class="tt-widget">
+                                <h3>Editar granja</h3>
+                                <form id="edit-granja">
+                                    <input type="hidden" name="g_id" value="fea96b46aeb02badb26b3a37460065cc">
+                                    <label>Nombre de la granja: <input type="text" name="nombre" placeholder="Xamapan"></label>
+                                    <label>Contacto: <input type="text" name="contacto" placeholder="Nombre de persona a contactar"></label>
+                                    <fieldset>
+                                        <label>Dirección: <input type="text" name="direccion" placeholder="Xamapan"></label>
+                                        <label>Localidad: <input type="text" name="localidad" placeholder="Xamapan"></label>
+                                        <label>Municipio: <input type="text" name="municipio" placeholder="Xamapan"></label>
+                                        <label>Estado: <input type="text" name="estado" placeholder="Costero"></label>
+                                    </fieldset>
+                                    <label>Razón social: <input type="text" name="razonsocial" placeholder="Nombre de compañía"></label>
+                                    <input class="btn" type="submit" value="Agregar">
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row-fluid">
+                        <div class="span12">
+                            <div class="tt-widget">
+                                <h3>Estanque nuevo</h3>
+                                <form id="edit-nuevo-estanque">
+                                    <input type="hidden" name="granja_id" value="fea96b46aeb02badb26b3a37460065cc">
+                                    <label>Nombre: <input type="text" name="nombre" value=""></label>
+                                    <fieldset>
+                                        <label>Forma: <input type="text" name="forma" value=""></label>
+                                        <label>Volumen (litros): <input type="text" name="volumen" value=""></label>
+                                        <label>Dimensiones: <input type="text" name="dimensiones" value=""></label>
+                                    </fieldset>
+                                    <label>Material: <input type="text" name="material" value=""></label>
+                                    <input class="btn" type="submit" value="Guardar cambios">
+                                </form>
+                            </div>
+                        </div>
+                    </div>
                 </div><!--/span-->
             </div><!--/row-->
 
             <hr>
 
             <footer>
-            <p>&copy; Company 2013</p>
+            <p>&copy; Red acuícola 2013</p>
             </footer>
 
         </div><!--/.fluid-container-->
