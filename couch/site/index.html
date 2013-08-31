@@ -6,6 +6,8 @@
         <link rel="shortcut icon" href="favicon.ico">
         <link href="vendor/bootstrap/css/bootstrap.css" rel="stylesheet">
         <link href="vendor/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
+        <link href='vendor/fullcalendar/fullcalendar.css' rel='stylesheet' />
+        <link href='vendor/fullcalendar/fullcalendar.print.css' rel='stylesheet' media='print' />
         <link rel="stylesheet" href="style/main.css" type="text/css">
     </head>
 
@@ -112,6 +114,13 @@
                                     </ul>
                                 </div>
                                 </li>
+                                <li class="span8">
+                                <div class="thumbnail">
+                                    <h2>Calendario</h2>
+                                    <div class="calendario">
+                                    </div>
+                                </div>
+                                </li>
                             </ul>
                         </div>
                     </div>
@@ -201,12 +210,14 @@
             </footer>
 
         </div><!--/.fluid-container-->
-        <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+        <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
         <script src="http://cdnjs.cloudflare.com/ajax/libs/json2/20110223/json2.js"></script>
         <script src="vendor/marionette/javascript/underscore.js"></script>
         <script src="vendor/marionette/javascript/backbone.js"></script>
         <script src="vendor/marionette/javascript/backbone.marionette.js"></script>
-
+        <script src='vendor/fullcalendar/jquery-ui-1.10.3.custom.min.js'></script>
+        <script src="vendor/fullcalendar/fullcalendar.min.js"></script>
+        <script src="application.js"></script>
 
     </body>
 </html>
