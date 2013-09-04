@@ -1,9 +1,9 @@
 """
 Copyright (C) 2013 Joaquin Rosales <globojorro@gmail.com>
 
-This file is part of tantan.zb.
+This file is part of tantan.zb
 
-txXBee program is free software: you can redistribute it and/or modify
+tantan.zb program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
 (at your option) any later version.
@@ -55,11 +55,12 @@ ZB_reverse = {
         }
 
 TCPClients = []
-WebSockClients=[]
-xbee=[]
+WebSockClients = []
+xbee = []
 timer = None
 delimiter = None
-timers={}
+timers = {}
+serService = None
 
 class MyOptions(usage.Options):
     optParameters = [
@@ -100,7 +101,7 @@ class TantanZB(txXBee):
         self.zb_net = task.LoopingCall(self.sendND)
         self.zb_dbvolt = task.LoopingCall(self.sendDB_Volt)
 
-        self.zb_net.start(20)
+        self.zb_net.start(15)
         self.zb_dbvolt.start(30)
 
     def connectionMade(self):
@@ -127,6 +128,7 @@ class TantanZB(txXBee):
             for (key, item) in resp.items():
                 rout += "{0}-{1}:".format(key, item)
             msg = "{0}:{1}:RX:".format(resp['name'], resp['addr'], resp['val']) + repr(resp['val'])
+            #print 'Evt id: {0}\nVal: {1}'.format(str(resp['name']), resp['val'].decode('utf8'))
             evt = {'id': resp['name'],
                    'value': resp['val'],
                   }
@@ -264,21 +266,6 @@ class TantanZB(txXBee):
                 dest_addr_long="\x00\x00\x00\x00\x00\x00\xff\xff",
                 dest_addr="\xff\xfe",
                 command="%V",
-                )
-
-
-
-    def extra(self):
-        reactor.callFromThread(self.send,
-                "at",
-                frame_id="\x03",
-                command="D5",
-                parameter="\x04")
-        reactor.callFromThread(self.send,
-                "remote_at",
-                frame_id="\x01",
-                command="ND",
-                #parameter="\x00",
                 )
 
 
