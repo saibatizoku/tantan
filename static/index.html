@@ -20,14 +20,14 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a class="brand" href="#">TanTán</a>
+                    <a class="brand" href="index.html">TanTán</a>
                     <div class="nav-collapse collapse">
                         <p class="navbar-text pull-right">
                         <a href="#" class="navbar-link">Ingresar</a>
                         </p>
                         <ul class="nav">
-                            <li class="active"><a href="#">Inicio</a></li>
-                            <li><a href="#cultivo">Cultivo</a></li>
+                            <li class="active"><a href="index.html">Red acuícola</a></li>
+                            <li><a href="zb.html">Sensores</a></li>
                             <li><a href="#reportes">Reportes</a></li>
                             <li><a href="#contacto">Contáctanos</a></li>
                         </ul>
@@ -86,8 +86,38 @@
                                         <span><strong>Razón social:</strong> Compañía de Xamapan</span>
                                     </div>
                                 </div>
+                                <div class="thumbnail">
+                                    <h3>Editar granja</h3>
+                                    <form id="edit-granja">
+                                        <input type="hidden" name="g_id" value="fea96b46aeb02badb26b3a37460065cc">
+                                        <label>Nombre de la granja: <input type="text" name="nombre" placeholder="Xamapan"></label>
+                                        <label>Contacto: <input type="text" name="contacto" placeholder="Nombre de persona a contactar"></label>
+                                        <fieldset>
+                                            <label>Dirección: <input type="text" name="direccion" placeholder="Xamapan"></label>
+                                            <label>Localidad: <input type="text" name="localidad" placeholder="Xamapan"></label>
+                                            <label>Municipio: <input type="text" name="municipio" placeholder="Xamapan"></label>
+                                            <label>Estado: <input type="text" name="estado" placeholder="Costero"></label>
+                                        </fieldset>
+                                        <label>Razón social: <input type="text" name="razonsocial" placeholder="Nombre de compañía"></label>
+                                        <input class="btn" type="submit" value="Agregar">
+                                    </form>
+                                </div>
                                 </li>
                                 <li class="span8">
+                                <div class="thumbnail">
+                                    <h3>Estanque nuevo</h3>
+                                    <form id="edit-nuevo-estanque">
+                                        <input type="hidden" name="granja_id" value="fea96b46aeb02badb26b3a37460065cc">
+                                        <label>Nombre: <input type="text" name="nombre" placeholder="A001"></label>
+                                        <fieldset>
+                                            <label>Forma: <input type="text" name="forma" placeholder="Cónico"></label>
+                                            <label>Volumen (litros): <input type="text" name="volumen" placeholder="150,000"></label>
+                                            <label>Dimensiones: <input type="text" name="dimensiones" placeholder="50x5x5"></label>
+                                        </fieldset>
+                                        <label>Material: <input type="text" name="material" placeholder="Geomembrana"></label>
+                                        <input class="btn" type="submit" value="Guardar cambios">
+                                    </form>
+                                </div>
                                 <div class="thumbnail">
                                     <h2>Estanques</h2>
                                     <ul class="nav nav-pills">
@@ -113,6 +143,41 @@
                                         <li><a class="estanque" data-id="fea96b46aeb02badb26b3a37460065cc" id="fea96b46aeb02badb26b3a3746012d07" href="/tantan/_design/tantan/_list/index/granjas?granja=fea96b46aeb02badb26b3a37460065cc&amp;estanque=fea96b46aeb02badb26b3a3746012d07">V</a></li>
                                     </ul>
                                 </div>
+                                <div class="thumbnail">
+                                    <h2>Estanque</h2>
+                                    <ul class="thumbnails">
+                                        <li class="span4">
+                                        <div class="thumbnail">
+                                            <h3>B1</h3>
+                                            <div class="sensores">
+                                                <div>pH: <span class="valor">7.20</span></div>
+                                                <div>Temp: <span class="valor">32.0</span> [°C]</div>
+                                            </div>
+                                            <a class="btn" href="#">Ver detalles &raquo;</a>
+                                        </div>
+                                        </li>
+                                        <li class="span4">
+                                        <div class="thumbnail">
+                                            <h3>B2</h3>
+                                            <div class="sensores">
+                                                <div>pH: <span class="valor">7.18</span></div>
+                                                <div>Temp: <span class="valor">32.2</span> [°C]</div>
+                                            </div>
+                                            <a class="btn" href="#">Ver detalles &raquo;</a>
+                                        </div>
+                                        </li>
+                                        <li class="active span4">
+                                        <div class="thumbnail">
+                                            <h3>A</h3>
+                                            <div class="sensores">
+                                                <div>pH: <span class="valor">7.18</span></div>
+                                                <div>Temp: <span class="valor">32.2</span> [°C]</div>
+                                            </div>
+                                            <a class="btn" href="#">Ver detalles &raquo;</a>
+                                        </div>
+                                        </li>
+                                    </ul>
+                                </div>
                                 </li>
                                 <li class="span8">
                                 <div class="thumbnail">
@@ -126,80 +191,15 @@
                     </div>
 
                     <div class="row-fluid">
-                        <h2>Estanque</h2>
-                        <ul class="thumbnails">
-                            <li class="span4">
-                            <div class="thumbnail">
-                                <h3>B1</h3>
-                                <div class="sensores">
-                                    <div>pH: <span class="valor">7.20</span></div>
-                                    <div>Temp: <span class="valor">32.0</span> [°C]</div>
-                                </div>
-                                <a class="btn" href="#">Ver detalles &raquo;</a>
-                            </div>
-                            </li>
-                            <li class="span4">
-                            <div class="thumbnail">
-                                <h3>B2</h3>
-                                <div class="sensores">
-                                    <div>pH: <span class="valor">7.18</span></div>
-                                    <div>Temp: <span class="valor">32.2</span> [°C]</div>
-                                </div>
-                                <a class="btn" href="#">Ver detalles &raquo;</a>
-                            </div>
-                            </li>
-                            <li class="active span4">
-                            <div class="thumbnail">
-                                <h3>A</h3>
-                                <div class="sensores">
-                                    <div>pH: <span class="valor">7.18</span></div>
-                                    <div>Temp: <span class="valor">32.2</span> [°C]</div>
-                                </div>
-                                <a class="btn" href="#">Ver detalles &raquo;</a>
-                            </div>
-                            </li>
-                        </ul>
                     </div>
 
                     <div class="row-fluid">
                         <div class="span12">
                             <div class="tt-widget">
-                                <h3>Editar granja</h3>
-                                <form id="edit-granja">
-                                    <input type="hidden" name="g_id" value="fea96b46aeb02badb26b3a37460065cc">
-                                    <label>Nombre de la granja: <input type="text" name="nombre" placeholder="Xamapan"></label>
-                                    <label>Contacto: <input type="text" name="contacto" placeholder="Nombre de persona a contactar"></label>
-                                    <fieldset>
-                                        <label>Dirección: <input type="text" name="direccion" placeholder="Xamapan"></label>
-                                        <label>Localidad: <input type="text" name="localidad" placeholder="Xamapan"></label>
-                                        <label>Municipio: <input type="text" name="municipio" placeholder="Xamapan"></label>
-                                        <label>Estado: <input type="text" name="estado" placeholder="Costero"></label>
-                                    </fieldset>
-                                    <label>Razón social: <input type="text" name="razonsocial" placeholder="Nombre de compañía"></label>
-                                    <input class="btn" type="submit" value="Agregar">
-                                </form>
                             </div>
                         </div>
                     </div>
 
-                    <div class="row-fluid">
-                        <div class="span12">
-                            <div class="tt-widget">
-                                <h3>Estanque nuevo</h3>
-                                <form id="edit-nuevo-estanque">
-                                    <input type="hidden" name="granja_id" value="fea96b46aeb02badb26b3a37460065cc">
-                                    <label>Nombre: <input type="text" name="nombre" placeholder="A001"></label>
-                                    <fieldset>
-                                        <label>Forma: <input type="text" name="forma" placeholder="Cónico"></label>
-                                        <label>Volumen (litros): <input type="text" name="volumen" placeholder="150,000"></label>
-                                        <label>Dimensiones: <input type="text" name="dimensiones" placeholder="50x5x5"></label>
-                                    </fieldset>
-                                    <label>Material: <input type="text" name="material" placeholder="Geomembrana"></label>
-                                    <input class="btn" type="submit" value="Guardar cambios">
-                                </form>
-                            </div>
-                        </div>
-                    </div>
                 </div><!--/span-->
             </div><!--/row-->
 
@@ -210,14 +210,16 @@
             </footer>
 
         </div><!--/.fluid-container-->
-        <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-        <script src="http://cdnjs.cloudflare.com/ajax/libs/json2/20110223/json2.js"></script>
-        <script src="vendor/marionette/javascript/underscore.js"></script>
-        <script src="vendor/marionette/javascript/backbone.js"></script>
-        <script src="vendor/marionette/javascript/backbone.marionette.js"></script>
-        <script src='vendor/fullcalendar/jquery-ui-1.10.3.custom.min.js'></script>
-        <script src="vendor/fullcalendar/fullcalendar.min.js"></script>
-        <script src="application.js"></script>
+        <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+        <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/json2/20110223/json2.js"></script>
+        <script type="text/javascript" src="vendor/marionette/javascript/underscore.js"></script>
+        <script type="text/javascript" src="vendor/marionette/javascript/backbone.js"></script>
+        <script type="text/javascript" src="vendor/marionette/javascript/backbone.marionette.js"></script>
+        <script type="text/javascript" src='vendor/fullcalendar/jquery-ui-1.10.3.custom.min.js'></script>
+        <script type="text/javascript" src="vendor/fullcalendar/fullcalendar.min.js"></script>
+        <script type="text/javascript" src="vendor/bootstrap/js/bootstrap.min.js"></script>
+
+        <script type="text/javascript" src="application.js"></script>
 
     </body>
 </html>
