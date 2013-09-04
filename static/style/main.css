@@ -26,7 +26,12 @@ body {
 #geninfo span {
     display: block;
 }
-
+html .fc .fc-header, .fc table .fc-header {
+    font-size: 13px;
+}
+.fc-header-title h2 {
+    font-size: 20px;
+}
 @media (max-width: 980px) {
     /* Enable use of floated navbar text */
     .navbar-text.pull-right {

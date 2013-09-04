@@ -6,11 +6,30 @@ $(document).ready(function() {
     var y = date.getFullYear();
 
     $('.calendario').fullCalendar({
+        dayNames: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
+        dayNamesShort: ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sa'],
+        monthNames: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio',
+                     'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+        monthNamesShort: ['Ene', 'Feb', 'Mar', 'Abr', 'Mayo', 'Jun', 'Jul',
+                     'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+        titleFormat: {
+            month: 'MMM yyyy',                             // September 2009
+            week: "MMM d[ yyyy]{ '&#8212;'[ MMM] d yyyy}", // Sep 7 - 13 2009
+            day: 'd/MMM/yy'                  // 8/Sep/09
+        },
         defaultView: 'basicDay',
+        firstDay: 1,
+        aspectRatio: 2,
+        buttonText: {
+            today: 'hoy',
+            month: 'mes',
+            week: 'semana',
+            day:   'día',
+        },
         header: {
             left: 'prev,next today',
-        center: 'title',
-        right: 'month,basicWeek,basicDay'
+            center: 'title',
+            right: 'month,basicWeek,basicDay'
         },
         editable: true,
         events: [
