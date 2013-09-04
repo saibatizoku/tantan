@@ -3,358 +3,155 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
         <meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1.0">
         <title>TanTan ZB2WS Demo</title>
-        <link rel="stylesheet" href="main.css" type="text/css">
+        <link href="vendor/bootstrap/css/bootstrap.css" rel="stylesheet">
+        <link href="vendor/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
+        <link rel="stylesheet" href="style/main.css" type="text/css">
 
-        <script src="http://autobahn.s3.amazonaws.com/js/autobahn.min.js"></script>
-        <script src="smoothie.js"></script>
-
-        <script>
-
-            var sess = null;
-            var wsuri = "ws://" + window.location.hostname + ":9000";
-            var retryCount = 0;
-            var retryDelay = 2;
-
-            var f1db = null;
-            var r1db = null;
-            var r2db = null;
-            var r3db = null;
-
-            var f1v = null;
-            var r1v = null;
-            var r2v = null;
-            var r3v = null;
-
-            var f1nd = null;
-            var r1nd = null;
-            var r2nd = null;
-            var r3nd = null;
-
-            var f1rx = null;
-            var r1rx = null;
-            var r2rx = null;
-            var r3rx = null;
-
-            var f1db_last = null;
-            var r1db_last = null;
-            var r2db_last = null;
-            var r3db_last = null;
-
-            var f1v_last = null;
-            var r1v_last = null;
-            var r2v_last = null;
-            var r3v_last = null;
-
-            var line0 = new TimeSeries();
-            var line1 = new TimeSeries();
-            var line2 = new TimeSeries();
-            var line3 = new TimeSeries();
-
-            var vline0 = new TimeSeries();
-            var vline1 = new TimeSeries();
-            var vline2 = new TimeSeries();
-            var vline3 = new TimeSeries();
-
-            var eventCnt = 0;
-            var eventCntUpdateInterval = 2;
-
-            function onND(topicUri, event) {
-                eventCnt += 1;
-                switch (event.id) {
-                    case 'F1':
-                    var oldrx = f1nd.innerHTML;
-                    f1nd.innerHTML = event.value['short'];
-                    break;
-                    case 'R1':
-                    var oldrx = r1nd.innerHTML;
-                    r1nd.innerHTML = event.value['short'];
-                    break;
-                    case 'R2':
-                    var oldrx = r2nd.innerHTML;
-                    r2nd.innerHTML = event.value['short'];
-                    break;
-                    case 'R3':
-                    var oldrx = r3nd.innerHTML;
-                    r3nd.innerHTML = event.value['short'];
-                    break;
-                    default:
-                    break;
-                }
-            }
-
-            function onRX(topicUri, event) {
-                eventCnt += 1;
-                switch (event.id) {
-                    case 'F1':
-                    var oldrx = f1rx.innerHTML;
-                    f1rx.innerHTML = oldrx + event.value;
-                    break;
-                    case 'R1':
-                    var oldrx = r1rx.innerHTML;
-                    r1rx.innerHTML = oldrx + event.value;
-                    break;
-                    case 'R2':
-                    var oldrx = r2rx.innerHTML;
-                    r2rx.innerHTML = oldrx + event.value;
-                    break;
-                    case 'R3':
-                    var oldrx = r3rx.innerHTML;
-                    r3rx.innerHTML = oldrx + event.value;
-                    break;
-                    default:
-                    break;
-                }
-            }
-            function onAnalogValue(topicUri, event) {
-                eventCnt += 1;
-                event.value = event.value; // / 400 * 100;
-                event.value = event.value.toFixed(2);
-                switch (event.id) {
-                    case 'F1':
-                    f1db.innerHTML = event.value;
-                    if (f1db_last !== null) {
-                        line0.append(new Date().getTime(), f1db_last);
-                    }
-                    f1db_last = event.value;
-                    line0.append(new Date().getTime(), event.value);
-                    break;
-                    case 'R1':
-                    r1db.innerHTML = event.value;
-                    if (r1db_last !== null) {
-                        line1.append(new Date().getTime(), r1db_last);
-                    }
-                    r1db_last = event.value;
-                    line1.append(new Date().getTime(), event.value);
-                    break;
-                    case 'R2':
-                    r2db.innerHTML = event.value;
-                    if (r2db_last !== null) {
-                        line2.append(new Date().getTime(), r2db_last);
-                    }
-                    r2db_last = event.value;
-                    line2.append(new Date().getTime(), event.value);
-                    break;
-                    case 'R3':
-                    r3db.innerHTML = event.value;
-                    if (r1db_last !== null) {
-                        line3.append(new Date().getTime(), r1db_last);
-                    }
-                    r3db_last = event.value;
-                    line3.append(new Date().getTime(), event.value);
-                    break;
-                    default:
-                    break;
-                }
-            }
-
-            function onVolt(topicUri, event) {
-                eventCnt += 1;
-                event.value = event.value; // / 400 * 100;
-                event.value = event.value.toFixed(2);
-                switch (event.id) {
-                    case 'F1':
-                    f1v.innerHTML = event.value;
-                    if (f1v_last !== null) {
-                        vline0.append(new Date().getTime(), f1v_last);
-                    }
-                    f1v_last = event.value;
-                    vline0.append(new Date().getTime(), event.value);
-                    break;
-                    case 'R1':
-                    r1v.innerHTML = event.value;
-                    if (r1v_last !== null) {
-                        vline1.append(new Date().getTime(), r1v_last);
-                    }
-                    r1v_last = event.value;
-                    vline1.append(new Date().getTime(), event.value);
-                    break;
-                    case 'R2':
-                    r2v.innerHTML = event.value;
-                    if (r2v_last !== null) {
-                        vline2.append(new Date().getTime(), r2v_last);
-                    }
-                    r2v_last = event.value;
-                    vline2.append(new Date().getTime(), event.value);
-                    break;
-                    case 'R3':
-                    r3v.innerHTML = event.value;
-                    if (r1v_last !== null) {
-                        vline3.append(new Date().getTime(), r1v_last);
-                    }
-                    r3v_last = event.value;
-                    vline3.append(new Date().getTime(), event.value);
-                    break;
-                    default:
-                    break;
-                }
-            }
-
-            function controlLed(status) {
-                sess.call("rpc:control-led", status).always(ab.log);
-            }
-
-            function sendND(status) {
-                sess.call("rpc:send-nd").always(ab.log);
-            }
-
-            function sendDBVOLT(status) {
-                sess.call("rpc:send-dbvolt").always(ab.log);
-            }
-
-            function updateEventCnt() {
-                document.getElementById("event-cnt").innerHTML = Math.round(eventCnt/eventCntUpdateInterval) + " events/s";
-                eventCnt = 0;
-            }
-
-            function connect() {
-
-                statusline = document.getElementById('statusline');
-
-                sess = new ab.Session(wsuri,
-                function() {
-
-                    statusline.innerHTML = "Connected to " + wsuri;
-                    retryCount = 0;
-
-                    sess.prefix("event", "http://example.com/mcu#");
-                    sess.subscribe("event:zb-db", onAnalogValue);
-                    sess.subscribe("event:zb-volt", onVolt);
-                    sess.subscribe("event:zb-nd", onND);
-                    sess.subscribe("event:zb-rx", onRX);
-                    //sess.subscribe("event:analog-value", onAnalogValue);
-
-                    sess.prefix("rpc", "http://example.com/mcu-control#");
-
-                    eventCnt = 0;
-
-                    window.setInterval(updateEventCnt, eventCntUpdateInterval * 1000);
-                },
-                function() {
-                    console.log(retryCount);
-                    retryCount = retryCount + 1;
-                    statusline.innerHTML = "Connection lost. Reconnecting (" + retryCount + ") in " + retryDelay + " secs ..";
-                    window.setTimeout(connect, retryDelay * 1000);
-                }
-                );
-            }
-
-
-            window.onload = function ()
-            {
-                r1db = document.getElementById('xbeeR1db');
-                r2db = document.getElementById('xbeeR2db');
-                r3db = document.getElementById('xbeeR3db');
-                f1db = document.getElementById('xbeeF1db');
-
-                r1nd = document.getElementById('xbeeR1nd');
-                r2nd = document.getElementById('xbeeR2nd');
-                r3nd = document.getElementById('xbeeR3nd');
-                f1nd = document.getElementById('xbeeF1nd');
-
-                r1rx = document.getElementById('xbeeR1rx');
-                r2rx = document.getElementById('xbeeR2rx');
-                r3rx = document.getElementById('xbeeR3rx');
-                f1rx = document.getElementById('xbeeF1rx');
-
-                var smoothie = new SmoothieChart({grid: {strokeStyle: 'rgb(125, 0, 0)',
-                        fillStyle: 'rgb(171, 171, 255)',
-                        lineWidth: 1,
-                        //millisPerLine: 55000,
-                        verticalSections: 6},
-                    millisPerPixel:1000,
-                    interpolation: 'linear',
-                    minValue: 0,
-                    maxValue: 100,
-                    resetBounds: false,
-                    //interpolation: "line"
-                });
-
-                //smoothie.addTimeSeries(line0, { strokeStyle: 'rgb(0, 255, 0)', fillStyle: 'rgba(0, 255, 0, 0.4)', lineWidth: 3 });
-                smoothie.addTimeSeries(line0, { strokeStyle: 'rgb(0, 115, 0)', lineWidth: 2 });
-                smoothie.addTimeSeries(line1, { strokeStyle: 'rgb(255, 0, 255)', lineWidth: 2 });
-                smoothie.addTimeSeries(line2, { strokeStyle: 'rgb(155, 50, 155)', lineWidth: 2 });
-                smoothie.addTimeSeries(line3, { strokeStyle: 'rgb(55, 0, 55)', lineWidth: 2 });
-
-                smoothie.streamTo(document.getElementById("mycanvas"));
-
-                r1v = document.getElementById('xbeeR1volt');
-                r2v = document.getElementById('xbeeR2volt');
-                r3v = document.getElementById('xbeeR3volt');
-                f1v = document.getElementById('xbeeF1volt');
-
-                var vsmoothie = new SmoothieChart({grid: {strokeStyle: 'rgb(125, 0, 0)',
-                        fillStyle: 'rgb(171, 171, 255)',
-                        lineWidth: 1,
-                        verticalSections: 6},
-                    millisPerPixel: 1000,
-                    minValue: 2.5,
-                    maxValue: 3.5,
-                    resetBounds: false,
-                    //interpolation: "line"
-                });
-
-                vsmoothie.addTimeSeries(vline0, { strokeStyle: 'rgb(0, 255, 0)', lineWidth: 3 });
-                vsmoothie.addTimeSeries(vline1, { strokeStyle: 'rgb(255, 0, 255)', lineWidth: 3 });
-                vsmoothie.addTimeSeries(vline2, { strokeStyle: 'rgb(155, 50, 155)', lineWidth: 3 });
-                vsmoothie.addTimeSeries(vline3, { strokeStyle: 'rgb(55, 0, 55)', lineWidth: 3 });
-
-                vsmoothie.streamTo(document.getElementById("volts"));
-                connect();
-            };
-        </script>
     </head>
     <body>
-        <h1>TanTan Internet: ZigBee to WS Gateway Demo</h1>
+        <div class="navbar navbar-inverse navbar-fixed-top">
+            <div class="navbar-inner">
+                <div class="container-fluid">
+                    <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="brand" href="index.html">TanTán</a>
 
-        <h2>Broadcast commands</h2>
-        <div id="commands">
-            <button onclick="sendDBVOLT()">Get XBee voltage and decibels</button>
-            <button onclick="sendND()">Send Network Discovery</button>
-        </div>
-        <div>
-            <button onclick="controlLed('RXTX')">ASSOC LED Rx/Tx</button>
-            <button onclick="controlLed('ON')">ASSOC LED On</button>
-            <button onclick="controlLed('OFF')">ASSOC LED Off</button>
-        </div>
+                    <div class="nav-collapse collapse">
+                        <p class="navbar-text pull-right">
+                        <a href="#" class="navbar-link">Ingresar</a>
+                        </p>
+                        <ul class="nav">
+                            <li><a href="index.html">Red acuícola</a></li>
 
-        <div>
-            <h2>ZigBee Network </h2>
-            <p>C0: <span id="xbeeC0nd">-</span></p>
-            <p>R1: <span id="xbeeR1nd">-</span></p>
-            <p>R2: <span id="xbeeR2nd">-</span></p>
-            <p>R3: <span id="xbeeR3nd">-</span></p>
-            <p>F1: <span id="xbeeF1nd">-</span></p>
-        </div>
-        <div>
-            <h2>XBee Voltage Values</h2>
-            <p>C0: <span id="xbeeC0volt">-</span></p>
-            <p>R1: <span id="xbeeR1volt">-</span></p>
-            <p>R2: <span id="xbeeR2volt">-</span></p>
-            <p>R3: <span id="xbeeR3volt">-</span></p>
-            <p>F1: <span id="xbeeF1volt">-</span></p>
+                            <li class="active"><a href="zb.html">Sensores</a></li>
+                            <li><a href="#reportes">Reportes</a></li>
+                            <li><a href="#contacto">Contáctanos</a></li>
 
-            <div id="event-cnt" style="color: #f60; font-weight: 700; font-size: 24px;">-</div>
 
-            <canvas id="volts" width="600" height="400"></canvas>
-        </div>
-        <div>
-            <h2>DB Values</h2>
-            <p>C0: <span id="xbeeC0db">-</span></p>
-            <p>R1: <span id="xbeeR1db">-</span></p>
-            <p>R2: <span id="xbeeR2db">-</span></p>
-            <p>R3: <span id="xbeeR3db">-</span></p>
-            <p>F1 : <span id="xbeeF1db">-</span></p>
-            <canvas id="mycanvas" width="600" height="400"></canvas>
-        </div>
-        <div>
-            <h2>RX Transmissions</h2>
-            <p>R1: <span id="xbeeR1rx">-</span></p>
-            <p>R2: <span id="xbeeR2rx">-</span></p>
-            <p>R3: <span id="xbeeR3rx">-</span></p>
-            <p>F1: <span id="xbeeF1rx">-</span></p>
-            <div>
-                <h2>Status</h2>
-                <div id="statusline"></div>
+                        </ul>
+                    </div><!--/.nav-collapse -->
+                </div>
             </div>
-        </body>
-    </html>
+        </div>
+        <div class="container-fluid">
+            <h1>TanTan Internet: ZigBee to WS Gateway Demo</h1>
+            <div class="row-fluid">
+                <div class="span6">
+                    <div class="row-fluid">
+                        <h2>Status</h2>
+                        <div id="statusline"></div>
+                        <div id="event-cnt" class="alert alert-info" style="color: #f60; font-weight: 700; font-size: 24px;">-</div>
+                        <div class="btn-group">
+                            <h2>Broadcast commands</h2>
+                            <button class="btn btn-primary btn-mini" onclick="sendDBVOLT()">Get XBee voltage and decibels</button>
+                            <button class="btn btn-primary btn-mini" onclick="sendND()">Send Network Discovery</button>
+                        </div>
+                    </div>
+                    <div class="btn-group">
+                        <button class="btn btn-primary btn-mini" onclick="controlLed('RXTX')">ASSOC LED Rx/Tx</button>
+                        <button class="btn btn-primary btn-mini" onclick="controlLed('ON')">ASSOC LED On</button>
+                        <button class="btn btn-primary btn-mini" onclick="controlLed('OFF')">ASSOC LED Off</button>
+                    </div>
+                </div>
+                <div class="span6">
+                    <h2>ZigBee Network </h2>
+                    <p>R1: <span id="xbeeR1nd">-</span></p>
+                    <p>R2: <span id="xbeeR2nd">-</span></p>
+                    <p>R3: <span id="xbeeR3nd">-</span></p>
+                    <p>F1: <span id="xbeeF1nd">-</span></p>
+                </div>
+            </div>
+            <div class="row-fluid">
+                <div class="span6">
+                    <h2>XBee Voltage Values</h2>
+                    <ul class="thumbnails">
+                        <li class="span3">
+                        <div class="thumbnail">
+                            <p>R1: <span id="xbeeR1volt"></span></p>
+                            <p>R2: <span id="xbeeR2volt"></span></p>
+                            <p>R3: <span id="xbeeR3volt"></span></p>
+                            <p>F1: <span id="xbeeF1volt"></span></p>
+                        </div>
+                        </li>
+                        <li class="span9">
+                        <div class="thumbnail">
+                            <div id="voltgraf" class="graf">
+                                <canvas id="volts" width="300" height="250"></canvas>
+                            </div>
+                        </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="span6 well">
+                    <h2>DB Values</h2>
+                    <ul class="thumbnails">
+                        <li class="span3">
+                        <div class="thumbnail">
+                            <p>R1: <span id="xbeeR1db"></span></p>
+                            <p>R2: <span id="xbeeR2db"></span></p>
+                            <p>R3: <span id="xbeeR3db"></span></p>
+                            <p>F1: <span id="xbeeF1db"></span></p>
+                        </div>
+                        </li>
+                        <li class="span9">
+                        <div class="thumbnail">
+                            <div id="dbgraf" class="graf">
+                                <canvas id="dbs" width="300" height="250"></canvas>
+                            </div>
+                        </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <h2>RX Transmissions</h2>
+            <div id="rxs" class="row-fluid">
+                <ul class="thumbnails">
+                    <li class="span3">
+                    <div class="thumbnail">
+                        <h2>R1</h2>
+                        <span id="xbeeR1rx"></span>
+                    </div>
+                    </li>
+                    <li class="span3">
+                    <div class="thumbnail">
+                        <h2>R2</h2>
+                        <span id="xbeeR2rx"></span>
+                    </div>
+                    </li>
+                    <li class="span3">
+                    <div class="thumbnail">
+                        <h2>R3</h2>
+                        <span id="xbeeR3rx"></span>
+                    </div>
+                    </li>
+                    <li class="span3">
+                    <div class="thumbnail">
+                        <h2>F1</h2>
+                        <span id="xbeeF1rx"></span>
+                    </div>
+                    </li>
+                </ul>
+            </div>
+
+            <hr>
+            <footer>
+            <p>&copy; Red acuícola 2013</p>
+            </footer>
+
+        </div>
+        <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+        <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/json2/20110223/json2.js"></script>
+        <script type="text/javascript" src="vendor/marionette/javascript/underscore.js"></script>
+        <script type="text/javascript" src="vendor/marionette/javascript/backbone.js"></script>
+        <script type="text/javascript" src="vendor/marionette/javascript/backbone.marionette.js"></script>
+        <script type="text/javascript" src='vendor/fullcalendar/jquery-ui-1.10.3.custom.min.js'></script>
+        <script type="text/javascript" src="vendor/fullcalendar/fullcalendar.min.js"></script>
+        <script type="text/javascript" src="vendor/bootstrap/js/bootstrap.min.js"></script>
+        <script src="http://autobahn.s3.amazonaws.com/js/autobahn.min.js"></script>
+        <script src="smoothie.js"></script>
+        <script src="zbapp.js"></script>
+    </body>
+</html>
