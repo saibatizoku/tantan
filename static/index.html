@@ -282,6 +282,41 @@
                     </div>
                 </div><!--/col-md--->
             </div><!--/row-->
+            <div class="row">
+                <div class="col-sm-12 col-md-offset-3 col-md-6 well">
+                    <div id="content">
+                    </div>
+                </div>
+            </div><!--/row-->
+
+            <script type="text/template" id="angry_cats-template">
+                <thead>
+                    <tr class='header'>
+                        <th>Rank</th>
+                        <th>Votes</th>
+                        <th>Name</th>
+                        <th>Image</th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </script>
+
+            <script type="text/template" id="angry_cat-template">
+                <td><%= rank %></td>
+                <td><%= votes %></td>
+                <td><%= name %></td>
+                <td><img class='angry_cat_pic img-thumbnail' src='<%= image_path %>' /></td>
+                <td>
+                    <div class="btn-group-vertical text-center">
+                    <div class='rank_up btn btn-default'><span class="glyphicon glyphicon-chevron-up"></span></div>
+                    <div class='rank_down btn btn-default'><span class="glyphicon glyphicon-chevron-down"></span></div>
+                    </div>
+                </td>
+                <td><a href="#" class="disqualify">Disqualify</a></td>
+            </script>
 
             <hr>
 
