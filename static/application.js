@@ -171,22 +171,22 @@ $(document).ready(function() {
         dayNames: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
         dayNamesShort: ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sa'],
         monthNames: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio',
-                     'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+        'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
         monthNamesShort: ['Ene', 'Feb', 'Mar', 'Abr', 'Mayo', 'Jun', 'Jul',
-                     'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+        'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
         titleFormat: {
             month: 'MMM yyyy',                             // September 2009
-            week: "MMM d[ yyyy]{ '&#8212;'[ MMM] d yyyy}", // Sep 7 - 13 2009
-            day: 'd/MMM/yy'                  // 8/Sep/09
+        week: "MMM d[ yyyy]{ '&#8212;'[ MMM] d yyyy}", // Sep 7 - 13 2009
+        day: 'd/MMM/yy'                  // 8/Sep/09
         },
         defaultView: 'basicDay',
         firstDay: 1,
         aspectRatio: 2,
         buttonText: {
             today: 'hoy',
-            month: 'mes',
-            week: 'semana',
-            day:   'día',
+        month: 'mes',
+        week: 'semana',
+        day:   'día',
         },
         header: {
             left: 'prev,next today',
@@ -195,20 +195,20 @@ $(document).ready(function() {
         },
         editable: true,
         events: [
-    {
-        title: 'All Day Event',
-        start: new Date(y, m, 1)
-    },
+        {
+            title: 'All Day Event',
+            start: new Date(y, m, 1)
+        },
         {
             title: 'Long Event',
-        start: new Date(y, m, d-5),
-        end: new Date(y, m, d-2)
+            start: new Date(y, m, d-5),
+            end: new Date(y, m, d-2)
         },
         {
             id: 999,
-        title: 'Repeating Event',
-        start: new Date(y, m, d-3, 16, 0),
-        allDay: false
+            title: 'Repeating Event',
+            start: new Date(y, m, d-3, 16, 0),
+            allDay: false
         },
         {
             id: 999,
