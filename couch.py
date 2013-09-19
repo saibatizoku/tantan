@@ -63,6 +63,16 @@ class TTCouchFactory(WampServerFactory):
         view.addCallback(granja_info)
         return view
 
+    @exportRpc("estanque-info")
+    def getEstanqueInfo(self, granja=''):
+        view = self.couchdb.openView('tantan', 'estanques', startkey=[granja, 1])
+        
+        def estanque_info(results):
+            print results
+            return results
+        view.addCallback(estanque_info)
+        return view
+
     @exportRpc("session")
     def getSession(self, event=None):
         uri = '/tantan/_session'
