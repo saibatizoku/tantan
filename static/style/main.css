@@ -3,16 +3,15 @@ body {
     padding-bottom: 40px;
 }
 .well, .jumbotron {
-    border: 1px solid gray;
+    border: 1px solid #95a65b;
 }
+.panel-default {border-color: #95a65b;}
 .jumbotron {
     padding: 10px 15px;
 }
 .jumbotron h1 {
     font-size: 40px;
-}
-.jumbotron .img-thumbnail {
-    background-color: #fff;
+} .jumbotron .img-thumbnail { background-color: #fff;
     padding: 5px 15px 10px;
 }
 .granja.img-thumbnail {
@@ -35,6 +34,8 @@ html .fc .fc-header, .fc table .fc-header {
 .fc-header-title h2 {
     font-size: 20px;
 }
+.fc-event {background-color: #85794d; border: 1px solid #85794d;}
+.fc-state-highlight {background: transparent;}
 @media (min-width: 980px) {
     body {
         padding-top: 60px;

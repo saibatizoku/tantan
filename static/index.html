@@ -42,22 +42,229 @@
                 </div><!--/.navbar-collapse -->
             </div>
         </div>
+        <div id="principal" class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="btn-toolbar well">
+                        <div class="btn-group">
+                            <button class="btn btn-default">Granjas</button>
+                            <button class="btn btn-default">Usuarios</button>
+                        </div>
+                        <div class="btn-group pull-right">
+                            <button type="button" class="btn btn-default" data-toggle="modal" data-target="#applogin">
+                                Ingresar <span class="glyphicon glyphicon-user"></span> 
+                            </button>
+                        </div>
+                        <div class="btn-group pull-right">
+                            <button class="btn btn-default">Configuración <span class="glyphicon glyphicon-wrench"></span></button>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="well">
+                                <div id="statusline"></div>
+                                <div id="event-cnt" class="alert alert-info" style="color: #f60; font-weight: 700; font-size: 24px;">-</div>
+                                <button type="button" class="btn btn-default" onclick="getSession(['admi', 'nimda']);">Session</button>
+                                <button type="button" class="btn btn-default" onclick="getGranjaInfo('fea96b46aeb02badb26b3a37460065cc');">Granja</button>
+                                <button type="button" class="btn btn-default" onclick="getEstanqueInfo('fea96b46aeb02badb26b3a37460065cc');">Estanque</button>
+                            </div>
+                        </div>
+                    </div>
+                </div><!--/.breadcrumbs -->
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="row">
+                        <div class="col-sm-6">
+                        </div>
+                        <div class="col-sm-3">
+                            <div id="applogin" class="modal fade">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <form class="inline-form">
+                                                <div class="form-group">
+                                                    <input type="text" placeholder="Email" class="form-control">
+                                                </div>
+                                                <div class="form-group">
+                                                    <input type="password" placeholder="Contraseña" class="form-control">
+                                                </div>
+                                                <button type="submit" class="btn btn-success">Ingresar</button>
+                                            </form>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-default" data-dismiss="modal">&times;</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div><!--/.manage-->
+            </div>
+        </div>
         <div class="container">
             <div class="row">
-                <div class="col-sm-offset-9 col-sm-3">
-                    <form class="inline-form">
-                        <div class="form-group">
-                            <input type="text" placeholder="Email" class="form-control">
+                <div class="col-md-12">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <div class="panel-title">
+                                <h1>Granja Xamapan</h1>
+                            </div>
+                                    <ul class="nav nav-pills" id="myTab">
+                                        <li><a href="#info" data-toggle="pill">Info</a></li>
+                                        <li class="active"><a href="#appcal" data-toggle="pill">Calendario <span class="glyphicon glyphicon-calendar"></span></a></li>
+                                        <li><a href="#estanques" data-toggle="pill">Estanques</a></li>
+                                        <li class="dropdown">
+                                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Reportes <b class="caret"></b></a>
+                                        <ul class="dropdown-menu" role="menu">
+                                            <li><a href="#reportes" data-toggle="pill">Alimentación</a></li>
+                                            <li><a href="#reportes" data-toggle="pill">Muestreo</a></li>
+                                            <li><a href="#reportes" data-toggle="pill">Biometría</a></li>
+                                        </ul>
+                                        </li>
+                                        <li><a href="#usuarios" data-toggle="pill">Usuarios</a></li>
+                                    </ul>
                         </div>
-                        <div class="form-group">
-                            <input type="password" placeholder="Contraseña" class="form-control">
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading">
+                                            <div class="panel-title">Acciones</div>
+                                        </div>
+                                        <div class="panel-body">
+                                            <button class="btn btn-default btn-block" data-toggle="modal" data-target="#editar-granja">Modificar datos</button>
+                                            <button class="btn btn-success btn-block" data-toggle="modal" data-target="#nuevo-estanque">Nuevo estanque</button>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-8">
+
+                                    <div class="tab-content">
+                                        <div class="tab-pane" id="info">
+                                            <div class="panel panel-default">
+                                                <div class="panel-heading">
+                                                    <div class="panel-title">Info general</div>
+                                                </div>
+                                                <div class="panel-body">
+                                                    <div id="genino" class="list-group">
+                                                        <span class="list-group-item"><strong>Nombre de la granja:</strong> Granja Xamapan</span>
+                                                        <span class="list-group-item"><strong>Contacto:</strong> Persona Uno</span>
+                                                        <span class="list-group-item"><strong>Dirección:</strong> En Xamapan</span>
+                                                        <span class="list-group-item"><strong>Localidad:</strong> Xamapan</span>
+                                                        <span class="list-group-item"><strong>Municipio:</strong> Xamapan</span>
+                                                        <span class="list-group-item"><strong>Estado:</strong> Costero</span>
+                                                        <span class="list-group-item"><strong>Razón social:</strong> Compañía de Xamapan</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div id="appcal" class="tab-pane active">
+                                            <div class="panel panel-default">
+                                                <div class="panel-heading">
+                                                    <h4 class="panel-title">Calendario</h4>
+                                                </div>
+                                                <div class="panel-body">
+                                                    <div class="calendario table-responsive">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="tab-pane" id="estanques">
+                                            <div class="panel panel-default">
+                                                <div class="panel-heading">
+                                                    <div class="panel-title">Estanques</div>
+                                                </div>
+                                                <div class="panel-body">
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <ul class="nav nav-pills">
+                                                                <li class=""><a class="estanque" data-id="fea96b46aeb02badb26b3a37460065cc" id="fea96b46aeb02badb26b3a3746006f6e" href="">B1</a></li>
+                                                                <li><a class="estanque" data-id="fea96b46aeb02badb26b3a37460065cc" id="fea96b46aeb02badb26b3a374600786f" href="">B2</a></li>
+                                                                <li><a class="estanque" data-id="fea96b46aeb02badb26b3a37460065cc" id="fea96b46aeb02badb26b3a374600820b" href="">1</a></li>
+                                                                <li><a class="estanque" data-id="fea96b46aeb02badb26b3a37460065cc" id="fea96b46aeb02badb26b3a3746009047" href="">2</a></li>
+                                                                <li><a class="estanque" data-id="fea96b46aeb02badb26b3a37460065cc" id="fea96b46aeb02badb26b3a3746009234" href="">3</a></li>
+                                                                <li><a class="estanque" data-id="fea96b46aeb02badb26b3a37460065cc" id="fea96b46aeb02badb26b3a3746009802" href="">4</a></li>
+                                                                <li><a class="estanque" data-id="fea96b46aeb02badb26b3a37460065cc" id="fea96b46aeb02badb26b3a3746009b9b" href="">5</a></li>
+                                                                <li><a class="estanque" data-id="fea96b46aeb02badb26b3a37460065cc" id="fea96b46aeb02badb26b3a374600a066" href="">6</a></li>
+                                                                <li><a class="estanque" data-id="fea96b46aeb02badb26b3a37460065cc" id="fea96b46aeb02badb26b3a374600adfd" href="">7</a></li>
+                                                                <li><a class="estanque" data-id="fea96b46aeb02badb26b3a37460065cc" id="fea96b46aeb02badb26b3a374600bc4d" href="">8</a></li>
+                                                                <li><a class="estanque" data-id="fea96b46aeb02badb26b3a37460065cc" id="fea96b46aeb02badb26b3a374600c0b2" href="">9</a></li>
+                                                                <li><a class="estanque" data-id="fea96b46aeb02badb26b3a37460065cc" id="fea96b46aeb02badb26b3a374600d022" href="">10</a></li>
+                                                                <li><a class="estanque" data-id="fea96b46aeb02badb26b3a37460065cc" id="fea96b46aeb02badb26b3a374600db56" href="">11</a></li>
+                                                                <li><a class="estanque" data-id="fea96b46aeb02badb26b3a37460065cc" id="fea96b46aeb02badb26b3a374600e1d2" href="">12</a></li>
+                                                                <li><a class="estanque" data-id="fea96b46aeb02badb26b3a37460065cc" id="fea96b46aeb02badb26b3a374600f167" href="">C</a></li>
+                                                                <li><a class="estanque" data-id="fea96b46aeb02badb26b3a37460065cc" id="fea96b46aeb02badb26b3a3746010007" href="">M</a></li>
+                                                                <li><a class="estanque" data-id="fea96b46aeb02badb26b3a37460065cc" id="fea96b46aeb02badb26b3a3746010fb3" href="">R</a></li>
+                                                                <li><a class="estanque" data-id="fea96b46aeb02badb26b3a37460065cc" id="fea96b46aeb02badb26b3a3746011d88" href="">N</a></li>
+                                                                <li class="active"><a class="estanque" data-id="fea96b46aeb02badb26b3a37460065cc" id="fea96b46aeb02badb26b3a37460128f6" href="">A</a></li>
+                                                                <li><a class="estanque" data-id="fea96b46aeb02badb26b3a37460065cc" id="fea96b46aeb02badb26b3a3746012d07" href="">V</a></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="tab-pane" id="reportes">
+                                            <h1>Reportes</h1>
+                                        </div>
+                                        <div class="tab-pane" id="usuarios">
+                                            <h1>Usuarios</h1>
+                                            <div class="table-responsive">
+                                                <table class="table table-bordered">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>#</th>
+                                                            <th>First Name</th>
+                                                            <th>Last Name</th>
+                                                            <th>Username</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td rowspan="2">1</td>
+                                                            <td>Mark</td>
+                                                            <td>Otto</td>
+                                                            <td>@mdo</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Mark</td>
+                                                            <td>Otto</td>
+                                                            <td>@TwBootstrap</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>2</td>
+                                                            <td>Jacob</td>
+                                                            <td>Thornton</td>
+                                                            <td>@fat</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>3</td>
+                                                            <td colspan="2">Larry the Bird</td>
+                                                            <td>@twitter</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <button type="submit" class="btn btn-success">Ingresar</button>
-                    </form>
+                    </div>
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-3">
+                    <script type="text/template" id="sitemas-template">
                     <div class="well">
                         <ul class="nav nav-pills nav-stacked">
                             <li class="nav-header">Granjas</li>
@@ -80,213 +287,168 @@
                             <li><a href="#">Link</a></li>
                         </ul>
                     </div><!--/.well -->
+                    </script>
                 </div><!--/col-md--->
-                <div class="col-md-9">
+                <div class="col-md-12">
                     <div class="well">
                         <div class="row">
-                            <div class="col-md-4">
-                                <div class="granja well thumbnail">
-                                    <h1>Granja Xamapan</h1>
-                                    <div class="btn-group">
-                                        <span class="btn btn-default btn-xs btn-important" data-toggle="modal" data-target="#editar-granja">Modificar datos</span>
-                                        <span class="btn btn-default btn-xs btn-info" data-toggle="modal" data-target="#nuevo-estanque">Nuevo estanque</span>
+                            <div class="col-md-12">
+                                <ol class="breadcrumb">
+                                    <li><a href="#">Granja Xamapan</a></li>
+                                    <li><a href="#">Estanque A</a></li>
+                                    <li class="active">Sensores</li>
+                                </ol>
+                            </div><!--/.breadcrumbs -->
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div id="editar-granja" class="modal fade">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h4 class="modal-title">Editar datos del sistema acuícola</h4>
+                                            </div>
+                                            <div class="modal-body">
+                                                <form id="edit-granja" class="form-horizontal">
+                                                    <input type="hidden" name="g_id" value="fea96b46aeb02badb26b3a37460065cc">
+                                                    <div class="form-group">
+                                                        <label for="nombre" class="col-lg-3 control-label">Nombre</label>
+                                                        <div class="col-lg-9">
+                                                            <input class="form-control" type="text" name="nombre" placeholder="Nombre del sistema acuícola">
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="contacto" class="col-lg-3 control-label">Contacto</label>
+                                                        <div class="col-lg-9">
+                                                            <input class="form-control" type="text" name="contacto" placeholder="Nombre de persona a contactar">
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="direccion" class="col-lg-3 control-label">Dirección</label>
+                                                        <div class="col-lg-9">
+                                                            <input class="form-control" type="text" name="direccion" placeholder="Dirección del sistema">
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="localidad" class="col-lg-3 control-label">Localidad</label>
+                                                        <div class="col-lg-9">
+                                                            <input class="form-control" type="text" name="localidad" placeholder="Localidad">
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="municipio" class="col-lg-3 control-label">Municipio</label>
+                                                        <div class="col-lg-9">
+                                                            <input class="form-control" type="text" name="municipio" placeholder="Municipio">
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="estado" class="col-lg-3 control-label">Estado</label>
+                                                        <div class="col-lg-9">
+                                                            <input class="form-control" type="text" name="estado" placeholder="Entidad federativa">
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="razonsocial" class="col-lg-3 control-label">Razón social</label>
+                                                        <div class="col-lg-9">
+                                                            <input class="form-control" type="text" name="razonsocial" placeholder="Nombre de la organización">
+                                                        </div>
+                                                    </div>
+                                                    <input class="btn btn-success pull-right" type="submit" value="Guardar cambios">
+                                                </form>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="well thumbnail">
-                                    <h2>Info general</h2>
-                                    <div id="geninfo">
-                                        <span><strong>Nombre de la granja:</strong> Granja Xamapan</span>
-                                        <span><strong>Contacto:</strong> Persona Uno</span>
-                                        <span><strong>Dirección:</strong> En Xamapan</span>
-                                        <span><strong>Localidad:</strong> Xamapan</span>
-                                        <span><strong>Municipio:</strong> Xamapan</span>
-                                        <span><strong>Estado:</strong> Costero</span>
-                                        <span><strong>Razón social:</strong> Compañía de Xamapan</span>
+                                <div id="nuevo-estanque" class="modal fade">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h4 class="modal-title">Estanque nuevo</h4>
+                                            </div>
+                                            <div class="modal-body">
+                                                <form id="edit-nuevo-estanque" class="form-horizontal" role="form">
+                                                    <input type="hidden" name="granja_id" value="fea96b46aeb02badb26b3a37460065cc">
+                                                    <div class="form-group">
+                                                        <label for="nombre" class="col-lg-3 control-label">Nombre</label>
+                                                        <div class="col-lg-9">
+                                                            <input class="form-control" type="text" name="nombre" placeholder="A001">
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="forma" class="col-lg-3 control-label">Forma</label>
+                                                        <div class="col-lg-9">
+                                                            <input class="form-control" type="text" name="forma" placeholder="Cónico">
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="volumen" class="col-lg-3 control-label">Volumen</label>
+                                                        <div class="col-lg-9">
+                                                            <input class="form-control" type="text" name="volumen" placeholder="150,000">
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="dimensiones" class="col-lg-3 control-label">Dimensiones</label>
+                                                        <div class="col-lg-9">
+                                                            <input class="form-control" type="text" name="dimensiones" placeholder="50x5x5">
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="material" class="col-lg-3 control-label">Material</label>
+                                                        <div class="col-lg-9">
+                                                            <input class="form-control" type="text" name="material" placeholder="Geomembrana">
+                                                        </div>
+                                                    </div>
+                                                    <input class="btn btn-success pull-right" type="submit" value="Guardar cambios">
+                                                </form>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="col-md-8">
-                                <div class="well thumbnail">
-                                    <h3>Editar datos del sistema acuícola</h3>
-                                    <form id="edit-granja" class="form-horizontal">
-                                        <input type="hidden" name="g_id" value="fea96b46aeb02badb26b3a37460065cc">
-                                        <div class="form-group">
-                                            <label for="nombre" class="col-lg-3 control-label">Nombre</label>
-                                            <div class="col-lg-9">
-                                                <input class="form-control" type="text" name="nombre" placeholder="Nombre del sistema acuícola">
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="contacto" class="col-lg-3 control-label">Contacto</label>
-                                            <div class="col-lg-9">
-                                                <input class="form-control" type="text" name="contacto" placeholder="Nombre de persona a contactar">
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="direccion" class="col-lg-3 control-label">Dirección</label>
-                                            <div class="col-lg-9">
-                                                <input class="form-control" type="text" name="direccion" placeholder="Dirección del sistema">
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="localidad" class="col-lg-3 control-label">Localidad</label>
-                                            <div class="col-lg-9">
-                                                <input class="form-control" type="text" name="localidad" placeholder="Localidad">
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="municipio" class="col-lg-3 control-label">Municipio</label>
-                                            <div class="col-lg-9">
-                                                <input class="form-control" type="text" name="municipio" placeholder="Municipio">
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="estado" class="col-lg-3 control-label">Estado</label>
-                                            <div class="col-lg-9">
-                                                <input class="form-control" type="text" name="estado" placeholder="Entidad federativa">
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="razonsocial" class="col-lg-3 control-label">Razón social</label>
-                                            <div class="col-lg-9">
-                                                <input class="form-control" type="text" name="razonsocial" placeholder="Nombre de la organización">
-                                            </div>
-                                        </div>
-                                        <input class="btn" type="submit" value="Agregar">
-                                    </form>
-                                </div>
-                                <div class="well thumbnail">
-                                    <h3>Estanque nuevo</h3>
-                                    <form id="edit-nuevo-estanque" class="form-horizontal" role="form">
-                                        <input type="hidden" name="granja_id" value="fea96b46aeb02badb26b3a37460065cc">
-                                        <div class="form-group">
-                                            <label for="nombre" class="col-lg-3 control-label">Nombre</label>
-                                            <div class="col-lg-9">
-                                                <input class="form-control" type="text" name="nombre" placeholder="A001">
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="forma" class="col-lg-3 control-label">Forma</label>
-                                            <div class="col-lg-9">
-                                                <input class="form-control" type="text" name="forma" placeholder="Cónico">
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="volumen" class="col-lg-3 control-label">Volumen</label>
-                                            <div class="col-lg-9">
-                                                <input class="form-control" type="text" name="volumen" placeholder="150,000">
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="dimensiones" class="col-lg-3 control-label">Dimensiones</label>
-                                            <div class="col-lg-9">
-                                                <input class="form-control" type="text" name="dimensiones" placeholder="50x5x5">
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="material" class="col-lg-3 control-label">Material</label>
-                                            <div class="col-lg-9">
-                                                <input class="form-control" type="text" name="material" placeholder="Geomembrana">
-                                            </div>
-                                        </div>
-                                        <input class="btn" type="submit" value="Guardar cambios">
-                                    </form>
-                                </div>
-                                <div class="well thumbnail">
-                                    <h2>Estanques</h2>
-                                    <ul class="nav nav-pills">
-                                        <li class=""><a class="estanque" data-id="fea96b46aeb02badb26b3a37460065cc" id="fea96b46aeb02badb26b3a3746006f6e" href="/tantan/_design/tantan/_list/index/granjas?granja=fea96b46aeb02badb26b3a37460065cc&amp;estanque=fea96b46aeb02badb26b3a3746006f6e">B1</a></li>
-                                        <li><a class="estanque" data-id="fea96b46aeb02badb26b3a37460065cc" id="fea96b46aeb02badb26b3a374600786f" href="/tantan/_design/tantan/_list/index/granjas?granja=fea96b46aeb02badb26b3a37460065cc&amp;estanque=fea96b46aeb02badb26b3a374600786f">B2</a></li>
-                                        <li><a class="estanque" data-id="fea96b46aeb02badb26b3a37460065cc" id="fea96b46aeb02badb26b3a374600820b" href="/tantan/_design/tantan/_list/index/granjas?granja=fea96b46aeb02badb26b3a37460065cc&amp;estanque=fea96b46aeb02badb26b3a374600820b">1</a></li>
-                                        <li><a class="estanque" data-id="fea96b46aeb02badb26b3a37460065cc" id="fea96b46aeb02badb26b3a3746009047" href="/tantan/_design/tantan/_list/index/granjas?granja=fea96b46aeb02badb26b3a37460065cc&amp;estanque=fea96b46aeb02badb26b3a3746009047">2</a></li>
-                                        <li><a class="estanque" data-id="fea96b46aeb02badb26b3a37460065cc" id="fea96b46aeb02badb26b3a3746009234" href="/tantan/_design/tantan/_list/index/granjas?granja=fea96b46aeb02badb26b3a37460065cc&amp;estanque=fea96b46aeb02badb26b3a3746009234">3</a></li>
-                                        <li><a class="estanque" data-id="fea96b46aeb02badb26b3a37460065cc" id="fea96b46aeb02badb26b3a3746009802" href="/tantan/_design/tantan/_list/index/granjas?granja=fea96b46aeb02badb26b3a37460065cc&amp;estanque=fea96b46aeb02badb26b3a3746009802">4</a></li>
-                                        <li><a class="estanque" data-id="fea96b46aeb02badb26b3a37460065cc" id="fea96b46aeb02badb26b3a3746009b9b" href="/tantan/_design/tantan/_list/index/granjas?granja=fea96b46aeb02badb26b3a37460065cc&amp;estanque=fea96b46aeb02badb26b3a3746009b9b">5</a></li>
-                                        <li><a class="estanque" data-id="fea96b46aeb02badb26b3a37460065cc" id="fea96b46aeb02badb26b3a374600a066" href="/tantan/_design/tantan/_list/index/granjas?granja=fea96b46aeb02badb26b3a37460065cc&amp;estanque=fea96b46aeb02badb26b3a374600a066">6</a></li>
-                                        <li><a class="estanque" data-id="fea96b46aeb02badb26b3a37460065cc" id="fea96b46aeb02badb26b3a374600adfd" href="/tantan/_design/tantan/_list/index/granjas?granja=fea96b46aeb02badb26b3a37460065cc&amp;estanque=fea96b46aeb02badb26b3a374600adfd">7</a></li>
-                                        <li><a class="estanque" data-id="fea96b46aeb02badb26b3a37460065cc" id="fea96b46aeb02badb26b3a374600bc4d" href="/tantan/_design/tantan/_list/index/granjas?granja=fea96b46aeb02badb26b3a37460065cc&amp;estanque=fea96b46aeb02badb26b3a374600bc4d">8</a></li>
-                                        <li><a class="estanque" data-id="fea96b46aeb02badb26b3a37460065cc" id="fea96b46aeb02badb26b3a374600c0b2" href="/tantan/_design/tantan/_list/index/granjas?granja=fea96b46aeb02badb26b3a37460065cc&amp;estanque=fea96b46aeb02badb26b3a374600c0b2">9</a></li>
-                                        <li><a class="estanque" data-id="fea96b46aeb02badb26b3a37460065cc" id="fea96b46aeb02badb26b3a374600d022" href="/tantan/_design/tantan/_list/index/granjas?granja=fea96b46aeb02badb26b3a37460065cc&amp;estanque=fea96b46aeb02badb26b3a374600d022">10</a></li>
-                                        <li><a class="estanque" data-id="fea96b46aeb02badb26b3a37460065cc" id="fea96b46aeb02badb26b3a374600db56" href="/tantan/_design/tantan/_list/index/granjas?granja=fea96b46aeb02badb26b3a37460065cc&amp;estanque=fea96b46aeb02badb26b3a374600db56">11</a></li>
-                                        <li><a class="estanque" data-id="fea96b46aeb02badb26b3a37460065cc" id="fea96b46aeb02badb26b3a374600e1d2" href="/tantan/_design/tantan/_list/index/granjas?granja=fea96b46aeb02badb26b3a37460065cc&amp;estanque=fea96b46aeb02badb26b3a374600e1d2">12</a></li>
-                                        <li><a class="estanque" data-id="fea96b46aeb02badb26b3a37460065cc" id="fea96b46aeb02badb26b3a374600f167" href="/tantan/_design/tantan/_list/index/granjas?granja=fea96b46aeb02badb26b3a37460065cc&amp;estanque=fea96b46aeb02badb26b3a374600f167">C</a></li>
-                                        <li><a class="estanque" data-id="fea96b46aeb02badb26b3a37460065cc" id="fea96b46aeb02badb26b3a3746010007" href="/tantan/_design/tantan/_list/index/granjas?granja=fea96b46aeb02badb26b3a37460065cc&amp;estanque=fea96b46aeb02badb26b3a3746010007">M</a></li>
-                                        <li><a class="estanque" data-id="fea96b46aeb02badb26b3a37460065cc" id="fea96b46aeb02badb26b3a3746010fb3" href="/tantan/_design/tantan/_list/index/granjas?granja=fea96b46aeb02badb26b3a37460065cc&amp;estanque=fea96b46aeb02badb26b3a3746010fb3">R</a></li>
-                                        <li><a class="estanque" data-id="fea96b46aeb02badb26b3a37460065cc" id="fea96b46aeb02badb26b3a3746011d88" href="/tantan/_design/tantan/_list/index/granjas?granja=fea96b46aeb02badb26b3a37460065cc&amp;estanque=fea96b46aeb02badb26b3a3746011d88">N</a></li>
-                                        <li class="active"><a class="estanque" data-id="fea96b46aeb02badb26b3a37460065cc" id="fea96b46aeb02badb26b3a37460128f6" href="/tantan/_design/tantan/_list/index/granjas?granja=fea96b46aeb02badb26b3a37460065cc&amp;estanque=fea96b46aeb02badb26b3a37460128f6">A</a></li>
-                                        <li><a class="estanque" data-id="fea96b46aeb02badb26b3a37460065cc" id="fea96b46aeb02badb26b3a3746012d07" href="/tantan/_design/tantan/_list/index/granjas?granja=fea96b46aeb02badb26b3a37460065cc&amp;estanque=fea96b46aeb02badb26b3a3746012d07">V</a></li>
-                                    </ul>
-                                </div>
-                                <div class="well thumbnail">
-                                    <h2>Estanque</h2>
-                                    <div class="row">
-                                        <div class="col-sm-6">
-                                            <div class="well thumbnail">
-                                                <h3>B1</h3>
-                                                <div class="sensores">
-                                                    <div>pH: <span class="valor">7.20</span></div>
-                                                    <div>Temp: <span class="valor">32.0</span> [°C]</div>
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        <h2 class="panel-title">Estanque A</h2>
+                                    </div>
+                                    <div class="panel-body">
+                                        <div class="row">
+                                            <div class="col-sm-6">
+                                                <div class="well thumbnail">
+                                                    <h3>B1</h3>
+                                                    <div class="sensores">
+                                                        <div>pH: <span class="valor">7.20</span></div>
+                                                        <div>Temp: <span class="valor">32.0</span> [°C]</div>
+                                                    </div>
+                                                    <a class="btn" href="#">Ver detalles &raquo;</a>
                                                 </div>
-                                                <a class="btn" href="#">Ver detalles &raquo;</a>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <div class="well thumbnail">
+                                                    <h3>B2</h3>
+                                                    <div class="sensores">
+                                                        <div>pH: <span class="valor">7.18</span></div>
+                                                        <div>Temp: <span class="valor">32.2</span> [°C]</div>
+                                                    </div>
+                                                    <a class="btn" href="#">Ver detalles &raquo;</a>
+                                                </div>
                                             </div>
                                         </div>
-                                        <div class="col-sm-6">
-                                            <div class="well thumbnail">
-                                            <h3>B2</h3>
-                                            <div class="sensores">
-                                                <div>pH: <span class="valor">7.18</span></div>
-                                                <div>Temp: <span class="valor">32.2</span> [°C]</div>
-                                            </div>
-                                            <a class="btn" href="#">Ver detalles &raquo;</a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-sm-6">
-                                            <div class="well thumbnail">
-                                            <h3>A</h3>
-                                            <div class="sensores">
-                                                <div>pH: <span class="valor">7.18</span></div>
-                                                <div>Temp: <span class="valor">32.2</span> [°C]</div>
-                                            </div>
-                                            <a class="btn" href="#">Ver detalles &raquo;</a>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="well thumbnail">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <div class="well thumbnail">
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="well thumbnail">
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="well thumbnail">
-                                    <h2>Calendario
-                                        <button type="button" class="btn btn-primary btn-lg" data-toggle="collapse" data-target="#appcal">
-                                            <span class="glyphicon glyphicon-calendar"></span> 
-                                        </button>
-                                    </h2>
-                                    <div id="appcal" class="calendario collapse in">
                                     </div>
                                 </div>
                             </div>
                         </div><!--/.row-->
+                        <div class="row">
+                            <div class="col-sm-12 col-md-offset-3 col-md-6 well">
+                                <div id="content" class="table-responsive">
+                                </div>
+                            </div>
+                        </div><!--/row-->
                     </div>
                 </div><!--/col-md--->
-            </div><!--/row-->
-            <div class="row">
-                <div class="col-sm-12 col-md-offset-3 col-md-6 well">
-                    <div id="content">
-                    </div>
-                </div>
             </div><!--/row-->
 
             <script type="text/template" id="angry_cats-template">
@@ -308,7 +470,7 @@
                 <td><%= rank %></td>
                 <td><%= votes %></td>
                 <td><%= name %></td>
-                <td><img class='angry_cat_pic img-thumbnail' src='<%= image_path %>' /></td>
+                <td><img class='angry_cat_pic img-responsive img-thumbnail' src='<%= image_path %>' /></td>
                 <td>
                     <div class="btn-group-vertical text-center">
                     <div class='rank_up btn btn-default'><span class="glyphicon glyphicon-chevron-up"></span></div>
@@ -335,6 +497,9 @@
         <script type="text/javascript" src="vendor/bootstrap/js/bootstrap.min.js"></script>
         <script type="text/javascript" src="autobahn.min.js"></script>
         <script type="text/javascript" src="smoothie.js"></script>
+        <script type="text/javascript" src="calendar.js"></script>
+        <script type="text/javascript" src="base.js"></script>
+        <script type="text/javascript" src="couchapp.js"></script>
         <script type="text/javascript" src="application.js"></script>
     </body>
 </html>
