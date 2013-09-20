@@ -320,8 +320,8 @@ if __name__ == '__main__':
 
     ## create embedded web server for static files
     ##
-    webdir = File("../static")
-    web = Site(webdir)
-    reactor.listenTCP(webport, web)
+    #webdir = File("../static")
+    #web = Site(webdir)
+    #reactor.listenTCP(webport, web)
 
     reactor.run()
