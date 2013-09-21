@@ -1,3 +1,4 @@
+#-*- coding: utf-8 -*-
 """
 Copyright (C) 2013 Joaquin Rosales <globojorro@gmail.com>
 
@@ -117,6 +118,8 @@ class TantanZB(txXBee):
     def handle_packet(self, xbeePacketDictionary):
         response = xbeePacketDictionary
         msg = None
+        print repr(self._frame.raw_data.encode('hex'))
+        print repr(response)
         #if response.get("source_addr_long", "default") in ZB_reverse:
         if response.get("id", "default") == "rx":
             resp = {}

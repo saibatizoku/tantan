@@ -77,6 +77,64 @@
                             </div>
                         </div>
                     </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <div class="panel-title">
+                                        <h3>Sistemas acuícolas</h3>
+                                    </div>
+                                </div>
+                                <div class="panel-body table-responsive">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th>Nombre</th>
+                                                <th colspan="3">Resumen</th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>
+                                                    Xamapan
+                                                </td>
+                                                <td colspan="3">
+                                                    <div class="list-group">
+                                                        <a href="#" class="list-group-item active">
+                                                            <span class="badge">19</span>
+                                                            <h4 class="list-group-item-heading">Estanques</h4>
+                                                            <p class="list-group-item-text"></p>
+                                                        </a>
+                                                        <a href="#" class="list-group-item">
+                                                            <h4 class="list-group-item-heading">Red de sensores</h4>
+                                                            <p class="list-group-item-text">Nodos activos<span class="badge">38</span></p>
+                                                            <p class="list-group-item-text">Nodos inactivos<span class="badge">0</span></p>
+                                                        </a>
+                                                        <a href="#" class="list-group-item">
+                                                            <h4 class="list-group-item-heading">Tareas</h4>
+                                                            <p class="list-group-item-text"></p>
+                                                        </a>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="btn-group-vertical">
+                                                        <button class="btn btn-default" data-toggle="modal" data-target="#editar-granja">Modificar datos</button>
+                                                        <button class="btn btn-success" data-toggle="modal" data-target="#nuevo-estanque">Nuevo estanque</button>
+                                                    </div>
+                                                    <div class="btn-group-vertical">
+                                                        <button class="btn btn-info disabled">Red de sensores</button>
+                                                        <button class="btn btn-info disabled">Calendario</button>
+                                                        <button class="btn btn-info disabled">Reportes</button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div><!--/.breadcrumbs -->
             </div>
             <div class="row">
@@ -119,44 +177,28 @@
                     <div class="panel panel-default">
                         <div class="panel-heading">
                             <div class="panel-title">
-                                <h1>Granja Xamapan</h1>
+                                <h3>Granja Xamapan</h3>
                             </div>
-                                    <ul class="nav nav-pills" id="myTab">
-                                        <li><a href="#info" data-toggle="pill">Info</a></li>
-                                        <li><a href="#appcal" data-toggle="pill">Calendario <span class="glyphicon glyphicon-calendar"></span></a></li>
-                                        <li class="active"><a href="#estanques" data-toggle="pill">Estanques</a></li>
-                                        <li class="dropdown">
-                                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Reportes <b class="caret"></b></a>
-                                        <ul class="dropdown-menu" role="menu">
-                                            <li><a href="#reportes" data-toggle="pill">Alimentación</a></li>
-                                            <li><a href="#reportes" data-toggle="pill">Muestreo</a></li>
-                                            <li><a href="#reportes" data-toggle="pill">Biometría</a></li>
-                                        </ul>
-                                        </li>
-                                        <li><a href="#usuarios" data-toggle="pill">Usuarios</a></li>
-                                    </ul>
+                            <ul class="nav nav-pills" id="myTab">
+                                <li><a href="#info" data-toggle="pill">Info</a></li>
+                                <li><a href="#appcal" data-toggle="pill">Calendario <span class="glyphicon glyphicon-calendar"></span></a></li>
+                                <li class="active"><a href="#estanques" data-toggle="pill">Estanques</a></li>
+                                <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Reportes <b class="caret"></b></a>
+                                <ul class="dropdown-menu" role="menu">
+                                    <li><a href="#reportes" data-toggle="pill">Alimentación</a></li>
+                                    <li><a href="#reportes" data-toggle="pill">Muestreo</a></li>
+                                    <li><a href="#reportes" data-toggle="pill">Biometría</a></li>
+                                </ul>
+                                </li>
+                                <li><a href="#usuarios" data-toggle="pill">Usuarios</a></li>
+                            </ul>
                         </div>
                         <div class="panel-body">
                             <div class="row">
-                                <div class="col-md-4">
-                                    <div class="panel panel-default">
-                                        <div class="panel-heading">
-                                            <div class="panel-title">Acciones</div>
-                                        </div>
-                                        <div class="panel-body">
-                                            <button class="btn btn-default btn-block" data-toggle="modal" data-target="#editar-granja">Modificar datos</button>
-                                            <button class="btn btn-success btn-block" data-toggle="modal" data-target="#nuevo-estanque">Nuevo estanque</button>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-8">
-
+                                <div class="col-md-12">
                                     <div class="tab-content">
-                                        <div class="tab-pane" id="info">
+                                        <div id="info" class="tab-pane">
                                             <div class="panel panel-default">
                                                 <div class="panel-heading">
                                                     <div class="panel-title">Info general</div>
@@ -220,10 +262,10 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="tab-pane" id="reportes">
+                                        <div id="reportes" class="tab-pane">
                                             <h1>Reportes</h1>
                                         </div>
-                                        <div class="tab-pane" id="usuarios">
+                                        <div id="usuarios" class="tab-pane">
                                             <h1>Usuarios</h1>
                                             <div class="table-responsive">
                                                 <table class="table table-bordered">
