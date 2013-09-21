@@ -75,25 +75,13 @@ class TTCouchFactory(WampServerFactory):
 
     @exportRpc("session")
     def getSession(self, event=None):
-        uri = '/tantan/_session'
-        dbs = self.couchdb.listDB()
-        
-        usr, pwd = event
-        def buildUri(**kwargs):
-            return "/_session?%s" % (urlencode(kwargs))
-        def printdbs(DBS):
-            print DBS
-            return DBS
-            
-
-        print 'Sessión: %s %s' % (repr(usr), repr(pwd))
-        sessuri = buildUri(username=usr, password=pwd)
-        sess = self.couchdb.get(sessuri, descr='getSession').addCallback(self.couchdb.parseResult)
-        #view = self.couchdb.openView('tantan', 'granjas')
-        sess.addCallback(printdbs)
-        dbs.addCallback(printdbs)
-        #return dbs
-        return 'Sessión: %s' % repr(event)
+        sess_uri = '/_session'
+        sess = self.couchdb.get(sess_uri, descr='').addCallback(self.couchdb.parseResult)
+        def prnt(r):
+            print "Session: %s" % repr(r)
+            return r
+        sess.addCallback(prnt)
+        return sess
 
 
 if __name__ == '__main__':
