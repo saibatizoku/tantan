@@ -73,7 +73,7 @@ class TTCouchFactory(WampServerFactory):
         view.addCallback(estanque_info)
         return view
 
-    @exportRpc("session")
+    @exportRpc("session-info")
     def getSession(self, event=None):
         sess_uri = '/_session'
         sess = self.couchdb.get(sess_uri, descr='').addCallback(self.couchdb.parseResult)
@@ -82,6 +82,52 @@ class TTCouchFactory(WampServerFactory):
             return r
         sess.addCallback(prnt)
         return sess
+
+    def getCreds(self):
+        cred_info = {
+                "username": self.couchdb.username,
+                "password": self.couchdb.password,
+                }
+        return cred_info
+    
+    def setCreds(self, creds):
+        usr, pwd = creds
+        self.couchdb.username = usr
+        self.couchdb.password = pwd
+        return (self.couchdb.username, self.couchdb.password,)
+    
+    @exportRpc("logout")
+    def doLogout(self, creds=None):
+        if self.couchdb.username:
+            self.setCreds((None, None))
+            return {'status': 'ok', 'username': None, 'msg': "Logged out."}
+        return {'status': 'ok', 'username': 'anonymous', 'msg': "Not logged in."}
+
+    @exportRpc("login")
+    def doLogin(self, creds=None):
+        usr, pwd = creds
+        print usr, pwd
+        old = (None, None)
+        if self.couchdb.username:
+            old = self.getCreds()
+
+        self.setCreds(creds)
+        d = self.couchdb.infoDB()
+
+        def checkCreds(response):
+            print 'response: %s' % repr(response)
+            if 'db_name' in response and 'doc_count' in response:
+                return {'status': 'ok', 'username': usr}
+            else:
+                raise Exception("Login failed")
+        d.addCallback(checkCreds)
+
+        def failedCreds(reason):
+            print "Login failed"
+            self.setCreds(old)
+            return {'status': 'failed', 'username': 'anonymous', 'msg': repr(reason)}
+        d.addErrback(failedCreds)
+        return d
 
 
 if __name__ == '__main__':

@@ -67,6 +67,9 @@
                                         <div id="statusline"></div>
                                         <div id="event-cnt" class="alert alert-info" style="color: #f60; font-weight: 700; font-size: 24px;">-</div>
                                         <button type="button" class="btn btn-default" onclick="getSession();">User info</button>
+                                        <button type="button" class="btn btn-success" onclick="doLogin(['admin', 'nimda']);">Login</button>
+                                        <button type="button" class="btn btn-default" onclick="doLogout();">Logout</button>
+                                        <button type="button" class="btn btn-warning" onclick="doLogin(['dmin', 'nimda']);">Bad Login</button>
                                         <button type="button" class="btn btn-default" onclick="getGranjaInfo('fea96b46aeb02badb26b3a37460065cc');">Granja</button>
                                         <button type="button" class="btn btn-default" onclick="getEstanqueInfo('fea96b46aeb02badb26b3a37460065cc');">Estanque</button>
                                     </div>

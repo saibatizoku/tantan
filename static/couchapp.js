@@ -18,7 +18,13 @@ function getEstanqueInfo(granja) {
     sess.call("rpc:estanque-info", granja).always(ab.log);
 }
 function getSession(status) {
-    sess.call("rpc:session", status).always(ab.log);
+    sess.call("rpc:session-info", status).always(ab.log);
+}
+function doLogin(status) {
+    sess.call("rpc:login", status).always(ab.log);
+}
+function doLogout(status) {
+    sess.call("rpc:logout", status).always(ab.log);
 }
 
 function connect() {
