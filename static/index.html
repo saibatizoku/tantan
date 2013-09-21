@@ -45,28 +45,32 @@
         <div id="principal" class="container">
             <div class="row">
                 <div class="col-md-12">
-                    <div class="btn-toolbar well">
-                        <div class="btn-group">
-                            <button class="btn btn-default">Granjas</button>
-                            <button class="btn btn-default">Usuarios</button>
-                        </div>
-                        <div class="btn-group pull-right">
-                            <button type="button" class="btn btn-default" data-toggle="modal" data-target="#applogin">
-                                Ingresar <span class="glyphicon glyphicon-user"></span> 
-                            </button>
-                        </div>
-                        <div class="btn-group pull-right">
-                            <button class="btn btn-default">Configuración <span class="glyphicon glyphicon-wrench"></span></button>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="well">
-                                <div id="statusline"></div>
-                                <div id="event-cnt" class="alert alert-info" style="color: #f60; font-weight: 700; font-size: 24px;">-</div>
-                                <button type="button" class="btn btn-default" onclick="getSession(['admi', 'nimda']);">Session</button>
-                                <button type="button" class="btn btn-default" onclick="getGranjaInfo('fea96b46aeb02badb26b3a37460065cc');">Granja</button>
-                                <button type="button" class="btn btn-default" onclick="getEstanqueInfo('fea96b46aeb02badb26b3a37460065cc');">Estanque</button>
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <div class="btn-toolbar well">
+                                <div class="btn-group">
+                                    <button class="btn btn-default">Granjas</button>
+                                    <button class="btn btn-default">Usuarios</button>
+                                </div>
+                                <div class="btn-group pull-right">
+                                    <button type="button" class="btn btn-default" data-toggle="modal" data-target="#applogin">
+                                        Ingresar <span class="glyphicon glyphicon-user"></span>
+                                    </button>
+                                </div>
+                                <div class="btn-group pull-right">
+                                    <button class="btn btn-default">Configuración <span class="glyphicon glyphicon-wrench"></span></button>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="well">
+                                        <div id="statusline"></div>
+                                        <div id="event-cnt" class="alert alert-info" style="color: #f60; font-weight: 700; font-size: 24px;">-</div>
+                                        <button type="button" class="btn btn-default" onclick="getSession();">User info</button>
+                                        <button type="button" class="btn btn-default" onclick="getGranjaInfo('fea96b46aeb02badb26b3a37460065cc');">Granja</button>
+                                        <button type="button" class="btn btn-default" onclick="getEstanqueInfo('fea96b46aeb02badb26b3a37460065cc');">Estanque</button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -116,8 +120,8 @@
                             </div>
                                     <ul class="nav nav-pills" id="myTab">
                                         <li><a href="#info" data-toggle="pill">Info</a></li>
-                                        <li class="active"><a href="#appcal" data-toggle="pill">Calendario <span class="glyphicon glyphicon-calendar"></span></a></li>
-                                        <li><a href="#estanques" data-toggle="pill">Estanques</a></li>
+                                        <li><a href="#appcal" data-toggle="pill">Calendario <span class="glyphicon glyphicon-calendar"></span></a></li>
+                                        <li class="active"><a href="#estanques" data-toggle="pill">Estanques</a></li>
                                         <li class="dropdown">
                                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">Reportes <b class="caret"></b></a>
                                         <ul class="dropdown-menu" role="menu">
@@ -167,7 +171,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div id="appcal" class="tab-pane active">
+                                        <div id="appcal" class="tab-pane">
                                             <div class="panel panel-default">
                                                 <div class="panel-heading">
                                                     <h4 class="panel-title">Calendario</h4>
@@ -178,7 +182,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="tab-pane" id="estanques">
+                                        <div id="estanques" class="tab-pane active">
                                             <div class="panel panel-default">
                                                 <div class="panel-heading">
                                                     <div class="panel-title">Estanques</div>
