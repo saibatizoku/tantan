@@ -6,6 +6,7 @@ TanTan.module('Layout', function (Layout, App, Backbone) {
     // ------------------
     Layout.Nav = Backbone.Marionette.Layout.extend({
         template: '#appnav',
+        className: 'container',
         regions: {
             menu: '#nav-menu',
             actions: '#nav-actions'
