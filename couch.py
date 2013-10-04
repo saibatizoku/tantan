@@ -37,8 +37,8 @@ class TantanCouchProtocol(WampServerProtocol):
         print u"Connection lost: %s" % reason
 
     def onSessionOpen(self):
-        self.registerForPubSub("http://www.tantan.org/db#", True)
-        self.registerForRpc(self.factory, "http://www.tantan.org/cmd-db#")
+        self.registerForPubSub("http://www.tantan.org/api/couchdb/info#", True)
+        self.registerForRpc(self.factory, "http://www.tantan.org/api/couchdb#")
 
 
 class TTCouchFactory(WampServerFactory):
