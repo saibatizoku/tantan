@@ -18,7 +18,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
-from twisted.python import log, usage
+from twisted.python import log
 from twisted.internet import defer, reactor, task, threads
 
 import json
@@ -128,35 +128,3 @@ class TTCouchFactory(WampServerFactory):
             return {'status': 'failed', 'username': 'anonymous', 'msg': repr(reason)}
         d.addErrback(failedCreds)
         return d
-
-
-if __name__ == '__main__':
-
-    class MyOptions(usage.Options):
-        optParameters = [
-                ['outfile', 'o', None, 'Logfile [default: sys.stdout]'],
-                ['webport', 'w', 8080, 'Web port to use for embedded Web server'],
-                ['wsurl', 's', "ws://localhost:9001", 'WebSocket port to use for embedded WebSocket server']
-        ]
-
-    o = MyOptions()
-    try:
-        o.parseOptions()
-    except usage.UsageError, errortext:
-        print '%s: %s' % (sys.argv[0], errortext)
-        print '%s: Try --help for usage details.' % (sys.argv[0])
-        raise SystemExit, 1
-
-    logFile = o.opts['outfile']
-    if logFile is None:
-        logFile = sys.stdout
-    log.startLogging(logFile)
-
-    webport = int(o.opts['webport'])
-    wsurl = o.opts['wsurl']
-    log.msg('Attempting to open %s, as a %s device' % (wsurl, CouchDB.__name__))
-
-    ttCouchFactory = TTCouchFactory(wsurl)
-    listenWS(ttCouchFactory)
-
-    reactor.run()
