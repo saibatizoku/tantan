@@ -45,9 +45,9 @@ class TTCouchFactory(WampServerFactory):
 
     protocol = TantanCouchProtocol
 
-    def __init__(self, url):
-        WampServerFactory.__init__(self, url)
-        self.couchdb = CouchDB('localhost', dbName='tantan')
+    def __init__(self, url, debug = False):
+        WampServerFactory.__init__(self, url, debugWamp = debug)
+        self.couchdb = CouchDB('localhost', port=6984, dbName='tantan')
 
 
     @exportRpc("granja-info")
@@ -158,11 +158,5 @@ if __name__ == '__main__':
 
     ttCouchFactory = TTCouchFactory(wsurl)
     listenWS(ttCouchFactory)
-
-    ## create embedded web server for static files
-    ##
-    #webdir = File("../static")
-    #web = Site(webdir)
-    #reactor.listenTCP(webport, web)
 
     reactor.run()

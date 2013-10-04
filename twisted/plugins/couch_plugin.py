@@ -15,12 +15,12 @@ from couch import TTCouchFactory
 
 
 class Options(usage.Options):
-        optParameters = [
-                ['outfile', 'o', None, 'Logfile [default: sys.stdout]'],
-                ['host', 'h', 'localhost', 'Logfile [default: sys.stdout]'],
-                ['port', 'p', 8080, 'Web port to use for embedded Web server'],
-                ['debug', 'd', False, 'Web port to use for embedded Web server'],
-        ]
+    optParameters = [
+            ['outfile', 'o', None, 'Logfile [default: sys.stdout]'],
+            ['host', 'h', 'localhost', 'Hostname or IP address to use for Web server'],
+            ['port', 'p', 8080, 'Port to use for embedded Web server'],
+            ['debug', 'd', False, 'Enable debug-level log messaging'],
+    ]
 
 
 class TantanServiceMaker(object):
@@ -53,7 +53,3 @@ class TantanServiceMaker(object):
         return internet.TCPServer(port, site)
 
 serviceMaker = TantanServiceMaker()
-#
-#application = service.Application("tantan")
-#echoService = internet.TCPServer(8000, EchoFactory())
-#echoService.setServiceParent(application)
