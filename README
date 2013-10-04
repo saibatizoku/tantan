@@ -7,6 +7,8 @@ propósito es el de automatizar tareas cotidianas en el cultivo de peces.
 Es un sistema con múltiples componentes de software libre, principalmente
 utilizando Python, HTML, CSS y JavaScript como lenguajes de programación.
 
+
+
 Funcionalidad
 -------------
 * Servicios de publicación web
@@ -17,6 +19,23 @@ Funcionalidad
 
 En esta versión del sistema TanTán, está construída sobre la plataforma
 para redes [Twisted](http://www.twistedmatrix.com).
+
+
+
+Para ejecutar el sistema
+------------------------
+
+Existe un plugin para utilizarse con el script de línea de comando _twistd_.
+
+Para ejecutarlo, desde una consola de sistema, acceder a la carpeta 'tantan'
+e invocar el siguiente comando:
+
+$ twistd -n tantan-couch
+
+y para consultar las opciones disponibles, invocar el comando de ayuda:
+
+$ twistd tantan-couch --help
+
 
 
 Modularidad del sistema
@@ -30,10 +49,7 @@ Los módulos principales del sistema son:
 3. Módulo de sensores inalámbricos
   1. Módulo de comunicaciones seriales
 
-
-.question
-
-
+#FIXME
 
 # Instalaciones con virtualenv activado
 _Creado por saibatizoku. 19/sep/2013_
