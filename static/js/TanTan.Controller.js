@@ -21,5 +21,9 @@ TanTan.module('GranjasApp', function (GranjasApp, App, Backbone, Marionette, $, 
             controller: controller
         });
         controller.start();
+        var api = new App.Couch.API();
+        var wsuri = "ws://" + window.location.hostname + ":8080/ws";
+        api.wsuri = wsuri;
+        api.connect();
     });
 });
