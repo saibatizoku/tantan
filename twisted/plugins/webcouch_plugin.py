@@ -25,8 +25,11 @@ class Options(usage.Options):
 
 class TantanServiceMaker(object):
     implements(IServiceMaker, IPlugin)
-    tapname = "tantan-couch"
-    description = "Sistema de acuacultura TanTan"
+    tapname = "tantan-web-couch"
+    description = """Servicio web con base de datos CouchDB, via WAMP. Este
+                     servicio incorpora las funciones de 'tantan-couch-wamp'
+                     y 'tantan-web-site', en un solo puerto.
+                  """
     options = Options
 
     def makeService(self, options):
