@@ -12,6 +12,7 @@ TanTan.module('Layout', function (Layout, App, Backbone) {
             actions: '#nav-actions'
         }
     });
+
     Layout.NavActions  = Marionette.ItemView.extend({
         template: '#navactions',
         tagName: 'form',
@@ -31,4 +32,28 @@ TanTan.module('Layout', function (Layout, App, Backbone) {
             App.vent.trigger('granjas:login', { creds: r, event: e});
         }
     });
+
+    Layout.NavUserMenu  = Marionette.ItemView.extend({
+        template: '#navmenu',
+        tagName: 'ul',
+        className: 'nav navbar-nav'
+    });
+
+    Layout.NavUserActions  = Marionette.ItemView.extend({
+        template: '#navuseractions',
+        tagName: 'form',
+        className: 'navbar-form navbar-right',
+        ui: {
+            logout: '#logout'
+        },
+
+        events: {
+            'click #logout': 'doLogout'
+        },
+
+        doLogout: function (e) {
+            App.vent.trigger('granjas:logout');
+        }
+    });
+
 });
