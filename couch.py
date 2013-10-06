@@ -45,9 +45,11 @@ class TTCouchFactory(WampServerFactory):
 
     protocol = TantanCouchProtocol
 
-    def __init__(self, url, debug = False):
-        WampServerFactory.__init__(self, url, debugWamp = debug)
-        self.couchdb = CouchDB('localhost', port=6984, dbName='tantan')
+    def __init__(self, url, couch_url='localhost', couch_port=5984,
+            db_name='tantan', debug = False):
+        WampServerFactory.__init__(self, url, debug = debug,
+                debugWamp = debug, debugApp = debug)
+        self.couchdb = CouchDB(couch_url, port=couch_port, dbName=db_name)
 
 
     @exportRpc("granja-info")
