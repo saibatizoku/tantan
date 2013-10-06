@@ -29,5 +29,10 @@ TanTan.module('GranjasApp', function (GranjasApp, App, Backbone, Marionette, $, 
         var wsuri = "ws://" + window.location.hostname + ":8080/ws";
         api.wsuri = wsuri;
         api.connect();
+
+        App.vent.on('granjas:login', function (info) {
+            ab.log('Logging in');
+            api.login(info.creds);
+        });
     });
 });
