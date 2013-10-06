@@ -16,6 +16,12 @@ TanTan.module('GranjasApp', function (GranjasApp, App, Backbone, Marionette, $, 
         showNav: function () {
             App.nav.show(this.nav);
             this.nav.actions.show(new App.Layout.NavActions());
+        },
+        loggedIn: function () {
+            this.nav.actions.close();
+        },
+        loggedOut: function () {
+            this.showNav();
         }
     });
 
@@ -33,6 +39,14 @@ TanTan.module('GranjasApp', function (GranjasApp, App, Backbone, Marionette, $, 
         App.vent.on('granjas:login', function (info) {
             ab.log('Logging in');
             api.login(info.creds);
+        });
+        App.vent.on('granjas:loggedIn', function (info) {
+            ab.log('Logged in', info);
+            controller.loggedIn();
+        });
+        App.vent.on('granjas:loggedOut', function (info) {
+            ab.log('Logged out', info);
+            controller.loggedOut();
         });
     });
 });
