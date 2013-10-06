@@ -41,6 +41,11 @@ class TantanCouchProtocol(WampServerProtocol):
         self.registerForRpc(self.factory, "http://www.tantan.org/api/couchdb#")
 
 
+def failure_print(failure):
+    print failure
+    return {'ok': False, 'error': repr(failure)}
+    
+
 class TTCouchFactory(WampServerFactory):
 
     protocol = TantanCouchProtocol
@@ -102,8 +107,8 @@ class TTCouchFactory(WampServerFactory):
     def doLogout(self, creds=None):
         if self.couchdb.username:
             self.setCreds((None, None))
-            return {'status': 'ok', 'username': None, 'msg': "Logged out."}
-        return {'status': 'ok', 'username': 'anonymous', 'msg': "Not logged in."}
+            return {'ok': True, 'username': None, 'msg': "Logged out."}
+        return {'ok': True, 'username': None, 'msg': "Not logged in."}
 
     @exportRpc("login")
     def doLogin(self, creds=None):
@@ -114,12 +119,15 @@ class TTCouchFactory(WampServerFactory):
             old = self.getCreds()
 
         self.setCreds(creds)
+
         d = self.couchdb.infoDB()
+        d.addErrback(failure_print)
 
         def checkCreds(response):
             print 'response: %s' % repr(response)
+            
             if 'db_name' in response and 'doc_count' in response:
-                return {'status': 'ok', 'username': usr}
+                return {'ok': True, 'username': usr}
             else:
                 raise Exception("Login failed")
         d.addCallback(checkCreds)
@@ -127,6 +135,6 @@ class TTCouchFactory(WampServerFactory):
         def failedCreds(reason):
             print "Login failed"
             self.setCreds(old)
-            return {'status': 'failed', 'username': 'anonymous', 'msg': repr(reason)}
+            return {'ok': False, 'username': 'anonymous', 'msg': repr(reason)}
         d.addErrback(failedCreds)
         return d
