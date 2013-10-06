@@ -44,6 +44,10 @@ TanTan.module('GranjasApp', function (GranjasApp, App, Backbone, Marionette, $, 
             ab.log('Logged in', info);
             controller.loggedIn();
         });
+        App.vent.on('granjas:logout', function () {
+            ab.log('Logging out');
+            api.login();
+        });
         App.vent.on('granjas:loggedOut', function (info) {
             ab.log('Logged out', info);
             controller.loggedOut();
