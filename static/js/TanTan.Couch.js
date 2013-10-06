@@ -35,6 +35,17 @@ TanTan.module('Couch', function (Couch, App, Backbone, Marionette, $, _) {
             this.sess = sess;
             ab.log('Couch.API session', sess);
             return sess;
+        },
+        login: function (creds) {
+            this.sess.call('rpc:login', creds).always(this.doLogin);
+        },
+        doLogin: function (resp) {
+            ab.log(resp);
+            if (resp.ok) {
+                App.vent.trigger('granjas:loggedIn', resp);
+            } else {
+                App.vent.trigger('granjas:loggedOut', resp);
+            }
         }
     });
 
