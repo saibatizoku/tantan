@@ -15,6 +15,20 @@ TanTan.module('Layout', function (Layout, App, Backbone) {
     Layout.NavActions  = Marionette.ItemView.extend({
         template: '#navactions',
         tagName: 'form',
-        className: 'navbar-form navbar-right'
+        className: 'navbar-form navbar-right',
+        ui: {
+            input: '#login',
+            user: '#usuario',
+            password: 'input[name=contra]'
+        },
+
+        events: {
+            'click #login': 'doLogin'
+        },
+
+        doLogin: function (e) {
+            var r = [ this.ui.user.val(), this.ui.password.val()];
+            App.vent.trigger('granjas:login', { creds: r, event: e});
+        }
     });
 });
