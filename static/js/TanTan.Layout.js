@@ -12,4 +12,9 @@ TanTan.module('Layout', function (Layout, App, Backbone) {
             actions: '#nav-actions'
         }
     });
+    Layout.NavActions  = Marionette.ItemView.extend({
+        template: '#navactions',
+        tagName: 'form',
+        className: 'navbar-form navbar-right'
+    });
 });

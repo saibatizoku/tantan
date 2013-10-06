@@ -11,7 +11,11 @@ TanTan.module('GranjasApp', function (GranjasApp, App, Backbone, Marionette, $, 
         start: function () {
             var Nav = new App.Layout.Nav();
             this.nav = Nav;
+            this.showNav();
+        },
+        showNav: function () {
             App.nav.show(this.nav);
+            this.nav.actions.show(new App.Layout.NavActions());
         }
     });
 
