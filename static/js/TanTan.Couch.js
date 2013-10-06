@@ -46,6 +46,9 @@ TanTan.module('Couch', function (Couch, App, Backbone, Marionette, $, _) {
             } else {
                 App.vent.trigger('granjas:loggedOut', resp);
             }
+        },
+        logout: function () {
+            this.sess.call('rpc:logout').always(ab.log);
         }
     });
 
