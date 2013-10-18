@@ -28,6 +28,7 @@ TanTan.module('Layout', function (Layout, App, Backbone) {
         },
 
         doLogin: function (e) {
+            e.preventDefault();
             var r = [ this.ui.user.val(), this.ui.password.val()];
             App.vent.trigger('granjas:login', { creds: r, event: e});
         }
