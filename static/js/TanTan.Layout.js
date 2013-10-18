@@ -58,4 +58,27 @@ TanTan.module('Layout', function (Layout, App, Backbone) {
         }
     });
 
+    Layout.Main = Backbone.Marionette.Layout.extend({
+        template: '#appmain',
+        className: 'container',
+        regions: {
+            content: '#content',
+            right: '#side-right',
+            left: '#side-left'
+        }
+    });
+
+    Layout.MainLeft = Marionette.ItemView.extend({
+        template: '#mainleft'
+    });
+
+    Layout.MainRight = Marionette.ItemView.extend({
+        template: '#mainright'
+    });
+
+    Layout.MainContent = Marionette.ItemView.extend({
+        template: '#maincontent',
+        className: 'container'
+    });
+
 });
