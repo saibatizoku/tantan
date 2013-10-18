@@ -9,6 +9,7 @@ TanTan.module('Layout', function (Layout, App, Backbone) {
         className: 'container',
         regions: {
             menu: '#nav-menu',
+            user: '#nav-user',
             actions: '#nav-actions'
         }
     });
