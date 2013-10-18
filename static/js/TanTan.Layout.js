@@ -68,6 +68,15 @@ TanTan.module('Layout', function (Layout, App, Backbone) {
         }
     });
 
+    Layout.MainUser = Backbone.Marionette.Layout.extend({
+        template: '#appmainuser',
+        className: 'container',
+        regions: {
+            content: '#content',
+            tools: '#tools'
+        }
+    });
+
     Layout.MainLeft = Marionette.ItemView.extend({
         template: '#mainleft'
     });
@@ -79,6 +88,20 @@ TanTan.module('Layout', function (Layout, App, Backbone) {
     Layout.MainContent = Marionette.ItemView.extend({
         template: '#maincontent',
         className: 'container'
+    });
+
+    Layout.MainUserContent = Backbone.Marionette.Layout.extend({
+        template: '#mainusercontent',
+        className: 'row',
+        regions: {
+            bar: '#user-bar',
+            panel: '#user-panel'
+        }
+    });
+
+    Layout.MainUserTools = Marionette.ItemView.extend({
+        template: '#mainusertools',
+        className: 'panel panel-default'
     });
 
 });
