@@ -1,17 +1,14 @@
 /*global TodoMVC */
 'use strict';
 
-TanTan.module('GranjasApp', function (GranjasApp, App, Backbone, Marionette, $, _) {
-    GranjasApp.Router = Marionette.AppRouter.extend({});
+TanTan.module('API', function (API, App, Backbone, Marionette, $, _) {
+    API.Router = Marionette.AppRouter.extend({});
 
-    GranjasApp.Controller = function () {
-    };
-
-    _.extend(GranjasApp.Controller.prototype, {
-        start: function () {
-            var Nav = new App.Layout.Nav();
-            this.nav = Nav;
-            this.showNav();
+    API.Controller = Marionette.Controller.extend({
+        initialize: function () {
+            this.nav = new App.Layout.Nav();
+            this.main = new App.Layout.Main();
+            this.loggedOut();
         },
         showNav: function () {
             App.nav.show(this.nav);
@@ -30,12 +27,12 @@ TanTan.module('GranjasApp', function (GranjasApp, App, Backbone, Marionette, $, 
         }
     });
 
-    GranjasApp.addInitializer(function () {
-        var controller = new GranjasApp.Controller();
-        controller.router = new GranjasApp.Router({
+    API.addInitializer(function () {
+        var controller = new API.Controller();
+        controller.router = new API.Router({
             controller: controller
         });
-        controller.start();
+        this.controller = controller;
         var api = new App.Couch.API();
         var wsuri = "ws://" + window.location.hostname + ":8080/ws";
         api.wsuri = wsuri;
