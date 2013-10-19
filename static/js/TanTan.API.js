@@ -8,6 +8,7 @@ TanTan.module('API', function (API, App, Backbone, Marionette, $, _) {
         initialize: function () {
             this.nav = new App.Layout.Nav();
             this.main = new App.Layout.Main();
+            this.mainuser = new App.Layout.MainUser();
             this.loggedOut();
         },
         showNav: function () {
@@ -25,8 +26,17 @@ TanTan.module('API', function (API, App, Backbone, Marionette, $, _) {
             this.main.content.show(new App.Layout.MainContent());
             this.main.left.show(new App.Layout.MainLeft());
         },
+        showUserMain: function () {
+            App.main.show(this.mainuser);
+            this.mainuser.tools.show(new App.Layout.MainUserTools());
+            this.maincontent = new App.Layout.MainUserContent();
+            this.mainuser.content.show(this.maincontent);
+            this.maincontent.bar.show(new App.Layout.UserBar());
+            this.maincontent.panel.show(new App.Layout.UserPanel());
+        },
         loggedIn: function () {
             this.showUserNav();
+            this.showUserMain();
         },
         loggedOut: function () {
             this.showNav();
