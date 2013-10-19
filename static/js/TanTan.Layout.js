@@ -104,4 +104,14 @@ TanTan.module('Layout', function (Layout, App, Backbone) {
         className: 'panel panel-default'
     });
 
+    Layout.UserBar= Marionette.ItemView.extend({
+        template: '#userbar',
+        className: 'row'
+    });
+
+    Layout.UserPanel= Marionette.ItemView.extend({
+        template: '#userpanel',
+        className: 'panel panel-default'
+    });
+
 });
