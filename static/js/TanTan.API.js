@@ -19,11 +19,18 @@ TanTan.module('API', function (API, App, Backbone, Marionette, $, _) {
             this.nav.menu.show(new App.Layout.NavUserMenu());
             this.nav.actions.show(new App.Layout.NavUserActions());
         },
+        showMain: function () {
+            App.main.show(this.main);
+            this.main.right.show(new App.Layout.MainRight());
+            this.main.content.show(new App.Layout.MainContent());
+            this.main.left.show(new App.Layout.MainLeft());
+        },
         loggedIn: function () {
             this.showUserNav();
         },
         loggedOut: function () {
             this.showNav();
+            this.showMain();
         }
     });
 
