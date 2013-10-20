@@ -55,6 +55,12 @@ TanTan.module('API', function (API, App, Backbone, Marionette, $, _) {
         api.wsuri = wsuri;
         api.connect();
 
+        App.vent.on('wamp:success', function (session) {
+            ab.log('WAMP session OK');
+        });
+        App.vent.on('wamp:failure', function (session) {
+            ab.log('WAMP session FAILED');
+        });
         App.vent.on('granjas:login', function (info) {
             ab.log('Logging in');
             api.login(info.creds);

@@ -14,7 +14,7 @@ TanTan.module('Couch', function (Couch, App, Backbone, Marionette, $, _) {
             var sess = null;
 
             function onConnect() {
-                var log_line = "WAMP success";
+                var log_line = "WAMP Connection success";
                 ab.log(log_line);
 
                 sess.prefix("event", "http://www.tantan.org/api/couchdb/info#");
@@ -24,11 +24,13 @@ TanTan.module('Couch', function (Couch, App, Backbone, Marionette, $, _) {
                 sess.prefix("rpc", "http://www.tantan.org/api/couchdb#");
                 log_line = "RPC ready"
                 ab.log(log_line);
+                App.vent.trigger('wamp:success', sess);
             }
 
             function onHangup(e) {
-                var log_line = "WAMP failed";
+                var log_line = "WAMP Connection failed";
                 ab.log(log_line,e);
+                App.vent.trigger('wamp:failure');
             }
 
             sess = new ab.Session(this.wsuri, onConnect, onHangup);
