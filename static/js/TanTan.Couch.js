@@ -43,7 +43,7 @@ TanTan.module('Couch', function (Couch, App, Backbone, Marionette, $, _) {
         },
         doLogin: function (resp) {
             ab.log(resp);
-            if (resp.ok) {
+            if (resp._id) {
                 App.vent.trigger('granjas:loggedIn', resp);
             } else {
                 App.vent.trigger('granjas:loggedOut', resp);
