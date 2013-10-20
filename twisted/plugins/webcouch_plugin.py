@@ -3,6 +3,8 @@ from zope.interface import implements
 
 from twisted.application.service import IServiceMaker
 from twisted.application import internet
+from twisted.cred import credentials, portal
+from twisted.cred.strcred import AuthOptionMixin
 from twisted.plugin import IPlugin
 from twisted.python import log, usage
 from twisted.web.server import Site
@@ -14,7 +16,9 @@ from autobahn.resource import WebSocketResource, \
 from couch import TTCouchFactory
 
 
-class Options(usage.Options):
+class Options(usage.Options, AuthOptionMixin):
+    supportedInterfaces = (credentials.IUsernamePassword,
+            credentials.IAnonymous,)
     optParameters = [
             ['outfile', 'o', None, 'Logfile [default: sys.stdout]'],
             ['host', 'h', 'localhost', 'Hostname or IP address to use for Web server'],
