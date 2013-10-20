@@ -81,13 +81,18 @@ class TTCouchFactory(WampServerFactory):
         return view
 
     @exportRpc("session-info")
-    def getSession(self, event=None):
+    def getSession(self, resp=None):
         sess_uri = '/_session'
         sess = self.couchdb.get(sess_uri, descr='').addCallback(self.couchdb.parseResult)
-        def prnt(r):
-            print "Session: %s" % repr(r)
+        def usr_info(r):
+            print "Session USR_INFO: %s" % repr(r)
+            if  u'ok' in r and r[u'ok']:
+                if r[u'userCtx'][u'name']:
+                    sess_uri = '/_users/org.couchdb.user:' + r[u'userCtx'][u'name']
+                usr_doc = self.couchdb.get(sess_uri, descr='').addCallback(self.couchdb.parseResult)
+                return usr_doc
             return r
-        sess.addCallback(prnt)
+        sess.addCallback(usr_info)
         return sess
 
     def getCreds(self):
@@ -112,29 +117,29 @@ class TTCouchFactory(WampServerFactory):
 
     @exportRpc("login")
     def doLogin(self, creds=None):
-        usr, pwd = creds
-        print usr, pwd
-        old = (None, None)
-        if self.couchdb.username:
-            old = self.getCreds()
+        if creds and len(creds) == 2:
+            usr, pwd = creds[:2]
+            print 'RPC LOGIN RECEIVED: %s:%s' % (usr, pwd,)
+            self.setCreds(creds)
 
-        self.setCreds(creds)
-
-        d = self.couchdb.infoDB()
+        d = self.getSession()
         d.addErrback(failure_print)
 
         def checkCreds(response):
             print 'response: %s' % repr(response)
-            
-            if 'db_name' in response and 'doc_count' in response:
-                return {'ok': True, 'username': usr}
+            if u'name' in response and response[u'name']:
+                self.user = response
+                print 'Good CREDS:', response
+                return response
             else:
+                self.user = None
                 raise Exception("Login failed")
         d.addCallback(checkCreds)
+        print 'getCreds:', self.getCreds()
 
         def failedCreds(reason):
             print "Login failed"
-            self.setCreds(old)
+            self.setCreds((None, None))
             return {'ok': False, 'username': 'anonymous', 'msg': repr(reason)}
         d.addErrback(failedCreds)
         return d
