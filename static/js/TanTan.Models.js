@@ -49,6 +49,27 @@ TanTan.module('Models', function(Models, App, Backbone) {
         }
     });
 
+    Models.Event = Models.Base.extend({
+        defaults: {
+            name: '',
+            type: 'event'
+        }
+    });
+
+    Models.Task= Models.Event.extend({
+        defaults: {
+            completed: false,
+            name: '',
+            type: 'task'
+        },
+        toggle: function () {
+            return this.set('completed', !this.isCompleted());
+        },
+        isCompleted: function () {
+            return this.get('completed');
+        }
+    });
+
     //DOCS - Collection of documents
     Models.Docs= Backbone.Collection.extend({
     });
@@ -61,6 +82,31 @@ TanTan.module('Models', function(Models, App, Backbone) {
     Models.Estanques = Models.Docs.extend({
         model: Models.Estanque,
         url: '/estanques'
+    });
+
+    Models.Events = Models.Docs.extend({
+        model: Models.Event,
+        url: '/eventos',
+        getCompleted: function () {
+            return this.filter(this._isCompleted);
+        },
+
+        getActive: function () {
+            return this.reject(this._isCompleted);
+        },
+
+        comparator: function (doc) {
+            return doc.get('created_at')
+        },
+
+        _isCompleted: function (doc) {
+            return doc.isCompleted();
+        }
+    });
+
+    Models.Tasks = Models.Events.extend({
+        model: Models.Task,
+        url: '/tareas'
     });
 
 });
