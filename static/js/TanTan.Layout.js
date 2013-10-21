@@ -46,11 +46,17 @@ TanTan.module('Layout', function (Layout, App, Backbone) {
         tagName: 'form',
         className: 'navbar-form navbar-right',
         ui: {
+            edit: '#edit-profile',
             logout: '#logout'
         },
 
         events: {
+            'click #edit-profile': 'doEditProfile',
             'click #logout': 'doLogout'
+        },
+
+        doEditProfile: function (e) {
+            App.vent.trigger('granjas:edit-profile');
         },
 
         doLogout: function (e) {
