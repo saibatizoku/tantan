@@ -30,8 +30,37 @@ TanTan.module('Models', function(Models, App, Backbone) {
         }
     });
 
+    Models.Granja = Models.Doc.extend({
+        defaults: {
+            name: '',
+            tantan: {
+                usuarios: [],
+                admins: []
+            },
+            type: 'granja'
+        }
+    });
+
+    Models.Estanque = Models.Doc.extend({
+        defaults: {
+            name: '',
+            type: 'estanque',
+            granja: null
+        }
+    });
+
     //DOCS - Collection of documents
     Models.Docs= Backbone.Collection.extend({
+    });
+
+    Models.Granjas = Models.Docs.extend({
+        model: Models.Granja,
+        url: '/granjas'
+    });
+
+    Models.Estanques = Models.Docs.extend({
+        model: Models.Estanque,
+        url: '/estanques'
     });
 
 });
