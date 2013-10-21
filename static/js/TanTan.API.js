@@ -34,7 +34,9 @@ TanTan.module('API', function (API, App, Backbone, Marionette, $, _) {
             this.maincontent.bar.show(new App.Layout.UserBar());
             this.maincontent.panel.show(new App.Layout.UserPanel());
         },
-        loggedIn: function () {
+        loggedIn: function (userdoc) {
+            var user = new App.Models.UserDoc(userdoc);
+            ab.log('UserDoc', user);
             this.showUserNav();
             this.showUserMain();
         },
@@ -65,14 +67,14 @@ TanTan.module('API', function (API, App, Backbone, Marionette, $, _) {
             ab.log('Logging in');
             api.login(info.creds);
         });
-        App.vent.on('granjas:loggedIn', function (info) {
-            ab.log('Logged in', info);
-            controller.loggedIn();
-        });
         App.vent.on('granjas:logout', function () {
             ab.log('Logging out');
             api.logout();
             controller.loggedOut();
+        });
+        App.vent.on('granjas:loggedIn', function (info) {
+            ab.log('Logged in', info);
+            controller.loggedIn(info);
         });
         App.vent.on('granjas:loggedOut', function (info) {
             ab.log('Logged out', info);
