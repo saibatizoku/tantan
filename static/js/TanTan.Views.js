@@ -10,7 +10,8 @@ TanTan.module('Views', function (Views, App, Backbone, Marionette, $) {
     });
 
      Views.UserDocView = Views.BaseItemView.extend({
-         template: '#template-userdoc'
+         template: '#template-userdoc',
+         className: 'panel panel-default'
     });
 
 });
