@@ -26,9 +26,10 @@ TanTan.module('API', function (API, App, Backbone, Marionette, $, _) {
             this.main.content.show(new App.Layout.MainContent());
             this.main.left.show(new App.Layout.MainLeft());
         },
-        showUserMain: function () {
+        showUserMain: function (user) {
             App.main.show(this.mainuser);
-            this.mainuser.tools.show(new App.Layout.MainUserTools());
+            var usr_view = new App.Views.UserDocView();
+            this.mainuser.tools.show(new App.Layout.MainUserTools({model: user}));
             this.maincontent = new App.Layout.MainUserContent();
             this.mainuser.content.show(this.maincontent);
             this.maincontent.bar.show(new App.Layout.UserBar());
@@ -37,8 +38,9 @@ TanTan.module('API', function (API, App, Backbone, Marionette, $, _) {
         loggedIn: function (userdoc) {
             var user = new App.Models.UserDoc(userdoc);
             ab.log('UserDoc', user);
+            this.user = user;
             this.showUserNav();
-            this.showUserMain();
+            this.showUserMain(user);
         },
         loggedOut: function () {
             this.showNav();

@@ -101,7 +101,7 @@ TanTan.module('Layout', function (Layout, App, Backbone) {
 
     Layout.MainUserTools = Marionette.ItemView.extend({
         template: '#mainusertools',
-        className: 'panel panel-default'
+        className: 'panel panel-info'
     });
 
     Layout.UserBar= Marionette.ItemView.extend({
