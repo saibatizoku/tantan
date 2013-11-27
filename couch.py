@@ -87,12 +87,18 @@ class TTCouchFactory(WampServerFactory):
         def usr_info(r):
             print "Session USR_INFO: %s" % repr(r)
             if  u'ok' in r and r[u'ok']:
-                if r[u'userCtx'][u'name']:
+                usr = {u'userCtx': r[u'userCtx']}
+                if r[u'userCtx'][u'name'] is not None:
                     sess_uri = '/_users/org.couchdb.user:' + r[u'userCtx'][u'name']
-                usr_doc = self.couchdb.get(sess_uri, descr='').addCallback(self.couchdb.parseResult)
-                return usr_doc
+                    usr_doc = self.couchdb.get(sess_uri, descr='').addCallback(self.couchdb.parseResult)
+                    return usr_doc
             return r
         sess.addCallback(usr_info)
+        def usr_doc(r):
+            print "Session USR_DOC: %s" % repr(r)
+            return r
+        sess.addCallback(usr_doc)
+
         return sess
 
     def getCreds(self):
