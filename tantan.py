@@ -30,6 +30,7 @@ from paisley import CouchDB
 from autobahn.websocket import listenWS, connectWS
 from autobahn.wamp import WampServerFactory, WampServerProtocol, exportRpc
 
+from zb import TantanZB
 
 
 class TantanWampProtocol(WampServerProtocol):
@@ -42,6 +43,10 @@ class TantanWampProtocol(WampServerProtocol):
 
         self.registerForPubSub("http://www.tantan.org/api/datos/info#", True)
         self.registerForRpc(self.factory, "http://www.tantan.org/api/datos#")
+
+        if self.factory.zbProtocol:
+            self.registerForPubSub("http://www.tantan.org/api/sensores#", True)
+            self.registerForRpc(self.factory.zbProtocol, "www.tantan.org/api/sensores-control#")
 
 
 def failure_print(failure):
@@ -61,6 +66,7 @@ class TantanWampFactory(WampServerFactory):
         self.couch_port = couch_port
         self.db_name = db_name
         self.couchdb = CouchDB(couch_url, port=couch_port, dbName=db_name)
+        self.zbProtocol = TantanZB(wsMcuFactory=self)
 
 
     @exportRpc("granja-info")
