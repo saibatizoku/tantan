@@ -12,10 +12,9 @@ from twisted.python import log, usage
 from twisted.web.server import Site
 from twisted.web.static import File
 
-from autobahn.resource import WebSocketResource, \
-                              HTTPChannelHixie76Aware
+from autobahn.resource import WebSocketResource, HTTPChannelHixie76Aware
 
-from couch import TTCouchFactory as CouchFactory
+from tantan import TantanWampFactory
 from zb import WsMcuFactory as ZBFactory
 
 
