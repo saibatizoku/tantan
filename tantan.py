@@ -38,8 +38,10 @@ class TantanWampProtocol(WampServerProtocol):
         print u"Connection lost: %s" % reason
 
     def onSessionOpen(self):
-        self.registerForPubSub("http://www.tantan.org/api/couchdb/info#", True)
-        self.registerForRpc(self.factory, "http://www.tantan.org/api/couchdb#")
+        print u"TanTan WAMP server connection made"
+
+        self.registerForPubSub("http://www.tantan.org/api/datos/info#", True)
+        self.registerForRpc(self.factory, "http://www.tantan.org/api/datos#")
 
 
 def failure_print(failure):
