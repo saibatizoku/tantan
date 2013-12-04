@@ -49,26 +49,28 @@ class TTServiceMaker(object):
         serial_port = str(options['serial_port'])
         bdrate = int(options['baudrate'])
         debug = options['debug']
+
         log.msg('Attempting to open %s' % (port, ))
-        wsurl = "ws://%s:%s" % (host, 9000)
-        wsurl_zb = "ws://%s:%s" % (host, 9001)
-        ttCouchFactory = CouchFactory(wsurl, debug = debug)
-        ttCouchFactory.setProtocolOptions(allowHixie76 = True)
-        ttCouchFactory.startFactory()
 
-        ttZBFactory = ZBFactory(wsurl_zb)
-        serialport = SerialPort(ttZBFactory.mcuProtocol, serial_port, reactor, baudrate=bdrate)
+        contextFactory = None
+        wsurl = "ws://%s:%s" % (host, port)
 
-        ttZBFactory.setProtocolOptions(allowHixie76 = True)
-        ttZBFactory.startFactory()
+        tantanFactory = TantanWampFactory(wsurl, debug = False,
+                            debugCodePaths = True, debugWamp = debug,
+                            debugApp = False)
+        tantanFactory.setProtocolOptions(allowHixie76 = True)
+        tantanFactory.startFactory()
 
-        resource = WebSocketResource(ttCouchFactory)
-        resource_zb = WebSocketResource(ttZBFactory)
+        try:
+            serialport = SerialPort(tantanFactory.zbProtocol, serial_port, reactor, baudrate=bdrate)
+        except:
+            serialport = None
+
+
+        resource = WebSocketResource(tantanFactory)
 
         root = File("./static")
-
-        root.putChild("ws/api", resource)
-        root.putChild("api/zb", resource_zb)
+        root.putChild("ws_couch", resource)
 
         site = Site(root)
         site.protocol = HTTPChannelHixie76Aware
