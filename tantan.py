@@ -31,7 +31,8 @@ from autobahn.websocket import listenWS, connectWS
 from autobahn.wamp import WampServerFactory, WampServerProtocol, exportRpc
 
 
-class TantanCouchProtocol(WampServerProtocol):
+
+class TantanWampProtocol(WampServerProtocol):
 
     def connectionLost(self, reason):
         print u"Connection lost: %s" % reason
@@ -46,14 +47,17 @@ def failure_print(failure):
     return {'ok': False, 'error': repr(failure)}
     
 
-class TTCouchFactory(WampServerFactory):
+class TantanWampFactory(WampServerFactory):
 
-    protocol = TantanCouchProtocol
+    protocol = TantanWampProtocol
 
     def __init__(self, url, couch_url='localhost', couch_port=5984,
-            db_name='tantan', debug = False):
+            db_name='tantan', debug = False, debugCodePaths = False, debugWamp = False, debugApp = False):
         WampServerFactory.__init__(self, url, debug = debug,
-                debugWamp = debug, debugApp = debug)
+                debugWamp = debugWamp, debugApp = debugApp)
+        self.couch_url = couch_url
+        self.couch_port = couch_port
+        self.db_name = db_name
         self.couchdb = CouchDB(couch_url, port=couch_port, dbName=db_name)
 
 
