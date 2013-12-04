@@ -2,7 +2,7 @@
 from zope.interface import implements
 
 from twisted.application.service import IServiceMaker
-from twisted.application import internet
+from twisted.application import internet, service
 from twisted.cred import credentials, portal
 from twisted.cred.strcred import AuthOptionMixin
 from twisted.internet import defer, reactor
@@ -73,6 +73,12 @@ class TTServiceMaker(object):
 
         site = Site(root)
         site.protocol = HTTPChannelHixie76Aware
-        return internet.TCPServer(port, site)
+
+        s = service.MultiService()
+
+        web = internet.TCPServer(port, site)
+        web.setServiceParent(s)
+
+        return s
 
 serviceMaker = TTServiceMaker()
