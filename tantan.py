@@ -27,13 +27,12 @@ from urllib import urlencode, quote
 
 from paisley import CouchDB
 
-from autobahn.websocket import listenWS, connectWS
-from autobahn.wamp import WampServerFactory, WampServerProtocol, exportRpc
+from autobahn.wamp import WampServerFactory, WampCraServerProtocol, exportRpc
 
 from zb import TantanZB
 
 
-class TantanWampProtocol(WampServerProtocol):
+class TantanWampProtocol(WampCraServerProtocol):
 
     def connectionLost(self, reason):
         print u"Connection lost: %s" % reason
