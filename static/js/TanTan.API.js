@@ -53,44 +53,4 @@ TanTan.module('API', function (API, App, Backbone, Marionette, $, _) {
             this.showMain();
         }
     });
-
-    API.addInitializer(function () {
-        var controller = new API.Controller();
-        controller.router = new API.Router({
-            controller: controller
-        });
-        this.controller = controller;
-        var api = new App.Couch.API();
-        var wsuri = "ws://" + window.location.hostname + ":8080/ws";
-        api.wsuri = wsuri;
-        api.connect();
-
-        App.vent.on('wamp:success', function (session) {
-            ab.log('WAMP session OK');
-        });
-        App.vent.on('wamp:failure', function (session) {
-            ab.log('WAMP session FAILED');
-        });
-        App.vent.on('granjas:login', function (info) {
-            ab.log('Logging in');
-            api.login(info.creds);
-        });
-        App.vent.on('granjas:logout', function () {
-            ab.log('Logging out');
-            api.logout();
-            controller.loggedOut();
-        });
-        App.vent.on('granjas:loggedIn', function (info) {
-            ab.log('Logged in', info);
-            controller.loggedIn(info);
-        });
-        App.vent.on('granjas:loggedOut', function (info) {
-            ab.log('Logged out', info);
-            controller.loggedOut();
-        });
-        App.vent.on('granjas:edit-profile', function (info) {
-            ab.log('Editing user profile');
-            controller.showUserEdit();
-        });
-    });
 });
