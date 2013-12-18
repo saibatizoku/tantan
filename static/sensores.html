@@ -1,0 +1,349 @@
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+        <meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1.0">
+        <title>TanTán</title>
+        <link rel="shortcut icon" href="eje_favicon.ico">
+        <link href="vendor/bootstrap/css/bootstrap.css" rel="stylesheet">
+        <link href='vendor/fullcalendar/fullcalendar.css' rel='stylesheet' />
+        <link href='vendor/fullcalendar/fullcalendar.print.css' rel='stylesheet' media='print' />
+        <link rel="stylesheet" href="style/main.css" type="text/css">
+    </head>
+
+    <body>
+        <a class="sr-only" href="#main">Ir al contenido</a>
+        <nav id="nav" class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="index.html"><img src="eje_acuicola_brand.png" width="25" height="14">TanTán</a>
+                </div>
+            </div>
+        </nav>
+        <section id="tantanapp" class="container">
+            <header id="header"></header>
+            <section id="graf">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="thumbnail text-center">
+                        <h2>Ambiental</h2>
+                        <h3 class="text-left">Humedad (<span id="instH"></span>%)</h3>
+                        <canvas id="ambgh"></canvas>
+                        <h3 class="text-left">Presión (<span id="instP"></span>hPa)</h3>
+                        <canvas id="ambgp"></canvas>
+                        <h3 class="text-left">Temperatura (<span id="instT"></span>°C)</h3>
+                        <canvas id="ambgt"></canvas>
+                        <div id="ambr"></div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="thumbnail text-center">
+                        <h2>Motores</h2>
+                        <h3 class="text-left">Voltaje (<span id="instV"></span>V)</h3>
+                        <canvas id="potgV"></canvas>
+                        <h3 class="text-left">Corriente (<span id="instC1">0</span>A,<span id="instC2">0</span>A,<span id="instC3">0</span>A)</h3>
+                        <canvas id="potgC"></canvas>
+                        <h3 class="text-left">Potencia (<span id="instW1">0</span>kW,<span id="instW2">0</span>kW,<span id="instW3">0</span>kW)</h3>
+                        <canvas id="potgW"></canvas>
+                        <div id="ambr"></div>
+                        <div id="potr"></div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="thumbnail text-center">
+                        <h2>Estanques</h2>
+                        <canvas id="estg"></canvas>
+                        <div id="estr"></div>
+                    </div>
+                </div>
+            </div>
+            </section>
+            <section id="main"></section>
+            <footer id="footer"></footer>
+        </section>
+        <footer id="copyright" class="container">
+            <hr>
+            <p>&copy; ejeacuicola.mx 2013</p>
+        </footer>
+
+        <script id="appnav" type="text/html">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="index.html"><img src="eje_acuicola_brand.png" width="25" height="14">TanTán</a>
+            </div>
+            <div class="navbar-collapse collapse">
+                <section id="nav-menu"></section>
+                <section id="nav-user"></section>
+                <section id="nav-actions"></section>
+            </div>
+        </script>
+
+        <script id="navactions" type="text/html">
+            <div class="form-group">
+                <input id="usuario" type="text" name="usuario" class="form-control" placeholder="nombre de usuario">
+            </div>
+            <div class="form-group">
+                <input id="contra" type="password" name="contra" class="form-control" placeholder="contraseña">
+            </div>
+            <button id="login" type="submit" class="btn btn-default">Ingresar <span class="glyphicon glyphicon-user"></span></button>
+        </script>
+
+        <script id="navmenu" type="text/html">
+            <li class="active"><a href="index.html">Granjas</a></li>
+        </script>
+
+        <script id="navuseractions" type="text/html">
+            <button id="edit-profile" type="button" class="btn btn-default">Editar perfil</button>
+            <button type="button" class="btn btn-default">Agregar granja</button>
+            <button id="logout" type="button" class="btn btn-warning">Salir <span class="glyphicon glyphicon-user"></span></button>
+        </script>
+
+        <script id="appmain" type="text/html">
+            <div class="row">
+                <div id="side-right" class="col-md-3">
+                    <h1>Enlaces</h1>
+                </div>
+                <div id="content" class="col-md-6">
+                    <h1>Contenido</h1>
+                </div>
+                <div id="side-left" class="col-md-3">
+                    <h1>Herramientas</h1>
+                </div>
+            </div>
+        </script>
+
+        <script id="appmainuser" type="text/html">
+            <div class="row">
+                <div id="tools" class="col-sm-4 col-md-3">
+                    <h1>Herramientas</h1>
+                </div>
+                <div id="content" class="col-sm-8 col-md-9">
+                    <h1>Contenido</h1>
+                </div>
+            </div>
+        </script>
+
+        <script id="mainright" type="text/html">
+            <div class="hidden panel panel-default">
+                <div class="panel-heading">
+                    <h1 class="panel-title">Derecha</h1>
+                </div>
+            </div>
+        </script>
+
+        <script id="mainleft" type="text/html">
+            <div class="hidden panel panel-default">
+                <div class="panel-heading">
+                    <h1 class="panel-title">Izkierda</h1>
+                </div>
+            </div>
+        </script>
+
+        <script id="maincontent" type="text/html">
+            <div class="jumbotron">
+                <div class="container">
+                    <p><img class="img-responsive" src="eje_acuicola_brand.png"></p>
+                    <p><img class="img-responsive" src="eje_acuicola_texto.png"></p>
+                    <p>Para un manejo automatizado de granjas acuícolas.</p>
+                </div>
+            </div>
+        </script>
+
+        <script id="mainusercontent" type="text/html">
+            <div class="col-md-12">
+                <section id="user-bar"></section>
+                <section id="user-panel"></section>
+            </div>
+        </script>
+
+        <script id="mainusertools" type="text/html">
+            <div class="panel-heading">
+                <div class="panel-title">
+                    <h4><%= name%></h4>
+                </div>
+            </div>
+            <div class="panel-body">
+            </div>
+        </script>
+
+        <script id="userbar" type="text/html">
+            <div class="col-md-12">
+                <div class="well">
+                    <div>
+                        <ol class="breadcrumb">
+                            <li><a href="#">Granjas</a></li>
+                            <li><a href="#">Granja Xamapan</a></li>
+                            <li><a href="#">Estanque A</a></li>
+                            <li class="active">Sensores</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </script>
+
+        <script id="userpanel" type="text/html">
+            <div class="panel-heading">
+                <div class="panel-title">
+                    <h3>Sistemas acuícolas</h3>
+                </div>
+            </div>
+            <div class="panel-body">
+                <ul class="nav nav-pills">
+                    <li class="active"><a href="#">Xamapan</a></li>
+                    <li><a href="#">Tilapia Inc.</a></li>
+                </ul>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="thumbnail">
+                            <canvas width="100"></canvas>
+                            <div class="caption">
+                                <h1>A1</h1>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="thumbnail">
+                            <canvas width="100"></canvas>
+                            <div class="caption">
+                                <h1>B1</h1>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="thumbnail">
+                            <canvas width="100"></canvas>
+                            <div class="caption">
+                                <h1>C1</h1>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="thumbnail">
+                            <canvas width="100"></canvas>
+                            <div class="caption">
+                                <h1>A1</h1>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="thumbnail">
+                            <canvas width="100"></canvas>
+                            <div class="caption">
+                                <h1>B1</h1>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="thumbnail">
+                            <canvas width="100"></canvas>
+                            <div class="caption">
+                                <h1>C1</h1>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="thumbnail">
+                            <canvas width="100"></canvas>
+                            <div class="caption">
+                                <h1>A1</h1>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="thumbnail">
+                            <canvas width="100"></canvas>
+                            <div class="caption">
+                                <h1>B1</h1>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="thumbnail">
+                            <canvas width="100"></canvas>
+                            <div class="caption">
+                                <h1>C1</h1>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </script>
+
+        <script id="template-userdoc" type="text/html">
+            <div class="panel-heading">
+                <div class="panel-title">
+                    <h3>Editar perfil de usuario</h3>
+                </div>
+            </div>
+            <div class="panel-body">
+                <form class="form-horizontal" role="form">
+                    <div class="form-group">
+                        <label class="col-lg-2 control-label">id</label>
+                        <div class="col-lg-10">
+                            <p class="form-control-static"><%= _id%></p>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-lg-2 control-label">Nombre</label>
+                        <div class="col-lg-10">
+                            <input type="text" class="form-control" name="name" value="<%= name%>">
+                        </div>
+                    </div>
+                    <% if (password_sha) { %>
+                    <div class="form-group">
+                        <label class="col-lg-2 control-label">Password SHA</label>
+                        <div class="col-lg-10">
+                            <input type="text" class="form-control" name="password_sha" disabled value="<%= password_sha%>">
+                        </div>
+                    </div>
+                    <% } %>
+                    <% if (salt) { %>
+                    <div class="form-group">
+                        <label class="col-lg-2 control-label">Password Salt</label>
+                        <div class="col-lg-10">
+                            <input type="text" class="form-control" name="salt" disabled value="<%= salt%>">
+                        </div>
+                    </div>
+                    <% } %>
+                    <div class="form-group">
+                        <label for="granjasList" class="col-lg-2 control-label">Password</label>
+                        <div class="col-lg-10">
+                            <input type="text" class="form-control" id="granjasList" placeholder="Granjas">
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </script>
+
+        <script type="text/javascript" src="vendor/jquery/jquery-1.10.2.min.js"></script>
+        <script type="text/javascript" src="json2.js"></script>
+        <script type="text/javascript" src="vendor/marionette/javascript/underscore.js"></script>
+        <script type="text/javascript" src="vendor/marionette/javascript/backbone.js"></script>
+        <script type="text/javascript" src="vendor/marionette/javascript/backbone.marionette.js"></script>
+        <script type="text/javascript" src='vendor/jquery/jquery-ui-1.10.3.custom.min.js'></script>
+        <script type="text/javascript" src="vendor/fullcalendar/fullcalendar.min.js"></script>
+        <script type="text/javascript" src="vendor/bootstrap/js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="autobahn.min.js"></script>
+        <script type="text/javascript" src="smoothie.js"></script>
+        <script type="text/javascript" src="js/TanTan.js"></script>
+        <script type="text/javascript" src="js/TanTan.WAMP.js"></script>
+        <script type="text/javascript" src="js/TanTan.Layout.js"></script>
+        <script type="text/javascript" src="js/TanTan.Models.js"></script>
+        <script type="text/javascript" src="js/TanTan.Sensores.js"></script>
+        <script type="text/javascript" src="js/TanTan.Controller.js"></script>
+        <script type="text/javascript" src="js/TanTan.Routes.js"></script>
+        <script type="text/javascript" src="js/zb_app.js"></script>
+    </body>
+</html>
