@@ -157,6 +157,16 @@ class TantanCouch:
         view.addCallback(estanque_info)
         return view
 
+    @exportRpc("eventos-info")
+    def getEventosInfo(self, granja=''):
+        view = self.couchdb.openView('tantan', 'eventos') #, startkey=[granja, 1])
+        
+        def estanque_info(results):
+            print results
+            return results
+        view.addCallback(estanque_info)
+        return view
+
     @exportRpc("session-info")
     def getSession(self, resp=None):
         sess_uri = '/_session'
