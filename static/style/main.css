@@ -35,7 +35,17 @@ html .fc .fc-header, .fc table .fc-header {
     font-size: 20px;
 }
 .fc-event {background-color: #85794d; border: 1px solid #85794d;}
+/*
 .fc-state-highlight {background: transparent;}
+*/
+
+.calendario {margin-top: 10px; min-height: 400px;}
+.calendario table {}
+
+#lista-eventos {font-size: 75%;}
+#lista-eventos .list-group-item {padding: 5px 10px;}
+#lista-eventos .list-item-text {line-height: 12px;}
+
 @media (min-width: 980px) {
     body {
         padding-top: 60px;
