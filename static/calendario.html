@@ -1,0 +1,152 @@
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+        <meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1.0">
+        <title>TanTán</title>
+        <link rel="shortcut icon" href="eje_favicon.ico">
+        <link href="vendor/bootstrap/css/bootstrap.css" rel="stylesheet">
+        <link href="vendor/bshelpers/css/bootstrap-formhelpers.min.css" rel="stylesheet">
+        <link href='vendor/fullcalendar/fullcalendar.css' rel='stylesheet' />
+        <link href='vendor/fullcalendar/fullcalendar.print.css' rel='stylesheet' media='print' />
+        <link rel="stylesheet" href="style/main.css" type="text/css">
+        <link rel="stylesheet" href="style/sticky-footer-navbar.css" type="text/css">
+    </head>
+
+    <body>
+        <div class="wrap">
+            <a class="sr-only" href="#main">Ir al contenido</a>
+            <nav id="nav" class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+                <div class="container">
+                    <div class="navbar-header">
+                        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </button>
+                        <a class="navbar-brand" href="index.html"><img src="eje_acuicola_brand.png" width="25" height="14">TanTán</a>
+                    </div>
+                </div>
+            </nav>
+            <section id="tantanapp" class="container">
+            <header id="header">
+            </div>
+            </header>
+                <section id="main"></section>
+            </section>
+            <footer id="copyright">
+                <div class="container">
+                    <hr>
+                    <p>&copy; ejeacuicola.mx 2013</p>
+                </div>
+            </footer>
+        </div>
+
+        <script type="text/template" id="template-evento-nuevo">
+            <div class="panel-heading">
+                <h3 class="panel-title">Agregar evento</h3>
+            </div>
+            <div class="panel-body">
+                <form class="form-horizontal" role="form">
+                    <div class="form-group">
+                        <label for="name" class="col-sm-4 control-label">Nombre</label>
+                        <div class="col-sm-8">
+                            <input type="text" name="name" class="form-control">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="startdate" class="col-sm-4 control-label">Fecha inicio</label>
+                        <div class="col-sm-8">
+                            <input type="date" name="startdate" class="form-control">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="starttime" class="col-sm-4 control-label">Hora inicio</label>
+                        <div class="col-sm-8">
+                            <input type="time" name="starttime" class="form-control">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="enddate" class="col-sm-4 control-label">Fecha fin</label>
+                        <div class="col-sm-8">
+                            <input type="date" name="enddate" class="form-control">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="endtime" class="col-sm-4 control-label">Hora fin</label>
+                        <div class="col-sm-8">
+                            <input type="time" name="endtime" class="form-control">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-offset-4 col-sm-8">
+                            <button type="submit" class="btn btn-primary">Guardar</button>
+                            <button type="reset" class="btn btn-danger">Cancelar</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </script>
+
+        <script type="text/template" id="template-agenda">
+            <div class="row">
+                <div class="col-sm-5">
+                    <section id="cal-nav-region"></section>
+                    <section id="cal-usr-region"></section>
+                </div>
+                <div class="col-sm-7">
+                    <section id="cal-region"></section>
+                </div>
+            </div>
+        </script>
+
+        <script type="text/template" id="template-lista-eventos">
+            <div class="panel-heading">
+                <h1 class="panel-title">Eventos del calendario</h1>
+            </div>
+            <div class="panel-body">
+                <div id="lista-eventos" class="list-group">
+                </div>
+            </div>
+        </script>
+
+        <script type="text/template" id="template-evento-nav">
+            <h4 class="list-item-heading initialism"><%= title %></h4>
+            <p class="list-item-text"><%= start %></p>
+            <p class="list-item-text"><%= end %></p>
+        </script>
+
+        <script type="text/template" id="template-calendario">
+            <div class="panel-heading">
+                <h1 class="panel-title">Calendario - Granja Xamapan</h1>
+            </div>
+            <div class="panel-body">
+                <div class="row text-center" role="toolbar">
+                    <div class="col-sm-12">
+                        <div class="btn-group">
+                            <button id="ver-mes" type="button" class="btn btn-default">Mes</button>
+                            <button id="ver-semana" type="button" class="btn btn-default">Semana</button>
+                            <button id="ver-dia" type="button" class="btn btn-default">Día</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="calendario table-responsive"></div>
+            </div>
+        </script>
+
+        <script type="text/javascript" src="json2.js"></script>
+        <script type="text/javascript" src="vendor/jquery/jquery-1.10.2.min.js"></script>
+        <script type="text/javascript" src='vendor/jquery/jquery-ui-1.10.3.custom.min.js'></script>
+        <script type="text/javascript" src="vendor/marionette/javascript/underscore.js"></script>
+        <script type="text/javascript" src="vendor/marionette/javascript/backbone.js"></script>
+        <script type="text/javascript" src="vendor/marionette/javascript/backbone.marionette.js"></script>
+        <script type="text/javascript" src="vendor/fullcalendar/fullcalendar.min.js"></script>
+        <script type="text/javascript" src="vendor/bootstrap/js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="vendor/bshelpers/js/bootstrap-formhelpers.min.js"></script>
+        <script type="text/javascript" src="autobahn.min.js"></script>
+        <script type="text/javascript" src="smoothie.js"></script>
+        <script type="text/javascript" src="js/TanTan.js"></script>
+        <script type="text/javascript" src="js/TanTan.AutoBahn.js"></script>
+        <script type="text/javascript" src="js/TanTan.Calendario.js"></script>
+        <script type="text/javascript" src="js/cal_app.js"></script>
+    </body>
+</html>
