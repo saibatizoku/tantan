@@ -35,7 +35,7 @@ from zb import TantanZB
 def failure_print(failure):
     print failure
     return {'ok': False, 'error': repr(failure)}
-    
+
 
 class TantanCouch:
 
@@ -68,7 +68,7 @@ class TantanCouch:
     @exportRpc("estanque-info")
     def getEstanqueInfo(self, granja=''):
         view = self.couchdb.openView('tantan', 'estanques', startkey=[granja, 1])
-        
+
         def estanque_info(results):
             print results
             return results
@@ -102,13 +102,13 @@ class TantanCouch:
                 "password": self.couchdb.password,
                 }
         return cred_info
-    
+
     def setCreds(self, creds):
         usr, pwd = creds
         self.couchdb.username = usr
         self.couchdb.password = pwd
         return (self.couchdb.username, self.couchdb.password,)
-    
+
     @exportRpc("logout")
     def doLogout(self, creds=None):
         if self.couchdb.username:
