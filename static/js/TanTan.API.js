@@ -2,8 +2,24 @@
 'use strict';
 
 TanTan.module('API', function (API, App, Backbone, Marionette, $, _) {
-    API.Router = Marionette.AppRouter.extend({});
+    App.commands.setHandler('login', function(usercreds) {
+        console.log('App Command: LOGIN', usercreds);
+    });
+    App.commands.setHandler('connect', function() {
+        console.log('App Command: CONNECT');
+    });
+    API.Router = Marionette.AppRouter.extend({
+        appRoutes: {
+            'granjas': 'loggedOut',
+            'edit/user': 'showUserEdit'
+        }
+    });
 
+    API.ZBRouter = Marionette.AppRouter.extend({
+        appRoutes: {
+            'zb': 'showUserEdit'
+        }
+    });
     API.Controller = Marionette.Controller.extend({
         initialize: function () {
             this.nav = new App.Layout.Nav();
@@ -15,7 +31,7 @@ TanTan.module('API', function (API, App, Backbone, Marionette, $, _) {
             App.nav.show(this.nav);
             this.nav.actions.show(new App.Layout.NavActions());
         },
-        showUserNav: function () {
+        showUserNav: function (user) {
             App.nav.show(this.nav);
             this.nav.menu.show(new App.Layout.NavUserMenu());
             this.nav.actions.show(new App.Layout.NavUserActions());
@@ -26,10 +42,9 @@ TanTan.module('API', function (API, App, Backbone, Marionette, $, _) {
             this.main.content.show(new App.Layout.MainContent());
             this.main.left.show(new App.Layout.MainLeft());
         },
-        showUserMain: function (user) {
+        showUserMain: function (usermodel) {
             App.main.show(this.mainuser);
-            var usr_view = new App.Views.UserDocView();
-            this.mainuser.tools.show(new App.Layout.MainUserTools({model: user}));
+            this.mainuser.tools.show(new App.Layout.MainUserTools({model: usermodel}));
             this.maincontent = new App.Layout.MainUserContent();
             this.mainuser.content.show(this.maincontent);
             this.maincontent.bar.show(new App.Layout.UserBar());

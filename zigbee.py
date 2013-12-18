@@ -79,10 +79,10 @@ def sleep_time_hex(seconds):
     return hex(int(seconds))
 
 def broadcastToClients(data, msg=None, source=None, timestamp=False):
-    if msg:
-        print msg
-    else:
-        print data
+    #if msg:
+    #    print msg
+    #else:
+    #    print data
 
     if timestamp:
         data = strftime("%Y-%m-%d %H:%M:%S").encode('utf8') + ": " + data
@@ -115,6 +115,58 @@ class TantanZB(txXBee):
     def handle_badpacket(self, packet):
         print "ERROR:", packet
 
+    def handle_rx(self, response):
+        resp = {}
+        resp['name'] = ZB_reverse.get(response["source_addr_long"], "Unknown")
+        resp['laddr'] = response["source_addr_long"].encode('hex')
+        resp['addr'] = response["source_addr"].encode('hex')
+        resp['val'] = response["rf_data"] or ''
+        rout = "RX:"
+        for (key, item) in resp.items():
+            rout += "{0}-{1}:".format(key, item)
+        msg = "{0}:{1}:RX:".format(resp['name'], resp['addr'], resp['val']) + repr(resp['val'])
+        #print 'Evt id: {0}\nVal: {1}'.format(str(resp['name']), resp['val'].decode('utf8'))
+        evt = {'id': resp['name'],
+                'value': resp['val'],
+                }
+        self.wsMcuFactory.dispatch("http://example.com/mcu#zb-rx", evt)
+
+    def handle_nd(self, response):
+        if "source_addr_long" in response:
+            laddr = response["source_addr_long"].encode('hex')
+        elif "source_addr_long" in response["parameter"]:
+            laddr = response["parameter"]["source_addr_long"].encode('hex')
+        
+        #nname = ZB_reverse.get(laddr, "Unknown")
+        nname = laddr
+        addr = response["parameter"]["source_addr"].encode('hex')
+        devt = response["parameter"]["device_type"].encode('hex')
+        devs = response["parameter"]["status"].encode('hex')
+        paddr = response["parameter"]["parent_address"].encode('hex')
+        msg = ":".join([nname, addr, "ND", laddr, devt, devs, paddr]) #, str(packet)])
+        print msg
+        evt = {'id': nname,
+               'value': {'long': laddr,
+                         'short': addr,
+                         'device': devt,
+                         'parent': paddr,
+                         'status': devs,
+                         }
+              }
+        self.wsMcuFactory.dispatch("http://example.com/mcu#zb-nd", evt)
+
+    def handle_db(self, response):
+        nname = ZB_reverse.get(response["source_addr_long"], "Unknown")
+        laddr = response["source_addr_long"].encode('hex')
+        addr = response["source_addr"].encode('hex')
+        val = 0
+        if "parameter" in response:
+            val = int(response["parameter"].encode('hex'),16)
+        msg = ":".join([nname, addr, "DB", str(val)])
+        evt = {'id': nname, 'value': val}
+        print msg
+        self.wsMcuFactory.dispatch("http://example.com/mcu#zb-db", evt)
+
     def handle_packet(self, xbeePacketDictionary):
         response = xbeePacketDictionary
         msg = None
@@ -122,53 +174,16 @@ class TantanZB(txXBee):
         print repr(response)
         #if response.get("source_addr_long", "default") in ZB_reverse:
         if response.get("id", "default") == "rx":
-            resp = {}
-            resp['name'] = ZB_reverse[response["source_addr_long"]]
-            resp['laddr'] = response["source_addr_long"].encode('hex')
-            resp['addr'] = response["source_addr"].encode('hex')
-            resp['val'] = response["rf_data"] or ''
-            rout = "RX:"
-            for (key, item) in resp.items():
-                rout += "{0}-{1}:".format(key, item)
-            msg = "{0}:{1}:RX:".format(resp['name'], resp['addr'], resp['val']) + repr(resp['val'])
-            #print 'Evt id: {0}\nVal: {1}'.format(str(resp['name']), resp['val'].decode('utf8'))
-            evt = {'id': resp['name'],
-                   'value': resp['val'],
-                  }
-            self.wsMcuFactory.dispatch("http://example.com/mcu#zb-rx", evt)
+            self.handle_rx(response)
             #broadcastToClients(response, msg)
         elif response.get("status", "default") == "\x00":
             if response.get("command", "default") == "ND":
-                #print "COMMAND>>>:", str(response), str(response["command"])
-                nname = ZB_reverse[response["parameter"]["source_addr_long"]]
-                laddr = response["parameter"]["source_addr_long"].encode('hex')
-                addr = response["parameter"]["source_addr"].encode('hex')
-                devt = response["parameter"]["device_type"].encode('hex')
-                devs = response["parameter"]["status"].encode('hex')
-                paddr = response["parameter"]["parent_address"].encode('hex')
-                msg = ":".join([nname, addr, "ND", laddr, devt, devs, paddr]) #, str(packet)])
-                evt = {'id': nname,
-                       'value': {'long': laddr,
-                                 'short': addr,
-                                 'device': devt,
-                                 'parent': paddr,
-                                 'status': devs,
-                                 }
-                      }
-                self.wsMcuFactory.dispatch("http://example.com/mcu#zb-nd", evt)
+                self.handle_nd(response)
             elif response.get("command", "default") == "DB":
-                nname = ZB_reverse[response["source_addr_long"]]
-                laddr = response["source_addr_long"].encode('hex')
-                addr = response["source_addr"].encode('hex')
-                val = 0
-                if "parameter" in response:
-                    val = int(response["parameter"].encode('hex'),16)
-                msg = ":".join([nname, addr, "DB", str(val)])
-                evt = {'id': nname, 'value': val}
-                self.wsMcuFactory.dispatch("http://example.com/mcu#zb-db", evt)
+                self.handle_db(response)
             elif response.get("command", "default") == "%V":
                 if response.get("id", "default") == "remote_at_response":
-                    nname = ZB_reverse[response["source_addr_long"]]
+                    nname = ZB_reverse.get(response["source_addr_long"], "Unknown")
                     laddr = response["source_addr_long"].encode('hex')
                     addr = response["source_addr"].encode('hex')
                     val = 0
@@ -185,7 +200,7 @@ class TantanZB(txXBee):
                     
         elif 'samples' in response:
             #print strftime("%Y-%m-%d %H:%M:%S").encode('utf8'), "<<< FROM:", response
-            nname = ZB_reverse[response["source_addr_long"]]
+            nname = ZB_reverse.get(response["source_addr_long"], "Unknown")
             laddr = response["source_addr_long"].encode('hex')
             addr = response["source_addr"].encode('hex')
             val = str(dict((str(key).replace('-',''), str(value)) for (key, value) in response["samples"][0].items())).replace("'",'"')
@@ -239,6 +254,18 @@ class TantanZB(txXBee):
                     )
             return 'ASSOC LED Sent: {0}'.format(evt)
 
+    @exportRpc("send-tx")
+    def sendTX(self, evt=None):
+        #self._sendTX()
+        print evt
+        return 'TX Sent'
+        
+    def _sendTX(self):
+        reactor.callFromThread(self.send,
+                "tx",
+                frame_id="\x01",
+                command="ND",
+                )
     @exportRpc("send-nd")
     def sendND(self, evt=None):
         self._sendND()
@@ -314,7 +341,7 @@ if __name__ == '__main__':
     log.startLogging(logFile)
 
     port = o.opts['port']
-    log.msg('Attempting to open %s at %dbps as a %s device' % (port, o.opts['baudrate'], txXBee.__name__))
+    log.msg('Attempting to open %s at %sbps as a %s device' % (port, o.opts['baudrate'], txXBee.__name__))
     webport = int(o.opts['webport'])
     wsurl = o.opts['wsurl']
 
@@ -323,8 +350,8 @@ if __name__ == '__main__':
 
     ## create embedded web server for static files
     ##
-    #webdir = File("../static")
-    #web = Site(webdir)
-    #reactor.listenTCP(webport, web)
+    webdir = File("./static")
+    web = Site(webdir)
+    reactor.listenTCP(webport, web)
 
     reactor.run()

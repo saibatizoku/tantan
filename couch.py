@@ -27,9 +27,9 @@ from urllib import urlencode, quote
 
 from paisley import CouchDB
 
-from autobahn.wamp import WampServerFactory, WampServerProtocol, exportRpc
+from autobahn.wamp import exportRpc
+from autobahn.wamp import WampCraProtocol
 
-from zb import TantanZB
 
 
 def failure_print(failure):
@@ -41,6 +41,50 @@ class TantanCouch:
 
     couchdb = None
     factory = None
+    AUTHEXTRA = None
+    SECRETS = {'granja-admin': WampCraProtocol.deriveKey('nimda', AUTHEXTRA)}
+    PERMISSIONS = {
+            'granja-admin': {
+                'pubsub': [
+                    {'uri': 'http://www.tantan.org/api/datos/info#',
+                        'prefix': True,
+                        'pub': True,
+                        'sub': True
+                        },
+                    {'uri': 'http://www.tantan.org/api/sensores#',
+                        'prefix': True,
+                        'pub': True,
+                        'sub': True
+                        },
+                    ],
+                'rpc': [
+                    {
+                        'uri': 'http://www.tantan.org/api/datos#',
+                        'call': True
+                        },
+                    {
+                        'uri': 'http://www.tantan.org/api/sensores-control#',
+                        'call': True
+                        },
+                    ],
+                },
+            None: {
+                'pubsub': [
+                    {'uri': 'http://www.tantan.org/api/datos/info#',
+                        'prefix': True,
+                        'pub': True,
+                        'sub': True
+                        },
+                    ],
+                'rpc': [
+                    {
+                        'uri': 'http://www.tantan.org/api/datos#',
+                        'call': True
+                        },
+                    ],
+                }
+            }
+
 
     def __init__(self, factory):
         self.factory = factory
@@ -51,6 +95,34 @@ class TantanCouch:
         port = self.factory.db_port
         dbName = self.factory.db_name
         self.couchdb = CouchDB(server_url, port = port, dbName = dbName)
+
+    def getCreds(self):
+        cred_info = {
+                "username": self.couchdb.username,
+                "password": self.couchdb.password,
+                }
+        return cred_info
+    
+    def setCreds(self, creds):
+        usr, pwd = creds
+        self.couchdb.username = usr
+        self.couchdb.password = pwd
+        return (self.couchdb.username, self.couchdb.password,)
+    
+    def getSecret(self, authKey):
+        if authKey == self.couchdb.username:
+            pwd = self.couchdb.password
+            extra = self.AUTHEXTRA
+            return WampCraProtocol.deriveKey(pwd, extra)
+
+    @exportRpc("save-doc")
+    def saveDoc(self, doc, docId=None):
+       save = self.couchdb.saveDoc(body=doc, docId=docId)
+       def printDoc(resp):
+           print "Saved document", repr(resp)
+           return resp
+       save.addCallback(printDoc)
+       return save
 
     @exportRpc("granja-info")
     def getGranjaInfo(self, granja=None):
@@ -75,39 +147,39 @@ class TantanCouch:
         view.addCallback(estanque_info)
         return view
 
+    @exportRpc("eventos-info")
+    def getEventosInfo(self, granja=''):
+        view = self.couchdb.openView('tantan', 'eventos') #, startkey=[granja, 1])
+        
+        def estanque_info(results):
+            print results
+            return results
+        view.addCallback(estanque_info)
+        return view
+
     @exportRpc("session-info")
     def getSession(self, resp=None):
         sess_uri = '/_session'
         sess = self.couchdb.get(sess_uri, descr='').addCallback(self.couchdb.parseResult)
-        def usr_info(r):
-            print "Session USR_INFO: %s" % repr(r)
-            if  u'ok' in r and r[u'ok']:
-                usr = {u'userCtx': r[u'userCtx']}
-                if r[u'userCtx'][u'name'] is not None:
-                    sess_uri = '/_users/org.couchdb.user:' + r[u'userCtx'][u'name']
-                    usr_doc = self.couchdb.get(sess_uri, descr='').addCallback(self.couchdb.parseResult)
-                    return usr_doc
-            return r
-        sess.addCallback(usr_info)
-        def usr_doc(r):
-            print "Session USR_DOC: %s" % repr(r)
-            return r
-        sess.addCallback(usr_doc)
-
         return sess
 
-    def getCreds(self):
-        cred_info = {
-                "username": self.couchdb.username,
-                "password": self.couchdb.password,
-                }
-        return cred_info
+    def getUserDoc(self, resp=None):
+        print "Session getUSERDOC: %s" % repr(resp)
+        def user_doc(r):
+            print "Session USR_DOC: %s" % repr(r)
+            self.user_doc = r
+            return r
 
-    def setCreds(self, creds):
-        usr, pwd = creds
-        self.couchdb.username = usr
-        self.couchdb.password = pwd
-        return (self.couchdb.username, self.couchdb.password,)
+        if resp and u'ok' in resp and resp[u'ok']:
+            self.user_session = resp
+            print "Session USR_SESSION: %s" % repr(resp)
+            if resp[u'userCtx'][u'name'] is not None:
+                sess_uri = '/_users/org.couchdb.user:' + resp[u'userCtx'][u'name']
+                usr_doc = self.couchdb.get(sess_uri, descr='').addCallback(self.couchdb.parseResult)
+                usr_doc.addCallback(user_doc)
+                return usr_doc
+            return resp
+
 
     @exportRpc("logout")
     def doLogout(self, creds=None):
@@ -124,16 +196,17 @@ class TantanCouch:
             self.setCreds(creds)
 
         d = self.getSession()
+        d.addCallback(self.getUserDoc)
         d.addErrback(failure_print)
 
         def checkCreds(response):
             print 'response: %s' % repr(response)
             if u'name' in response and response[u'name']:
-                self.user = response
                 print 'Good CREDS:', response
                 return response
             else:
-                self.user = None
+                self.user_doc = None
+                self.user_session = None
                 raise Exception("Login failed")
         d.addCallback(checkCreds)
         print 'getCreds:', self.getCreds()

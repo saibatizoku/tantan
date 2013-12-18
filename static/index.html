@@ -61,11 +61,13 @@
         </script>
 
         <script id="navmenu" type="text/html">
-            <li class="active"><a href="index.html">Granjas</a></li>
+            <li class="active"><a href="index.html">Peces</a></li>
+            <li><a href="calendario.html">Calendario</a></li>
         </script>
 
         <script id="navuseractions" type="text/html">
             <button id="edit-profile" type="button" class="btn btn-default">Editar perfil</button>
+            <button type="button" class="btn btn-default">Agregar granja</button>
             <button id="logout" type="button" class="btn btn-warning">Salir <span class="glyphicon glyphicon-user"></span></button>
         </script>
 
@@ -159,6 +161,88 @@
                 </div>
             </div>
             <div class="panel-body">
+                <ul class="nav nav-pills">
+                    <li class="active"><a href="#">Xamapan</a></li>
+                    <li><a href="#">Tilapia Inc.</a></li>
+                </ul>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="thumbnail">
+                            <canvas width="100"></canvas>
+                            <div class="caption">
+                                <h1>A1</h1>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="thumbnail">
+                            <canvas width="100"></canvas>
+                            <div class="caption">
+                                <h1>B1</h1>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="thumbnail">
+                            <canvas width="100"></canvas>
+                            <div class="caption">
+                                <h1>C1</h1>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="thumbnail">
+                            <canvas width="100"></canvas>
+                            <div class="caption">
+                                <h1>A1</h1>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="thumbnail">
+                            <canvas width="100"></canvas>
+                            <div class="caption">
+                                <h1>B1</h1>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="thumbnail">
+                            <canvas width="100"></canvas>
+                            <div class="caption">
+                                <h1>C1</h1>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="thumbnail">
+                            <canvas width="100"></canvas>
+                            <div class="caption">
+                                <h1>A1</h1>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="thumbnail">
+                            <canvas width="100"></canvas>
+                            <div class="caption">
+                                <h1>B1</h1>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="thumbnail">
+                            <canvas width="100"></canvas>
+                            <div class="caption">
+                                <h1>C1</h1>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </script>
 
@@ -175,20 +259,30 @@
                         <div class="col-lg-10">
                             <p class="form-control-static"><%= _id%></p>
                         </div>
-                        <label class="col-lg-2 control-label">Password SHA</label>
-                        <div class="col-lg-10">
-                            <p class="form-control-static"><%= password_sha%></p>
-                        </div>
-                        <label class="col-lg-2 control-label">Salt</label>
-                        <div class="col-lg-10">
-                            <p class="form-control-static"><%= salt%></p>
-                        </div>
                     </div>
                     <div class="form-group">
                         <label class="col-lg-2 control-label">Nombre</label>
                         <div class="col-lg-10">
                             <input type="text" class="form-control" name="name" value="<%= name%>">
                         </div>
+                    </div>
+                    <% if (password_sha) { %>
+                    <div class="form-group">
+                        <label class="col-lg-2 control-label">Password SHA</label>
+                        <div class="col-lg-10">
+                            <input type="text" class="form-control" name="password_sha" disabled value="<%= password_sha%>">
+                        </div>
+                    </div>
+                    <% } %>
+                    <% if (salt) { %>
+                    <div class="form-group">
+                        <label class="col-lg-2 control-label">Password Salt</label>
+                        <div class="col-lg-10">
+                            <input type="text" class="form-control" name="salt" disabled value="<%= salt%>">
+                        </div>
+                    </div>
+                    <% } %>
+                    <div class="form-group">
                         <label for="granjasList" class="col-lg-2 control-label">Password</label>
                         <div class="col-lg-10">
                             <input type="text" class="form-control" id="granjasList" placeholder="Granjas">

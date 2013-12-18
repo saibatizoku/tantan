@@ -1,5 +1,5 @@
 var sess = null;
-var wsuri = "ws://" + window.location.hostname + ":9000";
+var wsuri = "ws://" + window.location.hostname + ":8080/ws/api";
 var retryCount = 0;
 var retryDelay = 2;
 

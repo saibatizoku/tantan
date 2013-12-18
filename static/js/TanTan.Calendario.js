@@ -49,7 +49,7 @@ TanTan.module('Calendario', function(Calendario, App, Backbone) {
                     //right: 'month,agendaWeek,agendaDay'
                 },
                 editable: true //,
-                //events: evts
+                //events: App.AutoBahn.get_events()
             };
     Calendario.Base = Backbone.Model.extend({
         idAttribute: '_id',
@@ -288,6 +288,7 @@ TanTan.module('Calendario.Control', function(CalControl, App, Backbone) {
     CalControl.Controller = Marionette.Controller.extend({
         initialize: function () {
             var events = App.AutoBahn.get_events();
+            console.log('app.autobahn.events', App.AutoBahn.get_events());
         }
     });
 });

@@ -40,6 +40,15 @@ $(function () {
             ab.log('WAMP session OK');
 
             api.login(['admin', 'nimda']);
+            api.get_events();
+        });
+
+        TanTan.vent.on('agenda:get-events', function (events) {
+            ab.log("RECEIVED events list", events);
+            var cal = TanTan.main.currentView.calendar.currentView;
+            cal.collection.reset(events);
+            var calel = TanTan.main.currentView.calendar.currentView.ui.cal.data('fullCalendar');
+            calel.addEventSource(events);
         });
 
     });

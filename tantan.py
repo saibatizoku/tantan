@@ -22,20 +22,26 @@ from twisted.python import log
 from twisted.internet import defer, reactor, task, threads
 
 import json
-import sys
+from pprint import pprint
 from urllib import urlencode, quote
 
 from paisley import CouchDB
 
-from autobahn.wamp import WampServerFactory, WampCraServerProtocol, exportRpc
+from autobahn.wamp import WampServerFactory, WampCraProtocol, WampCraServerProtocol, exportRpc
+ 
 
 from couch import TantanCouch
 from zb import TantanZB
+
+def thisfunc(r, msg):
+    print msg;
+    return r
 
 
 class TantanWampProtocol(WampCraServerProtocol):
 
     couchHandler = None
+
 
     def connectionLost(self, reason):
         print u"Connection lost: %s" % reason
@@ -43,26 +49,67 @@ class TantanWampProtocol(WampCraServerProtocol):
 
     def onSessionOpen(self):
         print u"TanTan WAMP server connection made"
+        WampCraServerProtocol.onSessionOpen(self)
 
         couchHandler = TantanCouch(self.factory)
         self.couchHandler = couchHandler
 
-        self.registerForPubSub("http://www.tantan.org/api/datos/info#", True)
+        #self.registerForPubSub("http://www.tantan.org/api/datos/info#", True)
         self.registerForRpc(self.couchHandler, "http://www.tantan.org/api/datos#")
 
-        if self.factory.zbProtocol:
-            self.registerForPubSub("http://www.tantan.org/api/sensores#", True)
-            self.registerForRpc(self.factory.zbProtocol, "www.tantan.org/api/sensores-control#")
+        #if self.factory.zbProtocol:
+        #    self.registerForPubSub("http://www.tantan.org/api/sensores#", True)
+        #    self.registerForRpc(self.factory.zbProtocol, "www.tantan.org/api/sensores-control#")
+
+
+    def getAuthPermissions(self, authKey, authExtra):
+        perms = self.couchHandler.PERMISSIONS.get(authKey, None)
+        extra = self.couchHandler.AUTHEXTRA
+        authperms = {
+                'permissions': perms,
+                'authextra': extra
+                }
+        #authperms['permissions'] = {'pubsub': [], 'rpc': []}
+
+        d = defer.Deferred()
+        d.addCallback(thisfunc, "AuthPERMISSIONS")
+        d.addCallback(thisfunc, perms)
+        d.addCallback(thisfunc, extra)
+        d.callback(authperms)
+        return d
+
+    def getAuthSecret(self, authKey):
+        secret = self.couchHandler.getSecret(authKey)
+        d = defer.Deferred()
+        d.addCallback(thisfunc, "AuthSECRET")
+        d.addCallback(thisfunc, secret)
+        d.callback(secret)
+        return d
+
+    def onAuthenticated(self, authKey, perms):
+        self.registerForPubSubFromPermissions(perms['permissions'])
+
+        d = defer.Deferred()
+        d.addCallback(thisfunc, "OnAuthenticated")
+        return d
+        #if authKey is not None:
+        #    #self.registerForRPC(self,...
+        #    pass
+
 
 
 class TantanWampFactory(WampServerFactory):
 
     protocol = TantanWampProtocol
+    appUriPrefix = 'http://www.tantan.org/api/'
 
     def __init__(self, url, couch_url='localhost', couch_port=5984,
-            db_name='tantan', debug = False, debugCodePaths = False, debugWamp = False, debugApp = False):
+                 db_name='tantan', debug = False, debugCodePaths = False,
+                 debugWamp = False, debugApp = False):
+
         WampServerFactory.__init__(self, url, debug = debug,
                 debugWamp = debugWamp, debugApp = debugApp)
+
         self.db_url = couch_url
         self.db_port = couch_port
         self.db_name = db_name

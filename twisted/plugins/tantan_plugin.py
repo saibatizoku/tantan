@@ -5,7 +5,7 @@ from twisted.application.service import IServiceMaker
 from twisted.application import internet, service
 from twisted.cred import credentials, portal
 from twisted.cred.strcred import AuthOptionMixin
-from twisted.internet import defer, reactor
+from twisted.internet import defer, reactor, ssl
 from twisted.internet.serialport import SerialPort
 from twisted.plugin import IPlugin
 from twisted.python import log, usage
@@ -26,6 +26,7 @@ class Options(usage.Options, AuthOptionMixin):
             ['host', 'h', 'localhost', 'Hostname or IP address to use for Web server'],
             ['port', 'p', 8080, 'Port to use for embedded Web server'],
             ['serial_port', 's', '/dev/ttyUSB0', 'Port to use for ZigBee serial port'],
+            ['secure', 't', True, 'Initialize secure services'],
             ['baudrate', 'b', 38400, 'Baudrate for serial port communications'],
             ['debug', 'd', False, 'Enable debug-level log messaging'],
     ]
@@ -40,6 +41,7 @@ class TTServiceMaker(object):
                   """
     options = Options
 
+
     def makeService(self, options):
         """
         Construir un servidor
@@ -49,11 +51,22 @@ class TTServiceMaker(object):
         serial_port = str(options['serial_port'])
         bdrate = int(options['baudrate'])
         debug = options['debug']
+        is_secure = bool(options['secure'])
+        log.msg('IS SECURE')
+        log.msg(repr(is_secure))
 
         log.msg('Attempting to open %s' % (port, ))
 
         contextFactory = None
-        wsurl = "ws://%s:%s" % (host, port)
+        wsprot = "ws"
+
+        if is_secure:
+            wsprot = "wss"
+            contextFactory = ssl.DefaultOpenSSLContextFactory(
+                    'keys/server.key',
+                    'keys/server.crt')
+
+        wsurl = "%s://%s:%s" % (wsprot, host, port)
 
         tantanFactory = TantanWampFactory(wsurl, debug = False,
                             debugCodePaths = True, debugWamp = debug,
@@ -71,6 +84,8 @@ class TTServiceMaker(object):
 
         root = File("./static")
         root.putChild("ws_couch", resource)
+        if is_secure:
+            root.contentTypes['.crt'] = 'application/x-x509-ca-cert'
 
         site = Site(root)
         site.protocol = HTTPChannelHixie76Aware
@@ -78,8 +93,11 @@ class TTServiceMaker(object):
         s = service.MultiService()
 
         web = internet.TCPServer(port, site)
-        web.setServiceParent(s)
 
+        if is_secure:
+            web = internet.SSLServer(port, site, contextFactory)
+
+        web.setServiceParent(s)
         return s
 
 serviceMaker = TTServiceMaker()

@@ -9,6 +9,12 @@ TanTan.module('Models', function(Models, App, Backbone) {
         defaults: {
             name: '',
             type: 'user',
+            'org.tantan.user': {
+                nombre: ''
+            },
+            password_sha: '',
+            salt: '',
+            granjas: [],
             roles: []
         },
         validate: function (attribs) {
@@ -32,20 +38,26 @@ TanTan.module('Models', function(Models, App, Backbone) {
 
     Models.Granja = Models.Doc.extend({
         defaults: {
-            name: '',
-            tantan: {
-                usuarios: [],
-                admins: []
-            },
-            type: 'granja'
+            nombre: '',
+            contacto: '',
+            direccion: '',
+            razonsocial: '',
+            localidad: '',
+            municipio: '',
+            estado: '',
+            tipo: 'granja'
         }
     });
 
     Models.Estanque = Models.Doc.extend({
         defaults: {
-            name: '',
-            type: 'estanque',
-            granja: null
+            "nombre":"",
+            "tipo":"estanque",
+            "granja_id":"",
+            "forma":"",
+            "volumen":"",
+            "dimensiones":"",
+            "material":""
         }
     });
 

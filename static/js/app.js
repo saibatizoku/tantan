@@ -10,7 +10,8 @@ $(function () {
         this.router = router;
         this.zbrouter = zbrouter;
         this.controller = controller;
-        var api = new TanTan.WAMP.API();
+        //var api = new TanTan.WAMP.API();
+        var api = TanTan.AutoBahn;
         var wsprot = "ws://";
         if (window.location.protocol == 'https:') {
             wsprot = "wss://";

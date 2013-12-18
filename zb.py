@@ -61,22 +61,32 @@ class MyOptions(usage.Options):
 
 
 class TantanZB(txXBee):
-    def __init__(self, wsMcuFactory=None, escaped=True):
+    """
+    """
+
+    max_retries = None
+    retry_interval = 300 #seconds
+    retry_count = 0
+
+    def __init__(self, wsMcuFactory=None, dataStore=None, escaped=True):
         super(TantanZB, self).__init__(escaped=escaped)
         self.wsMcuFactory = wsMcuFactory
+        self.dataStore = dataStore
         self.devices = {}
         self._AMB = []
  
     def connectionMade(self):
         print "TanTan ZB Serial port connection made"
+        self.retry_count = 0
         self.zb_net = task.LoopingCall(self.sendND)
         self.zb_net.start(3)
-        self.amb_sensors = task.LoopingCall(self.get_amb_sensors)
-        self.amb_sensors.start(4)
-        #self.amb_hum = task.LoopingCall(self.ambiental_humedad)
-        #self.amb_hum.start(3)
         #self.zb_dbvolt.start(30)
         #self.zb_dbvolt = task.LoopingCall(self.sendDB_Volt)
+
+    def connectionLost(self, reason):
+        print "TanTan ZB Serial port connection lost.", reason
+        self.retry_count += 1
+            #reactor.stop()
       
     def get_amb_sensors(self):
         #amb_sensors = [ dev for devid, dev in self.devices if dev['name'].startswith('AMB')]
@@ -102,10 +112,6 @@ class TantanZB(txXBee):
                     dest_addr=saddr.decode('hex'),
                     data=command)
 
-    def connectionLost(self, reason):
-        print "TanTan ZB Serial port connection lost.", reason
-        reactor.stop()
-
     def deferred_handle_packet(self, packet):
         #d = defer.Deferred()
         return packet
@@ -113,7 +119,7 @@ class TantanZB(txXBee):
     def handle_packet(self, xbeePacketDictionary):
         response = xbeePacketDictionary
         msg = None
-        print repr(self._frame.raw_data.encode('hex'))
+        #print repr(self._frame.raw_data.encode('hex'))
         #print repr(response)
         if self.is_RX(response):
             self.handle_rx(response)
@@ -136,24 +142,52 @@ class TantanZB(txXBee):
     def is_RX(self, response):
         return self.is_target_type(response, 'id', 'rx')
 
+    def get_zb_node_info(self, response):
+        try:
+            resp = {}
+            resp['id'] = response["source_addr_long"].encode('hex')
+            resp['laddr'] = response["source_addr_long"].encode('hex')
+            resp['addr'] = response["source_addr"].encode('hex')
+            resp['data'] = response["rf_data"] or ''
+            return resp
+        except:
+            return None
+
     def handle_rx(self, response):
         resp = {}
         #resp['name'] = ZB_reverse.get(response["source_addr_long"], "Unknown")
-        resp['name'] = response["source_addr_long"].encode('hex')
-        resp['laddr'] = response["source_addr_long"].encode('hex')
-        resp['addr'] = response["source_addr"].encode('hex')
-        resp['val'] = response["rf_data"] or ''
+        resp = self.get_zb_node_info(response)
         rout = "RX:"
         for (key, item) in resp.items():
             rout += "{0}-{1}:".format(key, item)
-        msg = "{0}:{1}:RX:".format(resp['name'], resp['addr'], resp['val']) + repr(resp['val'])
-        #print 'Evt id: {0}\nVal: {1}'.format(str(resp['name']), resp['val'].decode('utf8'))
-        evt = {'id': resp['name'],
+        msg = "{0}:{1}:RX:".format(resp['id'], resp['addr'], resp['data']) + repr(resp['data'])
+        #print 'Evt id: {0}\nVal: {1}'.format(str(resp['name']), resp['data'].decode('utf8'))
+        evt = {'id': resp['id'],
                'type': 'rx',
-               'value': resp['val'],
+               'data': resp['data'],
                }
-        print evt
-        self.wsMcuFactory.dispatch("http://www.tantan.org/api/sensores#zb-rx", evt)
+        node_id = resp['id']
+        data = resp['data']
+        data_lines = data.splitlines()
+        #print "VAL LINES", val_lines
+        for l in data_lines:
+            try:
+                node_type, pin, sensor, value = l.split(":")
+                reading = {
+                           'node_id': node_id,
+                           'node_type': node_type,
+                           'pin': pin,
+                           'sensor': sensor,
+                           'value': float(value),
+                           }
+                ###if node_id in self.devices:
+                ###    reading['node'] = self.devices[node_id]
+                #print reading
+                self.wsMcuFactory.dispatch("http://www.tantan.org/api/sensores#amb-rx", reading)
+                #self.wsMcuFactory.dispatch("http://www.tantan.org/api/couchdb#info", reading)
+            except:
+                self.wsMcuFactory.dispatch("http://www.tantan.org/api/sensores#rx", [node_id, l])
+        #self.wsMcuFactory.dispatch("http://www.tantan.org/api/sensores#zb-rx", evt)
 
     @exportRpc("send-nd")
     def sendND(self, evt=None):
@@ -202,9 +236,10 @@ class TantanZB(txXBee):
         pulse.insert(0, beat)
         device.update({'pulse': pulse})
         self.devices[laddr] = device
-        print "heartbeat:", nname, beat
+        #print "heartbeat:", nname, beat
 
         self.wsMcuFactory.dispatch("http://www.tantan.org/api/sensores#zb-nd", device)
+        #self.wsMcuFactory.dispatch("http://www.tantan.org/api/couchdb#info", device)
 
 
 class UnUsed:
@@ -347,7 +382,7 @@ class WsMcuProtocol(WampServerProtocol):
  
     def onSessionOpen(self):
         self.registerForPubSub("http://www.tantan.org/api/sensores#", True)
-        self.registerForRpc(self.factory.mcuProtocol, "www.tantan.org/api/sensores-control#")
+        self.registerForRpc(self.factory.zbProtocol, "www.tantan.org/api/sensores-control#")
 
 
 ## WS-MCU factory
@@ -356,10 +391,10 @@ class WsMcuFactory(WampServerFactory):
 
     protocol = WsMcuProtocol
 
-    def __init__(self, url, opts=None):
+    def __init__(self, url, dataStore=None, opts=None):
         WampServerFactory.__init__(self, url)
-        self.mcuProtocol = TantanZB(wsMcuFactory=self)
-        #self.serialport = SerialPort(self.mcuProtocol, opts['port'], reactor, baudrate=opts['baudrate'])
+        self.zbProtocol = TantanZB(wsMcuFactory=self, dataStore=dataStore)
+        #self.serialport = SerialPort(self.zbProtocol, opts['port'], reactor, baudrate=opts['baudrate'])
 
 
 
@@ -383,7 +418,7 @@ if __name__ == '__main__':
     wsurl = o.opts['wsurl']
 
     wsMcuFactory = WsMcuFactory(wsurl)
-    serialport = SerialPort(wsMcuFactory.mcuProtocol, o.opts['port'], reactor, baudrate=o.opts['baudrate'])
+    serialport = SerialPort(wsMcuFactory.zbProtocol, o.opts['port'], reactor, baudrate=o.opts['baudrate'])
     listenWS(wsMcuFactory)
 
     ## create embedded web server for static files
