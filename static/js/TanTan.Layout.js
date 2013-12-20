@@ -47,12 +47,20 @@ TanTan.module('Layout', function (Layout, App, Backbone) {
         className: 'navbar-form navbar-right',
         ui: {
             edit: '#edit-profile',
+            add: '#add-granja',
             logout: '#logout'
         },
 
         events: {
+            'click #add-granja': 'doAddGranja',
             'click #edit-profile': 'doEditProfile',
             'click #logout': 'doLogout'
+        },
+
+        doAddGranja: function (e) {
+            e.preventDefault();
+            console.log('agregando granja');
+            App.vent.trigger('granjas:nueva');
         },
 
         doEditProfile: function (e) {
