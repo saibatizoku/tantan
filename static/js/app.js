@@ -49,7 +49,6 @@ $(function () {
         });
         TanTan.vent.on('granjas:login', function (info) {
             ab.log('Logging in');
-            api.login(info.creds);
         });
         TanTan.vent.on('granjas:logout', function () {
             ab.log('Logging out');
