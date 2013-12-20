@@ -105,3 +105,47 @@ _Creado por saibatizoku. 19/sep/2013_
 ## NumPy
 
     pip install numpy
+
+
+Notas de desarrollo:
+--------------------
+
+* Autenticación WAMP-CRA:
+
+AutoBahn permite la implementación de WAMP-CRA como sistema de autenticación
+de usuarios. En TanTán, las credenciales enviadas desde el cliente web son:
+__nombre de usuario__ y __contraseña__.
+
+El proceso de autenticación puede resumirse en las siguientes etapas:
+
+1. El usuario escribe su nombre de usuario y contraseña en el formulario
+de la página web de TanTán. Pulsa el botón de "INGRESAR".
+
+2. Los datos del usuario son enviados vía websockets al servidor de TanTán,
+iniciando una petición de autenticación.
+
+3. El servidor de TanTán recibe los datos del usuario y verifica con la base
+de datos principal su veracidad.
+
+  * En caso SÍ de ser autenticado:
+
+    1. El servidor recolecta toda la información acerca de permisos, roles y
+    grupos asociados al usuario AUTENTICADO.
+
+  * En caso NO de ser autenticado:
+
+    1. El servidor recolecta toda la información acerca de permisos asociados
+    a un usuario ANÓNIMO.
+
+4. La respuesta de la petición de autenticación del servidor es enviada vía
+websockets al cliente web del usuario. La respuesta consiste en la información
+recolectada por el servidor acerca del usuario, particularmente los permisos
+para suscribirse a los servicios de publicación de datos del sistema TanTán,
+permitiendo al usuario recibir datos de manera casi instantanea en su cliente
+web.
+
+5. El cliente web se actualiza para desplegar las partes de la aplicación para
+las cuales tenga permiso el usuario, además de suscribirse a torrentes de
+datos, como los datos recibidos desde redes de sensores, dispositivos conecta-
+dos a un puerto serial en el servidor de TanTán, notificaciones de cambios
+en la base de datos, etc.
