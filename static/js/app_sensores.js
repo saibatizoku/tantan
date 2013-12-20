@@ -1,7 +1,7 @@
 $(function () {
     TanTan.addInitializer(function () {
 
-        var api = new TanTan.WAMP.API();
+        var api = TanTan.AutoBahn;
         var wsprot = "ws://";
         if (window.location.protocol == 'https:') {
             wsprot = "wss://";
