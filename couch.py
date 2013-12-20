@@ -75,10 +75,19 @@ class TantanCouch:
                         'pub': True,
                         'sub': True
                         },
+                    {'uri': 'http://www.tantan.org/api/sensores#',
+                        'prefix': True,
+                        'pub': True,
+                        'sub': True
+                        },
                     ],
                 'rpc': [
                     {
                         'uri': 'http://www.tantan.org/api/datos#',
+                        'call': True
+                        },
+                    {
+                        'uri': 'http://www.tantan.org/api/sensores-control#',
                         'call': True
                         },
                     ],
