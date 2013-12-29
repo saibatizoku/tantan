@@ -47,9 +47,30 @@ TanTan.module('AutoBahn', function (AutoBahn, App, Backbone, Marionette, $, _) {
         ab.log("perms", JSON.stringify(permissions));
     }
 
-    function getGranjaInfo (granja) {
-        sess.call("rpc:granja-info", granja).always(ab.log);
-    };
+    function getGranjaInfo (resp) {
+        //ab.log('getGranjaInfo', resp);
+        ret = [];
+        if ((resp.rows) && (resp.total_rows > 0)) {
+            _.each(resp.rows, function (row) {
+                ret.push(row.value);
+            });
+            //ab.log("granja info", ret);
+            App.vent.trigger('granjas:info', ret);
+        }
+        return ret;
+    }
+
+    function getGranjasTree (resp) {
+        //ab.log('getGranjaInfo', resp);
+        ret = [];
+        _.each(resp.nodes, function (row) {
+            ret.push(row);
+        });
+        //ab.log("granja TREE", resp);
+        App.vent.trigger('granjas:tree', resp);
+        return ret;
+    }
+
     function getEstanqueInfo (granja) {
         sess.call("rpc:estanque-info", granja).always(ab.log);
     };
@@ -124,6 +145,10 @@ TanTan.module('AutoBahn', function (AutoBahn, App, Backbone, Marionette, $, _) {
 
     AutoBahn.save = function (doc) {
         sess.call('rpc:save-doc', doc).always(ab.log);
+    };
+
+    AutoBahn.get_granjas = function (granja) {
+        sess.call("rpc:granjas-tree", granja).always(getGranjasTree);
     };
 
     AutoBahn.get_events = function () {
