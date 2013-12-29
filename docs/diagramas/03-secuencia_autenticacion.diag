@@ -1,0 +1,26 @@
+seqdiag {
+
+  user     -> browser [label = "Login with\nusername & password"];
+              browser -> browser-app [label = "Click login button"];
+
+              === Login w/CORRECT credentials ===
+
+              browser-app  -> wampserver [label = "WAMP RPC:login"];
+                          wampserver -> database [label = "POST /_session"];
+                          wampserver <- database [label = "HTTP RESPONSE"];
+              browser-app  <- wampserver [label = "WAMP PUB:loggedIn"];
+              browser-app  -> browser-app [label = "Trigger login\n events"];
+
+              === Login w/INCORRECT credentials ===
+
+              browser-app  -> wampserver [label = "WAMP RPC:login"];
+                          wampserver -> database [label = "POST /_session"];
+                          wampserver <- database [label = "HTTP RESPONSE"];
+              browser-app  <- wampserver [label = "WAMP PUB:loggedOut"];
+              browser-app  -> browser-app [label = "Trigger loggegOut\n events"];
+
+              === ===
+
+              browser  <- browser-app [label = "Update HTML"];
+  user     <- browser [label = "Show the user\n the updated site"];
+}
