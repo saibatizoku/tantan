@@ -68,10 +68,9 @@ class TantanZB(txXBee):
     retry_interval = 300 #seconds
     retry_count = 0
 
-    def __init__(self, wsMcuFactory=None, dataStore=None, escaped=True):
+    def __init__(self, wsMcuFactory=None, escaped=True):
         super(TantanZB, self).__init__(escaped=escaped)
         self.wsMcuFactory = wsMcuFactory
-        self.dataStore = dataStore
         self.devices = {}
         self._AMB = []
  
@@ -391,9 +390,9 @@ class WsMcuFactory(WampServerFactory):
 
     protocol = WsMcuProtocol
 
-    def __init__(self, url, dataStore=None, opts=None):
+    def __init__(self, url, opts=None):
         WampServerFactory.__init__(self, url)
-        self.zbProtocol = TantanZB(wsMcuFactory=self, dataStore=dataStore)
+        self.zbProtocol = TantanZB(wsMcuFactory=self)
         #self.serialport = SerialPort(self.zbProtocol, opts['port'], reactor, baudrate=opts['baudrate'])
 
 
