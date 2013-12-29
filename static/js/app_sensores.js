@@ -24,53 +24,79 @@ $(function () {
         this.sensores = new TanTan.Sensores.Docs();
 
         var ambHum = new TimeSeries();
+        var ambLuz = new TimeSeries();
+        var ambSon = new TimeSeries();
         var ambTem = new TimeSeries();
         var ambPre = new TimeSeries();
 
         var humsmoothie = new SmoothieChart({
+            scaleSmoothing: 0.2,
+            //grid: {
+            //    fillStyle: 'rgba(0,0,0,0.79)',
+            //    //strokeStyle: 'rgb(155, 0, 0)',
+            //    //verticalSections: 6,
+            //    lineWidth: 2
+            //},
+            millisPerPixel: 1000,
+            labels: {precision: 3},
+            //minValue: 0.0,
+            //maxValue: 100.0,
+            resetBounds: false
+        });
+
+        var luzsmoothie = new SmoothieChart({
             grid: {
                 strokeStyle: 'rgb(125, 0, 0)',
                 fillStyle: 'rgb(171, 171, 255)',
                 lineWidth: 1,
                 verticalSections: 6
             },
-            millisPerPixel: 500,
-            minValue: 0.0,
-            maxValue: 100.0,
+            millisPerPixel: 1000,
+            scaleSmoothing: 0.2,
+            labels: {precision: 3},
+            //minValue: 0.0,
+            //maxValue: 100.0,
             resetBounds: false
         });
 
         var presmoothie = new SmoothieChart({
             grid: {
-                strokeStyle: 'rgb(125, 0, 0)',
+                strokeStyle: 'rgb(0, 255, 0)',
                 fillStyle: 'rgb(171, 171, 255)',
                 lineWidth: 1,
                 verticalSections: 6
             },
-            millisPerPixel: 500,
-            minValue: 900.0,
-            maxValue: 1100.0,
+            millisPerPixel: 1000,
+            scaleSmoothing: 0.2,
+            //minValue: 840.0,
+            //maxValue: 940.0,
             resetBounds: false
         });
 
         var temsmoothie = new SmoothieChart({
-            grid: {
-                strokeStyle: 'rgb(125, 0, 0)',
-                fillStyle: 'rgb(171, 171, 255)',
-                lineWidth: 1,
-                verticalSections: 6
-            },
-            millisPerPixel: 500,
-            minValue: 0.0,
-            maxValue: 50.0,
-            resetBounds: false
+            //grid: {
+            //    strokeStyle: 'rgb(125, 0, 0)',
+            //    fillStyle: 'rgb(171, 171, 255)',
+            //    lineWidth: 1,
+            //    verticalSections: 6
+            //},
+            millisPerPixel: 1000,
+            //scaleSmoothing: 0.2,
+            labels: {precision: 3}
+            //timestampFormatter:SmoothieChart.timeFormatter,
+            ////minValue: 0.0,
+            ////maxValue: 50.0,
+            //resetBounds: false
         });
 
-        humsmoothie.addTimeSeries(ambHum, { strokeStyle: 'rgb(0, 115, 0)', lineWidth: 2 });
+        humsmoothie.addTimeSeries(ambHum, { strokeStyle: 'rgb(0, 255, 0)', lineWidth: 2 });
+        luzsmoothie.addTimeSeries(ambLuz, { strokeStyle: 'rgb(90, 85, 10)', lineWidth: 2 });
+        //luzsmoothie.addTimeSeries(ambSon, { strokeStyle: 'rgb(10, 95, 90)', lineWidth: 2 });
         presmoothie.addTimeSeries(ambPre, { strokeStyle: 'rgb(90, 115, 0)', lineWidth: 2 });
-        temsmoothie.addTimeSeries(ambTem, { strokeStyle: 'rgb(0, 115, 90)', lineWidth: 2 });
+        temsmoothie.addTimeSeries(ambTem, { strokeStyle: 'rgb(0, 255, 0)', lineWidth: 2 });
 
         humsmoothie.streamTo(document.getElementById('ambgh'));
+        luzsmoothie.streamTo(document.getElementById('ambgl'));
         presmoothie.streamTo(document.getElementById('ambgp'));
         temsmoothie.streamTo(document.getElementById('ambgt'));
 
@@ -81,9 +107,11 @@ $(function () {
                 lineWidth: 1,
                 verticalSections: 6
             },
-            millisPerPixel: 500,
-            minValue: 0.0,
-            maxValue: 160.0,
+            millisPerPixel: 1000,
+            scaleSmoothing: 0.2,
+            labels: {precision: 3},
+            //minValue: 0.0,
+            //maxValue: 160.0,
             resetBounds: false
         });
 
@@ -95,8 +123,10 @@ $(function () {
                 verticalSections: 6
             },
             millisPerPixel: 500,
-            minValue: 0.0,
-            maxValue: 50.0,
+            scaleSmoothing: 0.2,
+            labels: {precision: 3},
+            //minValue: 0.0,
+            //maxValue: 50.0,
             resetBounds: false
         });
 
@@ -108,8 +138,10 @@ $(function () {
                 verticalSections: 6
             },
             millisPerPixel: 500,
-            minValue: 0.0,
-            maxValue: 1500.0,
+            scaleSmoothing: 0.2,
+            labels: {precision: 3},
+            //minValue: 0.0,
+            //maxValue: 1500.0,
             resetBounds: false
         });
 
@@ -142,8 +174,19 @@ $(function () {
                     TanTan.vent.trigger('sensor:amb', nsens);
                     switch (event.sensor) {
                         case 'humedad':
-                            $("#instH").text(event.value);
+                            var v = parseFloat(event.value).toFixed(2)
+                            $("#instH").text(v);
                             ambHum.append(new Date().getTime(), event.value);
+                            break;
+                        case 'luz':
+                            var v = parseFloat(event.value).toFixed(2)
+                            $("#instL").text(v);
+                            ambLuz.append(new Date().getTime(), event.value);
+                            break;
+                        case 'sonido':
+                            var v = parseFloat(event.value).toFixed(2)
+                            $("#instS").text(v);
+                            ambSon.append(new Date().getTime(), event.value);
                             break;
                         case 'presion':
                             $("#instP").text(event.value);
@@ -186,8 +229,7 @@ $(function () {
                             }
                             break;
                         case 'PotReal':
-                            var kw = event.value/1000;
-                            kwstr = kw.toFixed();
+                            var kwstr = parseFloat(event.value/1000).toFixed(4);
                             switch (event.pin) {
                                 case 'A0A1':
                                     $("#instW1").text(kwstr);
@@ -220,6 +262,7 @@ $(function () {
 
             sess.prefix("db", "http://www.tantan.org/api/datos/info#");
             sess.prefix("zb", "http://www.tantan.org/api/sensores#");
+            sess.prefix("zbn", "http://www.tantan.org/api/sensores/nodos#");
             log_line = "Event PubSub ready";
             ab.log(log_line);
 
