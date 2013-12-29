@@ -77,13 +77,20 @@ class TantanZB(txXBee):
     def connectionMade(self):
         print "TanTan ZB Serial port connection made"
         self.retry_count = 0
+        self.startPulse(beat=15)
+
+    def startPulse(self, beat=3):
         self.zb_net = task.LoopingCall(self.sendND)
-        self.zb_net.start(3)
+        self.zb_net.start(beat)
         #self.zb_dbvolt.start(30)
         #self.zb_dbvolt = task.LoopingCall(self.sendDB_Volt)
 
+    def stopPulse(self):
+        self.zb_net.stop()
+
     def connectionLost(self, reason):
         print "TanTan ZB Serial port connection lost.", reason
+        self.stopPulse()
         self.retry_count += 1
             #reactor.stop()
       
