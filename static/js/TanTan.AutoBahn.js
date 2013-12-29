@@ -74,8 +74,9 @@ TanTan.module('AutoBahn', function (AutoBahn, App, Backbone, Marionette, $, _) {
     function getEstanqueInfo (granja) {
         sess.call("rpc:estanque-info", granja).always(ab.log);
     };
+
     function getUser (resp) {
-        ab.log('getUser', resp);
+        //ab.log('getUser', resp);
         if ((resp.ok) && (resp.name)) {
             App.vent.trigger('granjas:user', resp);
         } else {
@@ -107,7 +108,6 @@ TanTan.module('AutoBahn', function (AutoBahn, App, Backbone, Marionette, $, _) {
         } else {
             App.vent.trigger('wamp:failure', resp);
         }
-        anonLogin();
     };
 
     AutoBahn.connect = function () {
@@ -125,14 +125,9 @@ TanTan.module('AutoBahn', function (AutoBahn, App, Backbone, Marionette, $, _) {
 
     AutoBahn.login = function (creds) {
         function doLogin (resp) {
-            ab.log('doLogin CREDS', creds);
             if (resp._id) {
-                ab.log('good login', resp);
-                //userLogin(creds[0], creds[1]);
                 App.vent.trigger('granjas:loggedIn', resp);
             } else {
-                ab.log('bad login', resp);
-                //anonLogin();
                 App.vent.trigger('granjas:loggedOut', resp);
             }
         }
