@@ -11,8 +11,9 @@
     </head>
 
     <body>
-        <a class="sr-only" href="#main">Ir al contenido</a>
-        <nav id="nav" class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+        <div class="wrap">
+            <a class="sr-only" href="#main">Ir al contenido</a>
+            <nav id="nav" class="navbar navbar-inverse navbar-fixed-top" role="navigation">
             <div class="container">
                 <div class="navbar-header">
                     <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -21,18 +22,25 @@
                         <span class="icon-bar"></span>
                     </button>
                     <a class="navbar-brand" href="index.html"><img src="eje_acuicola_brand.png" width="25" height="14">TanTán</a>
+                    <ul class="nav navbar-nav">
+                        <li><a href="#home">Granjas</a></li>
+                        <!--li><a href="#sensors">Sensores</a></li>
+                        <li><a href="#energy">Energía</a></li-->
+                    </ul>
                 </div>
             </div>
-        </nav>
-        <section id="tantanapp" class="container">
+            </nav>
+            <section id="tantanapp" class="container">
             <header id="header"></header>
             <section id="main"></section>
-            <footer id="footer"></footer>
-        </section>
-        <footer id="copyright" class="container">
-            <hr>
-            <p>&copy; ejeacuicola.mx 2013</p>
-        </footer>
+            </section>
+            <footer id="copyright">
+            <div class="container">
+                <hr>
+                <p>&copy; ejeacuicola.mx 2013</p>
+            </div>
+            </footer>
+        </div>
 
         <script id="appnav" type="text/html">
             <div class="navbar-header">
