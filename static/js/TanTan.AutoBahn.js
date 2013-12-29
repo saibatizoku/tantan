@@ -135,7 +135,7 @@ TanTan.module('AutoBahn', function (AutoBahn, App, Backbone, Marionette, $, _) {
     };
 
     AutoBahn.logout = function () {
-        sess.call('rpc:logout').always(ab.log);
+        sess.call('rpc:logout').always(doLogout);
     };
 
     AutoBahn.save = function (doc) {
