@@ -191,13 +191,14 @@ class TantanZB(txXBee):
                            'sensor': sensor,
                            'value': float(value),
                            }
-                ###if node_id in self.devices:
-                ###    reading['node'] = self.devices[node_id]
                 #print reading
                 self.wsMcuFactory.dispatch("http://www.tantan.org/api/sensores#amb-rx", reading)
+                uri = "/".join(["http://www.tantan.org/api/sensores/nodos#", node_id])
+                self.wsMcuFactory.dispatch(uri, {'node_id': node_id, 'msg': l})
                 #self.wsMcuFactory.dispatch("http://www.tantan.org/api/couchdb#info", reading)
             except:
-                self.wsMcuFactory.dispatch("http://www.tantan.org/api/sensores#rx", [node_id, l])
+                uri = "/".join(["http://www.tantan.org/api/sensores#", node_id])
+                self.wsMcuFactory.dispatch(uri, {'node_id': node_id, 'msg': l})
         #self.wsMcuFactory.dispatch("http://www.tantan.org/api/sensores#zb-rx", evt)
 
     @exportRpc("send-nd")
