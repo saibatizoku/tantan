@@ -5,7 +5,7 @@ TanTan.module('Layout', function (Layout, App, Backbone) {
     // Navbar Layout 
     // ------------------
     Layout.Nav = Backbone.Marionette.Layout.extend({
-        template: '#appnav',
+        template: '#template-navbar',
         className: 'container',
         regions: {
             menu: '#nav-menu',
@@ -38,7 +38,26 @@ TanTan.module('Layout', function (Layout, App, Backbone) {
     Layout.NavUserMenu  = Marionette.ItemView.extend({
         template: '#navmenu',
         tagName: 'ul',
-        className: 'nav navbar-nav'
+        className: 'nav navbar-nav',
+        ui: {
+            'navlinks': 'li a',
+            'navhome': 'li a[href=#home]',
+            'navsensors': 'li a[href=#sensors]',
+            'navagenda': 'li a[href=#agenda]'
+        },
+        events: {
+            'click @ui.navlinks': 'navClick'
+        },
+        navClick: function (e) {
+            var nav_el = $(e.currentTarget).parent();
+            if (!nav_el.hasClass('active')) {
+                this.toggleActive(nav_el);
+            }
+        },
+        toggleActive: function (el) {
+            this.$el.find(".active").toggleClass('active');
+            el.toggleClass('active');
+        }
     });
 
     Layout.NavUserActions  = Marionette.ItemView.extend({
