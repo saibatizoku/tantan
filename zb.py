@@ -37,6 +37,8 @@ from autobahn.websocket import listenWS
 from autobahn.wamp import WampServerFactory, WampServerProtocol, exportRpc
 
 from txXBee.protocol import txXBee
+
+from nodos import Nodo, NodoAmbiental
 import utils
 
 
@@ -58,6 +60,7 @@ class MyOptions(usage.Options):
     ]
 
 # REGEX   '  ND:(.*)|bat:(.*)\[V\]:(.*)\%carga:(.*):contador:(.*)|\%V:(.*)'
+
 
 
 class TantanZB(txXBee):
@@ -122,47 +125,49 @@ class TantanZB(txXBee):
         #d = defer.Deferred()
         return packet
  
-    def handle_packet(self, xbeePacketDictionary):
-        response = xbeePacketDictionary
+    def extractNodeInfo(self, packet):
+        if True:
+            return Nodo('')
+
+    def handle_packet(self, packet):
         msg = None
-        #print repr(self._frame.raw_data.encode('hex'))
-        #print repr(response)
-        if self.is_RX(response):
-            self.handle_rx(response)
-        if self.is_ND(response):
-            self.handle_nd(response)
+        if self.extractNodeInfo(packet):
+            if self.is_RX(packet):
+                self.handle_rx(packet)
+            if self.is_ND(packet):
+                self.handle_nd(packet)
 
-    def is_AT_RESPONSE(self, response):
-        return self.is_target_type(response, 'id', 'at_response')
+    def is_AT_RESPONSE(self, packet):
+        return self.is_target_type(packet, 'id', 'at_response')
 
-    def is_ND(self, response):
-        is_atresp = self.is_AT_RESPONSE(response)
-        is_nd = self.is_target_type(response, 'command', 'nd')
+    def is_ND(self, packet):
+        is_atresp = self.is_AT_RESPONSE(packet)
+        is_nd = self.is_target_type(packet, 'command', 'nd')
         return is_atresp and is_nd
 
-    def is_target_type(self, response, field, target):
-        if field in response and response[field].lower() == target:
+    def is_target_type(self, packet, field, target):
+        if field in packet and packet[field].lower() == target:
             return True
         return False
 
-    def is_RX(self, response):
-        return self.is_target_type(response, 'id', 'rx')
+    def is_RX(self, packet):
+        return self.is_target_type(packet, 'id', 'rx')
 
-    def get_zb_node_info(self, response):
+    def get_zb_node_info(self, packet):
         try:
             resp = {}
-            resp['id'] = response["source_addr_long"].encode('hex')
-            resp['laddr'] = response["source_addr_long"].encode('hex')
-            resp['addr'] = response["source_addr"].encode('hex')
-            resp['data'] = response["rf_data"] or ''
+            resp['id'] = packet["source_addr_long"].encode('hex')
+            resp['laddr'] = packet["source_addr_long"].encode('hex')
+            resp['addr'] = packet["source_addr"].encode('hex')
+            resp['data'] = packet["rf_data"] or ''
             return resp
         except:
             return None
 
-    def handle_rx(self, response):
+    def handle_rx(self, packet):
         resp = {}
-        #resp['name'] = ZB_reverse.get(response["source_addr_long"], "Unknown")
-        resp = self.get_zb_node_info(response)
+        #resp['name'] = ZB_reverse.get(packet["source_addr_long"], "Unknown")
+        resp = self.get_zb_node_info(packet)
         rout = "RX:"
         for (key, item) in resp.items():
             rout += "{0}-{1}:".format(key, item)
@@ -207,20 +212,24 @@ class TantanZB(txXBee):
                 command="ND",
                 )
 
-    def handle_nd(self, response):
+    def getNode(self, node_id):
+        if node_id in self.devices:
+            return Node(node_id)
+
+    def handle_nd(self, packet):
         beat = datetime.datetime.today().isoformat()
         device = {}
-        if "source_addr_long" in response:
-            laddr = response["source_addr_long"].encode('hex')
-        elif "source_addr_long" in response["parameter"]:
-            laddr = response["parameter"]["source_addr_long"].encode('hex')
+        if "source_addr_long" in packet:
+            laddr = packet["source_addr_long"].encode('hex')
+        elif "source_addr_long" in packet["parameter"]:
+            laddr = packet["parameter"]["source_addr_long"].encode('hex')
         
         #nname = ZB_reverse.get(laddr, "Unknown")
-        nname = response["parameter"]["node_identifier"]
-        addr = response["parameter"]["source_addr"].encode('hex')
-        devt = response["parameter"]["device_type"].encode('hex')
-        devs = response["parameter"]["status"].encode('hex')
-        paddr = response["parameter"]["parent_address"].encode('hex')
+        nname = packet["parameter"]["node_identifier"]
+        addr = packet["parameter"]["source_addr"].encode('hex')
+        devt = packet["parameter"]["device_type"].encode('hex')
+        devs = packet["parameter"]["status"].encode('hex')
+        paddr = packet["parameter"]["parent_address"].encode('hex')
         msg = ":".join([nname, addr, "ND", laddr, devt, devs, paddr]) #, str(packet)])
         #print msg
         device.update({'id': laddr,
@@ -253,19 +262,9 @@ class UnUsed:
         print "ERROR:", packet
 
 
-    def handle_db(self, response):
-        #nname = ZB_reverse.get(response["source_addr_long"], "Unknown")
-        #laddr = response["source_addr_long"].encode('hex')
-        #addr = response["source_addr"].encode('hex')
-        #val = 0
-        #if "parameter" in response:
-        #    val = int(response["parameter"].encode('hex'),16)
-        #msg = ":".join([nname, addr, "DB", str(val)])
-        #evt = {'id': nname, 'value': val}
-        #print msg
-        #self.wsMcuFactory.dispatch("http://example.com/mcu#zb-db", evt)
+    def handle_db(self, packet):
         topic = "http://www.tantan.org/api/sensores#zb-db"
-        utils.handle_factory_db(self.wsMcuFactory, response, topic)
+        utils.handle_factory_db(self.wsMcuFactory, packet, topic)
 
     def handle_packet(self, xbeePacketDictionary):
         response = xbeePacketDictionary
@@ -388,6 +387,7 @@ class WsMcuProtocol(WampServerProtocol):
  
     def onSessionOpen(self):
         self.registerForPubSub("http://www.tantan.org/api/sensores#", True)
+        self.registerForPubSub("http://www.tantan.org/api/sensores/nodos#", True)
         self.registerForRpc(self.factory.zbProtocol, "www.tantan.org/api/sensores-control#")
 
 
