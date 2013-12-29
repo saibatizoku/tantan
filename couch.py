@@ -177,7 +177,7 @@ class TantanCouch:
 
     @exportRpc("estanque-info")
     def getEstanqueInfo(self, granja=''):
-        view = self.couchdb.openView('tantan', 'estanques', startkey=[granja, 1])
+        view = self.couchdb.openView('tantan', 'estanques', key=[granja, 1])
 
         def estanque_info(results):
             print results
@@ -185,9 +185,9 @@ class TantanCouch:
         view.addCallback(estanque_info)
         return view
 
-    @exportRpc("eventos-info")
-    def getEventosInfo(self, granja=''):
-        view = self.couchdb.openView('tantan', 'eventos') #, startkey=[granja, 1])
+    @exportRpc("nodos-info")
+    def getNodosInfo(self, estanque):
+        view = self.couchdb.openView('tantan', 'nodos', startkey=[estanque, 1])
         
         def estanque_info(results):
             print results
