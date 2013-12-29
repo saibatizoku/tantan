@@ -133,6 +133,35 @@ class TantanCouch:
        save.addCallback(printDoc)
        return save
 
+    @exportRpc("granjas-tree")
+    def getGranjasInfo(self, granja=None):
+        if granja is None:
+            view = self.couchdb.openView('tantan', 'estanques')
+        else:
+            view = self.couchdb.openView('tantan', 'estanques', startkey=[granja,0], endkey=[granja,2])
+
+        def addBranchNodes(resp, branch, tipo):
+            print "BRANCH NODES", resp
+            if ('rows' in resp):
+                #items = [ v for g in resp['rows'] for k, v in g.items() if k == tipo]
+                items = [ g['value'] for g in resp['rows'] if g['value']['tipo'] == 'granja']
+                nodos = [ g['value'] for g in resp['rows'] if g['value']['tipo'] == 'estanque']
+                for g in items:
+                    ns = [ e for e in nodos if e['granja_id'] == g['_id'] ]
+                    g['nodos'] = ns
+                    #print "BRANCH estanques de {0}\n{1}".format(g['_id'], ns)
+                print "BRANCH granjas", items
+                branch['nodos'] = items
+            #return branch
+            return items
+
+        def addRoot(resp):
+            return True
+
+        root = dict(nombre=u'Cultivos de tilapia')
+        view.addCallback(addBranchNodes, root, 'granja')
+        return view
+
     @exportRpc("granja-info")
     def getGranjaInfo(self, granja=None):
         if granja is None:
