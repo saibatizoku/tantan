@@ -63,7 +63,7 @@ class TantanCouch:
                         'call': True
                         },
                     {
-                        'uri': 'http://www.tantan.org/api/sensores-control#',
+                        'uri': 'http://www.tantan.org/api/sensores/control#',
                         'call': True
                         },
                     ],
@@ -87,7 +87,7 @@ class TantanCouch:
                         'call': True
                         },
                     {
-                        'uri': 'http://www.tantan.org/api/sensores-control#',
+                        'uri': 'http://www.tantan.org/api/sensores/control#',
                         'call': True
                         },
                     ],

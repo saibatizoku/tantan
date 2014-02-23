@@ -59,7 +59,7 @@ class TantanWampProtocol(WampCraServerProtocol):
 
         if self.factory.zbProtocol:
             self.registerForPubSub("http://www.tantan.org/api/sensores#", True)
-            self.registerForRpc(self.factory.zbProtocol, "www.tantan.org/api/sensores-control#")
+            self.registerForRpc(self.factory.zbProtocol, "http://www.tantan.org/api/sensores/control#")
 
 
     def getAuthPermissions(self, authKey, authExtra):

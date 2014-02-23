@@ -85,8 +85,6 @@ class TantanZB(txXBee):
     def startPulse(self, beat=3):
         self.zb_net = task.LoopingCall(self.sendND)
         self.zb_net.start(beat)
-        #self.zb_dbvolt.start(30)
-        #self.zb_dbvolt = task.LoopingCall(self.sendDB_Volt)
 
     def stopPulse(self):
         self.zb_net.stop()
@@ -194,7 +192,7 @@ class TantanZB(txXBee):
                 uri = "/".join(["http://www.tantan.org/api/sensores/nodos#", node_id])
                 self.wsMcuFactory.dispatch(uri, {'node_id': node_id, 'msg': l})
             except:
-                uri = "/".join(["http://www.tantan.org/api/sensores#", node_id])
+                uri = "#".join(["http://www.tantan.org/api/sensores", node_id])
                 self.wsMcuFactory.dispatch(uri, {'node_id': node_id, 'msg': l})
 
     @exportRpc("send-nd")
@@ -255,7 +253,7 @@ class WsMcuProtocol(WampServerProtocol):
     def onSessionOpen(self):
         self.registerForPubSub("http://www.tantan.org/api/sensores#", True)
         self.registerForPubSub("http://www.tantan.org/api/sensores/nodos#", True)
-        self.registerForRpc(self.factory.zbProtocol, "www.tantan.org/api/sensores-control#")
+        self.registerForRpc(self.factory.zbProtocol, "http://www.tantan.org/api/sensores/control#", True)
 
 
 ## WS-MCU factory
