@@ -70,12 +70,6 @@ _Creado por saibatizoku. 19/sep/2013_
 *    __CouchDB__
     src/paisley/python setup.py develop
 
-## Para _IPython con [zmq,qtconsole,notebook,test]_
-
-*   __IPython__
-    pip install ipython[zmq,qtconsole,notebook,test]
-
-
 ## Para XBee
 *   __PySerial__
     pip install pySerial
@@ -96,15 +90,22 @@ _Creado por saibatizoku. 19/sep/2013_
     python setup.py install
 
 
-## zeroMQ & txZMQ
+(OPCIONALES)
+## NumPy (<- procesamiento eficiente de datos numéricos)
+
+    pip install numpy
+
+## Para _IPython con [zmq,qtconsole,notebook,test]_
+
+*   __IPython__
+    pip install ipython[zmq,qtconsole,notebook,test]
+
+
+## zeroMQ & txZMQ (<- sin uso actual)
 
     pip install pyzmq
     #para twisted
     pip install txZMQ
-
-## NumPy
-
-    pip install numpy
 
 
 Notas de desarrollo:
