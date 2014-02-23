@@ -1,0 +1,9 @@
+diagram {
+    A -> B -> C;
+    lane you {
+        A; B;
+    }
+    lane me {
+        C;
+    }
+}

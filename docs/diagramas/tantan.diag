@@ -1,0 +1,18 @@
+{
+  network {
+    address = "210.x.x.x/24";
+    www;
+    wamp-couchdb;
+    wamp-zb;
+  }
+  network internal {
+    address = "10.8.0.x/24";
+    twistd;
+    AutoBahn-WAMP;
+    CouchDB;
+    ZigBee-API;
+    www;
+    wamp-couchdb;
+    wamp-zb;
+  }
+}
