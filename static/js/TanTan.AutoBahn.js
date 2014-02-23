@@ -151,6 +151,19 @@ TanTan.module('AutoBahn', function (AutoBahn, App, Backbone, Marionette, $, _) {
         return ret;
     };
 
+    function subSensor (topicURI) {
+        ab.log('subscribing to', topicURI);
+    }
+
+    AutoBahn.subscribe_sensor = function (sensor_id) {
+        sess.subscribe("zbn:"+sensor_id, subSensor);
+    }
+
+    AutoBahn.unsubscribe_sensor = function (sensor_id) {
+        ab.log('unsubscribing from', topicURI);
+        sess.unsubscribe("zbn:"+sensor_id);
+    }
+
     AutoBahn.sync = function (method, model, options) {
         function success (result) {
             if (options.success) {
