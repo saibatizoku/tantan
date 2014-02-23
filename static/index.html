@@ -160,7 +160,7 @@
             </div>
             <% if (typeof nombre != 'undefined') { %>
             <div class="row">
-                <div class="col-sm-6">
+                <div class="col-sm-12">
                     <div class="panel-group nodo-acuatico">
                         <div class="panel panel-default">
                             <div class="panel-heading">
@@ -214,7 +214,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-sm-6">
+                <div class="col-sm-6 hide">
                     <div class="panel-group nodo-energia">
                         <div class="panel panel-default">
                             <div class="panel-heading">
@@ -282,11 +282,12 @@
             </div>
         </script>
         <script type="text/template" id="template-main-contents">
+            <img src="tttexto.png" class="ttbrand" style="height: 60px;">
             <div class="page-header">
                 <% if (typeof nombre != 'undefined') { %>
                     <h1><%= nombre %> <small>Sistema acuícola</small></h1>
                 <% } else { %>
-                    <h1>Sistema TanTán <small>Granjas del sistema acuícola</small></h1>
+                    <img src="tttexto.png" class="ttbrand" style="height: 60px;"><h1><small>Granjas del sistema acuícola</small></h1>
                 <% } %>
                 <!--div class="media">
                     <a class="pull-left" href="#">
