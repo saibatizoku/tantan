@@ -76,6 +76,7 @@ class TantanZB(txXBee):
         self.wsMcuFactory = wsMcuFactory
         self.devices = {}
         self._AMB = []
+        self.ON_OFF = True
  
     def connectionMade(self):
         print "TanTan ZB Serial port connection made"
@@ -88,6 +89,42 @@ class TantanZB(txXBee):
 
     def stopPulse(self):
         self.zb_net.stop()
+
+    def singleTX(self, device, txdata):
+        print "handle TX for"+repr(device['value']["long"].decode('hex'))+" "+repr(device['value']["short"].decode('hex'))
+        print repr(b"{0}".format(device['value']["short"].decode('hex')))
+        reactor.callFromThread(self.send,
+                "tx",
+                frame_id="\x03",
+                dest_addr_long=device['value']["long"].decode('hex'),
+                dest_addr=device['value']["short"].decode('hex'),
+                data=txdata,
+                )
+
+    def allTX(self, txdata):
+        reactor.callFromThread(self.send,
+                "tx",
+                frame_id="\x03",
+                dest_addr_long="\x00\x00\x00\x00\x00\x00\xff\xff",
+                dest_addr="\xff\xfe",
+                data=txdata,
+                )
+
+    @exportRpc("toggle-power")
+    def handle_tx(self, all=True):
+        if self.ON_OFF:
+            txdata = '0'
+            self.ON_OFF = False
+        else:
+            txdata = '1'
+            self.ON_OFF = True
+
+        if all:
+            self.allTX(txdata)
+        else:
+            for v in self.devices.values():
+                self.singleTX(v, txdata)
+        return txdata
 
     def connectionLost(self, reason):
         print "TanTan ZB Serial port connection lost.", reason
@@ -128,6 +165,7 @@ class TantanZB(txXBee):
             return Nodo('')
 
     def handle_packet(self, packet):
+        print packet
         if self.extractNodeInfo(packet):
             if self.is_RX(packet):
                 self.handle_rx(packet)
@@ -188,6 +226,7 @@ class TantanZB(txXBee):
                            'sensor': sensor,
                            'value': float(value),
                            }
+                print reading
                 self.wsMcuFactory.dispatch("http://www.tantan.org/api/sensores#amb-rx", reading)
                 uri = "/".join(["http://www.tantan.org/api/sensores/nodos#", node_id])
                 self.wsMcuFactory.dispatch(uri, {'node_id': node_id, 'msg': l})

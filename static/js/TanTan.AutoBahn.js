@@ -147,6 +147,7 @@ TanTan.module('AutoBahn', function (AutoBahn, App, Backbone, Marionette, $, _) {
     };
 
     AutoBahn.get_events = function () {
+        ret = [];
         sess.call('rpc:eventos-info').always(getEvents);
         return ret;
     };
@@ -162,6 +163,10 @@ TanTan.module('AutoBahn', function (AutoBahn, App, Backbone, Marionette, $, _) {
     AutoBahn.unsubscribe_sensor = function (sensor_id) {
         ab.log('unsubscribing from', topicURI);
         sess.unsubscribe("zbn:"+sensor_id);
+    }
+
+    AutoBahn.toggle_motors = function () {
+        sess.call("rpc:toggle-power").always(ab.log);
     }
 
     AutoBahn.sync = function (method, model, options) {
