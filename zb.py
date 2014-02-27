@@ -57,9 +57,9 @@ class MyOptions(usage.Options):
             ['port', 'p', '/dev/ttyUSB0', 'Serial Port device'],
             ['webport', 'w', 8080, 'Web port to use for embedded Web server'],
             ['wsurl', 's', "ws://localhost:9000", 'WebSocket port to use for embedded WebSocket server']
-    ]
+            ]
 
-# REGEX   '  ND:(.*)|bat:(.*)\[V\]:(.*)\%carga:(.*):contador:(.*)|\%V:(.*)'
+    # REGEX   '  ND:(.*)|bat:(.*)\[V\]:(.*)\%carga:(.*):contador:(.*)|\%V:(.*)'
 
 
 
@@ -77,7 +77,7 @@ class TantanZB(txXBee):
         self.devices = {}
         self._AMB = []
         self.ON_OFF = True
- 
+
     def connectionMade(self):
         print "TanTan ZB Serial port connection made"
         self.retry_count = 0
@@ -110,6 +110,11 @@ class TantanZB(txXBee):
                 data=txdata,
                 )
 
+    @exportRpc("get-nodes")
+    def connected_devices(self, all=True):
+        return {'devices': self.devices}
+
+
     @exportRpc("toggle-power")
     def handle_tx(self, all=True):
         if self.ON_OFF:
@@ -131,7 +136,7 @@ class TantanZB(txXBee):
         self.stopPulse()
         self.retry_count += 1
             #reactor.stop()
-      
+
     def get_amb_sensors(self):
         #amb_sensors = [ dev for devid, dev in self.devices if dev['name'].startswith('AMB')]
         amb_sensors = [ dev for devid, dev in self.devices.items() if dev['name'].startswith('AMB')]
@@ -157,9 +162,8 @@ class TantanZB(txXBee):
                     data=command)
 
     def deferred_handle_packet(self, packet):
-        #d = defer.Deferred()
         return packet
- 
+
     def extractNodeInfo(self, packet):
         if True:
             return Nodo('')
@@ -209,9 +213,9 @@ class TantanZB(txXBee):
         msg = "{0}:{1}:RX:".format(resp['id'], resp['addr'], resp['data']) + repr(resp['data'])
         #print 'Evt id: {0}\nVal: {1}'.format(str(resp['name']), resp['data'].decode('utf8'))
         evt = {'id': resp['id'],
-               'type': 'rx',
-               'data': resp['data'],
-               }
+                'type': 'rx',
+                'data': resp['data'],
+                }
         node_id = resp['id']
         data = resp['data']
         data_lines = data.splitlines()
@@ -220,12 +224,12 @@ class TantanZB(txXBee):
             try:
                 node_type, pin, sensor, value = l.split(":")
                 reading = {
-                           'node_id': node_id,
-                           'node_type': node_type,
-                           'pin': pin,
-                           'sensor': sensor,
-                           'value': float(value),
-                           }
+                        'node_id': node_id,
+                        'node_type': node_type,
+                        'pin': pin,
+                        'sensor': sensor,
+                        'value': float(value),
+                        }
                 print reading
                 self.wsMcuFactory.dispatch("http://www.tantan.org/api/sensores#amb-rx", reading)
                 uri = "/".join(["http://www.tantan.org/api/sensores/nodos#", node_id])
@@ -238,7 +242,7 @@ class TantanZB(txXBee):
     def sendND(self, evt=None):
         self._sendND()
         return 'ND Sent'
-        
+
     def _sendND(self):
         reactor.callFromThread(self.send,
                 "remote_at",
@@ -257,7 +261,7 @@ class TantanZB(txXBee):
             laddr = packet["source_addr_long"].encode('hex')
         elif "source_addr_long" in packet["parameter"]:
             laddr = packet["parameter"]["source_addr_long"].encode('hex')
-        
+
         nname = packet["parameter"]["node_identifier"]
         addr = packet["parameter"]["source_addr"].encode('hex')
         devt = packet["parameter"]["device_type"].encode('hex')
@@ -285,14 +289,27 @@ class TantanZB(txXBee):
 
         self.wsMcuFactory.dispatch("http://www.tantan.org/api/sensores#zb-nd", device)
 
+    @exportRpc("get-pan")
+    def get_panid(self):
+        self._getPanId()
+        return "PAN ID asked for"
 
-## WS-MCU protocol
+
+    def _getPanId(self):
+        reactor.callFromThread(self.send,
+                "at",
+                frame_id="\x02",
+                command="ID"
+                )
+
+
+        ## WS-MCU protocol
 class WsMcuProtocol(WampServerProtocol):
- 
+
     def onSessionOpen(self):
         self.registerForPubSub("http://www.tantan.org/api/sensores#", True)
         self.registerForPubSub("http://www.tantan.org/api/sensores/nodos#", True)
-        self.registerForRpc(self.factory.zbProtocol, "http://www.tantan.org/api/sensores/control#", True)
+        self.registerForRpc(self.factory.zbProtocol, "http://www.tantan.org/api/sensores/control#")
 
 
 ## WS-MCU factory
