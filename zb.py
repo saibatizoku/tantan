@@ -96,7 +96,7 @@ class TantanZB(txXBee):
         reactor.callFromThread(self.send,
                 "tx",
                 frame_id="\x03",
-                dest_addr_long=device['value']["long"].decode('hex'),
+                #dest_addr_long=device['value']["long"].decode('hex'),
                 dest_addr=device['value']["short"].decode('hex'),
                 data=txdata,
                 )
@@ -109,6 +109,14 @@ class TantanZB(txXBee):
                 dest_addr="\xff\xfe",
                 data=txdata,
                 )
+
+    @exportRpc("talk-to-node")
+    def talk_to_node(self, device_id, tx_data):
+        if device_id in self.devices:
+            self.singleTX(self.devices[device_id], tx_data)
+            return "Transmission sent to {0}: {1}".format(device_id, tx_data)
+        else:
+            return "Device not found"
 
     @exportRpc("get-nodes")
     def connected_devices(self, all=True):
