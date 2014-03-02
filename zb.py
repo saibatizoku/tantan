@@ -96,7 +96,7 @@ class TantanZB(txXBee):
         reactor.callFromThread(self.send,
                 "tx",
                 frame_id="\x03",
-                #dest_addr_long=device['value']["long"].decode('hex'),
+                dest_addr_long=device['value']["long"].decode('hex'),
                 dest_addr=device['value']["short"].decode('hex'),
                 data=txdata,
                 )
