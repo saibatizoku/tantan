@@ -126,7 +126,8 @@ class TanTanPANService(service.Service):
         for net in networks:
             #try:
             pan_id = net['pan_id']
-            self.networks[pan_id] = self.openUART(pan_id)
+            self.networks[pan_id] = net
+            self.networks[pan_id]['uart'] = self.openUART(pan_id)
             print "Network started", pan_id
             #except:
             #    print "COULD NOT CONNECT", net['port']
