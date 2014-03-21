@@ -1,0 +1,16 @@
+{
+    "networks": {
+        "557744": {
+            "pan_id": "557744", 
+            "port": "/dev/ttyACM0", 
+            "baud": 115200, 
+            "name": "Red de biofloc Granja Xamapan"
+        },
+        "aabb": {
+            "pan_id": "aabb", 
+            "port": "/dev/ttyACM1", 
+            "baud": 115200, 
+            "name": "Red de potencia Granja Xamapan"
+        }
+    }
+}
