@@ -105,7 +105,7 @@ class TanTanPANService(service.Service):
         d = defer.Deferred()
         d.addCallback(open_serial_port)
         d.addErrback(connection_error)
-        return d
+        return d.callback(pan_id)
 
 
     def startPAN(self, pan_id=None):
