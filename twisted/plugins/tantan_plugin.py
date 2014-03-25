@@ -12,7 +12,7 @@ from twisted.python import log, usage
 from twisted.web.server import Site
 from twisted.web.static import File
 
-from autobahn.resource import WebSocketResource, HTTPChannelHixie76Aware
+from autobahn.twisted.resource import WebSocketResource, HTTPChannelHixie76Aware
 
 from tantan import TantanWampFactory
 from zb import WsMcuFactory as ZBFactory

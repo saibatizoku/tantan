@@ -85,7 +85,7 @@ _Creado por saibatizoku. 19/sep/2013_
 *   __AutobahnPython__
     git clone git://github.com/tavendo/AutobahnPython.git
     cd AutobahnPython
-    git checkout v0.5.2
+    git checkout v0.8.6
     cd autobahn
     python setup.py install
 

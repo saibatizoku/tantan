@@ -27,7 +27,7 @@ from urllib import urlencode, quote
 
 from paisley import CouchDB
 
-from autobahn.wamp import WampServerFactory, WampCraProtocol, WampCraServerProtocol, exportRpc
+from autobahn.wamp1.protocol import WampServerFactory, WampCraProtocol, WampCraServerProtocol, exportRpc
  
 
 from couch import TantanCouch

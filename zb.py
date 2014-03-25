@@ -33,8 +33,8 @@ import sys
 import json
 from pprint import pprint
 
-from autobahn.websocket import listenWS
-from autobahn.wamp import WampServerFactory, WampServerProtocol, exportRpc
+from autobahn.twisted.websocket import listenWS
+from autobahn.wamp1.protocol import WampServerFactory, WampServerProtocol, exportRpc
 
 from txXBee.protocol import txXBee
 
