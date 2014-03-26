@@ -1,16 +1,30 @@
 {
+    "info": {
+        "name": "Sistema de redes TanT\u00e1n",
+        "description": "Sistema de interconexi\u00f3n de redes WSAN"
+    },
     "networks": {
         "557744": {
-            "pan_id": "557744", 
-            "port": "/dev/ttyACM0", 
-            "baud": 115200, 
+            "baud": 115200,
+            "pan_id": "557744",
+            "port": "/dev/ttyACM1",
             "name": "Red de biofloc Granja Xamapan"
         },
         "aabb": {
-            "pan_id": "aabb", 
-            "port": "/dev/ttyACM1", 
-            "baud": 115200, 
+            "baud": 115200,
+            "pan_id": "aabb",
+            "port": "/dev/ttyACM0",
             "name": "Red de potencia Granja Xamapan"
+        },
+        "ccdd": {
+            "baud": 115200,
+            "pan_id": "ccdd",
+            "name": "Red de dom\u00f3tica",
+            "port": "/dev/ttyUSB0"
         }
+    },
+    "server": {
+        "host": "192.168.2.7",
+        "port": 8080
     }
 }
