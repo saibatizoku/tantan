@@ -53,6 +53,7 @@ class TanTanPANClientProtocol(protocol.Protocol):
 
     def connectionMade(self):
         pans = self.factory.getNetworkInfo()
+        self.factory.resetDelay()
         print "Service PAN IDs", repr(pans)
 
     def dataReceived(self, data):
@@ -62,8 +63,10 @@ class TanTanPANClientProtocol(protocol.Protocol):
             pans[self.factory.pan_id].protocol.transport.write(data)
 
     def connectionLost(self, reason):
-        pans = self.factory.getNetworkInfo()
-        print "Service PAN IDs", repr(pans)
+        print "AGENT connection LOST", self.factory.pan_id, self.factory.service.pan.keys()
+        pans = self.factory.service.pan
+        if self.factory.pan_id in pans:
+            pans[self.factory.pan_id].protocol.transport.loseConnection()
 
 
 class TanTanPANClientFactory(protocol.ReconnectingClientFactory):
@@ -80,10 +83,20 @@ class TanTanPANClientFactory(protocol.ReconnectingClientFactory):
     def getNetworkInfo(self):
         return self.service.config['networks'].keys()
 
-    #def buildProtocol(self, address):
+    #def buildProtocol(self, addr):
+    #    print 'Connected.'
+    #    print 'Resetting reconnection delay'
     #    self.resetDelay()
-    #    return self.protocol()
+    #    return TanTanPANClientProtocol()
 
+    def clientConnectionLost(self, connector, reason):
+        print 'Lost connection.  Reason:', reason
+        ReconnectingClientFactory.clientConnectionLost(self, connector, reason)
+
+    def clientConnectionFailed(self, connector, reason):
+        print 'Connection failed. Reason:', reason
+        ReconnectingClientFactory.clientConnectionFailed(self, connector,
+                                                         reason)
 
 components.registerAdapter(TanTanPANClientFactory,
                            IPANService,
@@ -101,7 +114,7 @@ class SerialEcho(protocol.Protocol):
         print "CLIENT", repr(self.client)
 
     def connectionLost(self, reason):
-        print "Serial port NOT CONNECTED", self.pan_id, reason
+        print "Serial port NOT CONNECTED", self.pan_id
         if self.pan_id in self.client.factory.service.pan:
             del self.client.factory.service.pan[self.pan_id]
 

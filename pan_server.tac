@@ -73,7 +73,7 @@ class WAMPClientProtocol(WampClientProtocol):
         self.registerForRpc(self, "http://api.tantan.net/pan#")
 
     def connectionLost(self, reason):
-        print "WAMP connection lost"
+        print "WAMP agent connection lost"
         WampClientProtocol.connectionLost(self, reason)
 
 
@@ -93,10 +93,11 @@ class PANZigBeeProtocol(txXBee):
         self.getPanId()
 
     def connectionLost(self, reason):
+        if self.pan_id and self.factory.service.agents.get(self.pan_id):
+            self.factory.service.agents[self.pan_id].sendClose()
+            del self.factory.service.agents[self.pan_id]
         if self.pan_id and self.factory.service.networks.get(self.pan_id):
             del self.factory.service.networks[self.pan_id]
-        if self.pan_id and self.factory.service.agents.get(self.pan_id):
-            del self.factory.service.agents[self.pan_id]
 
     def handle_packet(self, packet):
         def print_debug(packet):
@@ -116,6 +117,7 @@ class PANZigBeeProtocol(txXBee):
             addr_long = packet['parameter']['source_addr_long'].encode('hex')
             addr = packet['parameter']['source_addr'].encode('hex')
             if agent:
+                print dir(agent)
                 agent.publish("http://api.tantan.net/pan/sensors#nd", [addr_long, addr])
         if self.state == "SILENT":
             self.getPanId()
@@ -157,25 +159,26 @@ class PANZigBeeProtocol(txXBee):
             return None
 
     def handle_rx(self, packet, agent):
-        resp = {}
-        #resp['name'] = ZB_reverse.get(packet["source_addr_long"], "Unknown")
-        resp = self.get_zb_node_info(packet)
-        rout = "RX:"
-        for (key, item) in resp.items():
-            rout += "{0}-{1}:".format(key, item)
-        msg = "{0}:{1}:RX:".format(resp['id'], resp['addr'], resp['data']) + repr(resp['data'])
-        #print 'Evt id: {0}\nVal: {1}'.format(str(resp['name']), resp['data'].decode('utf8'))
-        evt = {'id': resp['id'],
-                'type': 'rx',
-                'data': resp['data'],
-                }
-        node_id = resp['id']
-        data = resp['data']
-        data_lines = data.splitlines()
-        #print "VAL LINES", val_lines
-        for l in data_lines:
-            uri = "#".join(["http://www.tantan.org/api/sensores", node_id])
-            agent.publish(uri, {'node_id': node_id, 'msg': l})
+        if agent:
+            resp = {}
+            #resp['name'] = ZB_reverse.get(packet["source_addr_long"], "Unknown")
+            resp = self.get_zb_node_info(packet)
+            rout = "RX:"
+            for (key, item) in resp.items():
+                rout += "{0}-{1}:".format(key, item)
+            msg = "{0}:{1}:RX:".format(resp['id'], resp['addr'], resp['data']) + repr(resp['data'])
+            #print 'Evt id: {0}\nVal: {1}'.format(str(resp['name']), resp['data'].decode('utf8'))
+            evt = {'id': resp['id'],
+                    'type': 'rx',
+                    'data': resp['data'],
+                    }
+            node_id = resp['id']
+            data = resp['data']
+            data_lines = data.splitlines()
+            #print "VAL LINES", val_lines
+            for l in data_lines:
+                uri = "#".join(["http://www.tantan.org/api/sensores", node_id])
+                agent.publish(uri, {'node_id': node_id, 'msg': l})
 
     def getPanId(self):
         reactor.callFromThread(self.send,
@@ -290,7 +293,7 @@ class TanTanPANService(service.Service):
         return client
 
     def startWAMPFactory(self):
-        factory = WampServerFactory("ws://localhost:9000", debugWamp = True)
+        factory = WampServerFactory("ws://ejeacuicola.mx:9000", debugWamp = True)
         factory.protocol = WAMPServerProtocol
         factory.service = self
         endpoint = TCP4ServerEndpoint(reactor, 9000)
@@ -310,7 +313,7 @@ class TanTanPANService(service.Service):
         server.addCallback(setConn)
         server.addErrback(failedConn)
         return server
-        
+
     def startService(self):
         self.startWAMPFactory()
         service.Service.startService(self)
@@ -324,4 +327,4 @@ wsan_service = TanTanPANService()
 serviceCollection = service.IServiceCollection(application)
 wsan_service.setServiceParent(serviceCollection)
 pan_factory = IPANServerFactory(wsan_service)
-internet.TCPServer(8080, pan_factory).setServiceParent(serviceCollection)
+internet.TCPServer(7780, pan_factory).setServiceParent(serviceCollection)
