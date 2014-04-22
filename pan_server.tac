@@ -81,7 +81,6 @@ class PANZigBeeProtocol(txXBee):
             addr_long = packet['parameter']['source_addr_long'].encode('hex')
             addr = packet['parameter']['source_addr'].encode('hex')
             if agent:
-                print dir(agent)
                 agent.publish("http://api.tantan.net/pan/sensors#nd", [addr_long, addr])
         if self.state == "SILENT":
             self.getPanId()
@@ -151,6 +150,12 @@ class PANZigBeeProtocol(txXBee):
                 command="ID"
                 )
 
+    def getC0ID(self, dest_addr_long, dest_addr, txdata):
+        reactor.callFromThread(self.send,
+                "at",
+                command="ID",
+                )
+
     def obtainPAN(self):
         if self.pan_id and self.status == "SILENT":
             self.status == "PUBLISH"
@@ -207,17 +212,11 @@ class TanTanPANServerFactory(protocol.ServerFactory):
         return self.service.getPANs()
 
 
-components.registerAdapter(TanTanPANServerFactory,
-                           IPANService,
-                           IPANServerFactory)
-
-
 class TanTanPANService(service.Service):
 
     implements(IPANService)
 
     def __init__(self, *args, **kwargs):
-        self.config = loadConfig()
         self.agents = {}
         self.networks = {}
 
@@ -228,16 +227,9 @@ class TanTanPANService(service.Service):
         return defer.succeed(self.networks.keys())
 
     def startWAMPClient(self, pan_id):
-        #wfactory = protocol.Factory.forProtocol(WAMPClientProtocol)
-        #wfactory.pan_id = pan_id
-        #factory = WrappingWebSocketClientFactory(wfactory,
-        #        "ws://localhost:9000",
-        #        )
-        #factory = protocol.Factory.forProtocol(WAMPClientProtocol)
-        factory = WampClientFactory("ws://localhost:9000", debugWamp = True)
+        factory = WampClientFactory("ws://localhost:9000", debugWamp = debugW)
         factory.protocol = WAMPClientProtocol
         factory.pan_id = pan_id
-        #endpoint = clientFromString(reactor, 'autobahn:tcp\:localhost\:9000:url=ws\://localhost\:9000')
         endpoint = TCP4ClientEndpoint(reactor, 'localhost', 9000)
         client = endpoint.connect(factory)
 
@@ -257,7 +249,7 @@ class TanTanPANService(service.Service):
         return client
 
     def startWAMPFactory(self):
-        factory = WampServerFactory("ws://ejeacuicola.mx:9000", debugWamp = True)
+        factory = WampServerFactory("ws://ejeacuicola.mx:9000", debugWamp = debugW)
         factory.protocol = WAMPServerProtocol
         factory.service = self
         endpoint = TCP4ServerEndpoint(reactor, 9000)
@@ -286,7 +278,12 @@ class TanTanPANService(service.Service):
         service.Service.stopService(self)
 
 
-application = service.Application('tantanclient')
+components.registerAdapter(TanTanPANServerFactory,
+                           IPANService,
+                           IPANServerFactory)
+
+
+application = service.Application('tantanserver')
 wsan_service = TanTanPANService()
 serviceCollection = service.IServiceCollection(application)
 wsan_service.setServiceParent(serviceCollection)
