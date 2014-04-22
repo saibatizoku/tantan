@@ -24,13 +24,10 @@ from autobahn.wamp1.protocol import WampServerFactory, \
                                     WampClientProtocol, \
                                     exportRpc
 
-def loadConfig():
-    try:
-        cfg = json.load(open('config.json', 'r'))
-        pprint(cfg, depth=4)
-        return cfg
-    except:
-        return {}
+from wamp import WAMPServerProtocol, WAMPClientProtocol
+
+debug = False
+debugW = False
 
 
 class IPANService(Interface):
@@ -42,39 +39,6 @@ class IPANService(Interface):
 class IPANServerFactory(Interface):
     """ A factory for clients made to publish at a central node.
     """
-
-
-class WAMPServerProtocol(WampServerProtocol):
-
-    def onSessionOpen(self):
-        print "WAMP connection started"
-        self.registerForPubSub("http://www.tantan.org/api/sensores#", True)
-        self.registerForPubSub("http://api.tantan.net/pan/", True)
-        self.call("http://api.tantan.net/pan#getPanId").addCallback(self.onPanId)
-
-    def onPanId(self, result):
-        print "WAMP PAN ID", result
-        self.dispatch("http://api.tantan.net/pan/id", result)
-
-    def connectionLost(self, reason):
-        print "WAMP connection lost"
-        WampServerProtocol.connectionLost(self, reason)
-
-
-class WAMPClientProtocol(WampClientProtocol):
-
-    @exportRpc("getPanId")
-    def getPanId(self):
-        return self.factory.pan_id
-
-    def onSessionOpen(self):
-        pan_id = self.factory.pan_id
-        print "WAMP client connected" #, pan_id
-        self.registerForRpc(self, "http://api.tantan.net/pan#")
-
-    def connectionLost(self, reason):
-        print "WAMP agent connection lost"
-        WampClientProtocol.connectionLost(self, reason)
 
 
 class PANZigBeeProtocol(txXBee):
