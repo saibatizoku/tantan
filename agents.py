@@ -5,10 +5,12 @@ from twisted.internet.endpoints import TCP4ClientEndpoint
 from twisted.internet.serialport import SerialPort
 
 from zope.interface import Interface, implements
+from autobahn.wamp1.protocol import WampClientFactory
 
 from pans import IPANClientFactory
 from uarts import SerialEcho
 from utils import compDictKeys
+from wamp import WAMPClientProtocol
 
 
 class IAgentManager(Interface):
@@ -72,3 +74,14 @@ class PANTcpAgentManager(object):
                 print "Agent NOT present", pan_id
                 self.agents[pan_id] = "CONNECTING"
                 self.service.startPANClient(pan_id)
+
+
+class PANWampAgentManager(PANTcpAgentManager):
+
+    implements(IAgentManager)
+
+    def makeFactory(self, pan_id=None):
+        factory = WampClientFactory("ws://localhost:9000", debugWamp = debugW)
+        factory.protocol = WAMPClientProtocol
+        factory.pan_id = pan_id
+        return factory
