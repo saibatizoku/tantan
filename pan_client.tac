@@ -10,6 +10,7 @@ from twisted.python import components
 from zope.interface import Interface, implements
 
 from pans import IPANClientFactory, TanTanPANClientFactory
+from agents import IAgentManager, PANTcpAgentManager
 from utils import loadConfig
 
 
@@ -62,31 +63,17 @@ class TanTanPANService(service.Service):
         self.config = loadConfig('config.json')
         self.pan = {}
         self.agents = {}
+        self.managers = {}
+        self.managers['agents'] = IAgentManager(self)
 
         """
         """
     def startAgent(self, pan_id):
         host = self.config['server']['host']
         port = self.config['server']['port']
-        factory = IPANClientFactory(self)
-        factory.pan_id = pan_id
-        endpoint = TCP4ClientEndpoint(reactor, host, port)
-        client = endpoint.connect(factory)
-
-        def setConn(client):
-            print "CONN", client.transport.getPeer()
-            self.agents[pan_id] = client
-            #self._readConfigNetworks()
-            return client
-
-        def failedConn(failure):
-            print "UART not found"
-            if pan_id in self.agents:
-                del self.agents[pan_id]
-            return None
-
-        client.addCallback(setConn)
-        client.addErrback(failedConn)
+        manager = self.managers['agents']
+        manager.agents[pan_id] = "CONNECTING"
+        client = manager.addAgent(pan_id, host, port)
         return client
 
 
@@ -95,8 +82,9 @@ class TanTanPANService(service.Service):
         """
 
     def startCOMM(self, pan_id):
-        if pan_id in self.agents:
-            agent = self.agents[pan_id]
+        agents = self.managers['agents'].agents
+        if pan_id in agents:
+            agent = agents[pan_id]
         else:
             agent = None
         return self._startCOMM(agent)
@@ -113,7 +101,10 @@ class TanTanPANService(service.Service):
 
     def _startCOMM(self, agent):
 
-        pan_id = agent.factory.pan_id
+        if agent:
+            pan_id = agent.factory.pan_id
+        else:
+            pan_id = None
 
         def open_serial_port(agent):
             if pan_id in self.config['networks']:
@@ -130,7 +121,7 @@ class TanTanPANService(service.Service):
             return None
 
         def connection_error(reason):
-            print "Failed to connect", pan_id, reason
+            print "Failed to connect", pan_id, reason.value
             if pan_id in self.pan:
                 del self.pan[pan_id]
             return None
@@ -149,11 +140,14 @@ class TanTanPANService(service.Service):
 
     def startPANClients(self):
         for pan_id in self.getPANs():
-            client = self.startAgent(pan_id)
-            client.addCallback(self._startCOMM)
+            self.startPANClient(pan_id)
+
+    def startPANClient(self, pan_id):
+        client = self.startAgent(pan_id)
+        client.addCallback(self._startCOMM)
 
     def stopPANClients(self):
-        for pan_id, client in self.agents.items():
+        for pan_id, client in self.managers['agents'].agents.items():
             client.transport.loseConnection()
             print pan_id, " PAN closed"
 
@@ -165,6 +159,14 @@ class TanTanPANService(service.Service):
         self.stopPANClients()
         service.Service.stopService(self)
 
+
+components.registerAdapter(TanTanPANClientFactory,
+                           IPANService,
+                           IPANClientFactory)
+
+components.registerAdapter(PANTcpAgentManager,
+                           IPANService,
+                           IAgentManager)
 
 application = service.Application('tantanclient')
 client = TanTanPANService()
