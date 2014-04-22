@@ -14,3 +14,7 @@ def loadConfig(filepath):
         cfg = {}
     return cfg
 
+def compDictKeys(a, b):
+    set_a = set(a.keys())
+    set_b = set(b.keys())
+    return set_b.difference(set_a)
