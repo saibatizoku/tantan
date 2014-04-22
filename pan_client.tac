@@ -2,13 +2,12 @@ import json
 from pprint import pprint
 
 from twisted.application import internet, service
-from twisted.internet import protocol, reactor, defer
+from twisted.internet import reactor, defer, task
 from twisted.internet.endpoints import TCP4ClientEndpoint
 from twisted.internet.serialport import SerialPort
 from twisted.python import components
 
 from zope.interface import Interface, implements
-
 
 def loadConfig():
     try:
@@ -17,6 +16,7 @@ def loadConfig():
     except:
         cfg = {}
     return cfg
+from pans import IPANClientFactory, TanTanPANClientFactory
 
 
 class IPANService(Interface):
@@ -38,69 +38,6 @@ class IPANService(Interface):
     def closeCOMM():
         """
         """
-
-
-class IPANClientFactory(Interface):
-    """ A factory for clients made to publish at a central node.
-
-        The PAN client factory manages connections to Physical-
-        Area-Networks (PANs), by controlling UART connections
-        via the PAN service.
-    """
-
-
-class TanTanPANClientProtocol(protocol.Protocol):
-
-    def connectionMade(self):
-        pans = self.factory.getNetworkInfo()
-        self.factory.resetDelay()
-        print "Service PAN IDs", repr(pans)
-
-    def dataReceived(self, data):
-        #print "Client received DATA:", data
-        pans = self.factory.service.pan
-        if self.factory.pan_id in pans:
-            pans[self.factory.pan_id].protocol.transport.write(data)
-
-    def connectionLost(self, reason):
-        print "AGENT connection LOST", self.factory.pan_id, self.factory.service.pan.keys()
-        pans = self.factory.service.pan
-        if self.factory.pan_id in pans:
-            pans[self.factory.pan_id].protocol.transport.loseConnection()
-
-
-class TanTanPANClientFactory(protocol.ReconnectingClientFactory):
-
-    implements(IPANClientFactory)
-
-    protocol = TanTanPANClientProtocol
-    maxDelay = 5
-
-    def __init__(self, service):
-        self.service = service
-        self.pan_id = None
-
-    def getNetworkInfo(self):
-        return self.service.config['networks'].keys()
-
-    #def buildProtocol(self, addr):
-    #    print 'Connected.'
-    #    print 'Resetting reconnection delay'
-    #    self.resetDelay()
-    #    return TanTanPANClientProtocol()
-
-    def clientConnectionLost(self, connector, reason):
-        print 'Lost connection.  Reason:', reason
-        ReconnectingClientFactory.clientConnectionLost(self, connector, reason)
-
-    def clientConnectionFailed(self, connector, reason):
-        print 'Connection failed. Reason:', reason
-        ReconnectingClientFactory.clientConnectionFailed(self, connector,
-                                                         reason)
-
-components.registerAdapter(TanTanPANClientFactory,
-                           IPANService,
-                           IPANClientFactory)
 
 
 class SerialEcho(protocol.Protocol):
