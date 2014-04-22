@@ -7,6 +7,7 @@ from twisted.internet.serialport import SerialPort
 from zope.interface import Interface, implements
 
 from pans import IPANClientFactory
+from uarts import SerialEcho
 from utils import compDictKeys
 
 
