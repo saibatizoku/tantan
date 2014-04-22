@@ -9,14 +9,8 @@ from twisted.python import components
 
 from zope.interface import Interface, implements
 
-def loadConfig():
-    try:
-        cfg = json.load(open('config.json', 'r'))
-        pprint(cfg, depth=4)
-    except:
-        cfg = {}
-    return cfg
 from pans import IPANClientFactory, TanTanPANClientFactory
+from utils import loadConfig
 
 
 class IPANService(Interface):
@@ -65,7 +59,7 @@ class TanTanPANService(service.Service):
     implements(IPANService)
 
     def __init__(self, *args, **kwargs):
-        self.config = loadConfig()
+        self.config = loadConfig('config.json')
         self.pan = {}
         self.agents = {}
 
