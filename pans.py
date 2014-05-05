@@ -1,16 +1,30 @@
+from twisted.internet import protocol
 from twisted.internet.protocol import Protocol
 from twisted.internet.protocol import ReconnectingClientFactory
 
 from zope.interface import Interface, implements
 
+from zigbee import PANZigBeeProtocol
 
-class IPANClientFactory(Interface):
+class IPANServerFactory(Interface):
     """ A factory for clients made to publish at a central node.
-
-        The PAN client factory manages connections to Physical-
-        Area-Networks (PANs), by controlling UART connections
-        via the PAN service.
     """
+
+
+class TanTanPANServerFactory(protocol.ServerFactory):
+
+    implements(IPANServerFactory)
+
+    protocol = PANZigBeeProtocol
+
+    def __init__(self, service):
+        self.service = service
+
+    def getNetwork(self, pan_id=None):
+        return self.service.getPAN(pan_id)
+
+    def getNetworks(self, pan_id=None):
+        return self.service.getPANs()
 
 
 class TanTanPANClientProtocol(Protocol):
@@ -37,6 +51,15 @@ class TanTanPANClientProtocol(Protocol):
 
         if self.factory.pan_id in pans:
             pans[self.factory.pan_id].protocol.transport.loseConnection()
+
+
+class IPANClientFactory(Interface):
+    """ A factory for clients made to publish at a central node.
+
+        The PAN client factory manages connections to Physical-
+        Area-Networks (PANs), by controlling UART connections
+        via the PAN service.
+    """
 
 
 class TanTanPANClientFactory(ReconnectingClientFactory):
