@@ -14,6 +14,13 @@ def loadConfig(filepath):
         cfg = {}
     return cfg
 
+def saveConfig(cfg, filepath):
+    try:
+        json.dump(cfg, open(filepath, 'w'), indent=4)
+        pprint(cfg, depth=4)
+    except:
+        print "Could not save config"
+
 def compDictKeys(a, b):
     set_a = set(a.keys())
     set_b = set(b.keys())

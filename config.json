@@ -1,30 +1,17 @@
 {
     "info": {
-        "name": "Sistema de redes TanT\u00e1n",
-        "description": "Sistema de interconexi\u00f3n de redes WSAN"
-    },
+        "name": "Physical-Area-Network System", 
+        "description": "Data publishing and control of physical devices."
+    }, 
     "networks": {
-        "557744": {
-            "baud": 115200,
-            "pan_id": "557744",
-            "port": "/dev/ttyACM1",
-            "name": "Red de biofloc Granja Xamapan"
-        },
         "aabb": {
-            "baud": 115200,
-            "pan_id": "aabb",
-            "port": "/dev/ttyACM0",
-            "name": "Red de potencia Granja Xamapan"
-        },
-        "ccdd": {
-            "baud": 115200,
-            "pan_id": "ccdd",
-            "name": "Red de dom\u00f3tica",
-            "port": "/dev/ttyUSB0"
+            "baud": 115200, 
+            "port": "/dev/ttyUSB0", 
+            "name": "ZigBee PAN"
         }
-    },
+    }, 
     "server": {
-        "host": "10.8.0.1",
+        "host": "localhost", 
         "port": 7780
     }
 }
