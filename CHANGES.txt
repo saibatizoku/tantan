@@ -1,0 +1,3 @@
+v0.2.0, 04/07/2014 -- Modularization of concerns.
+v0.1.1, 29/04/2014 -- Need recent setuptools.
+v0.1.0, 29/04/2014 -- Initial release.
