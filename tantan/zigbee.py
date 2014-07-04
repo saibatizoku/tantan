@@ -24,37 +24,56 @@ class PANZigBeeProtocol(txXBee):
         self.getPanId()
 
     def connectionLost(self, reason):
-        if self.pan_id and self.factory.service.agents.get(self.pan_id):
-            self.factory.service.agents[self.pan_id].sendClose()
-            del self.factory.service.agents[self.pan_id]
+        self.factory.service.stopAgent(self.pan_id)
+
         if self.pan_id and self.factory.service.networks.get(self.pan_id):
             del self.factory.service.networks[self.pan_id]
 
     def handle_packet(self, packet):
-        print "{0}".format(self._frame.raw_data.encode('hex'))
+        #print "{0}".format(self._frame.raw_data.encode('hex'))
+        #print "{}".format(packet)
         def print_debug(packet):
             print "FRAME", self._frame.raw_data.encode('hex')
             print "PACKET", packet
-
-        agent = self.factory.service.agents.get(self.pan_id, None)
+            
+        def publishPANID(agent):
+            self.state = "PUBLISH"
+            agent.publish("http://api.tantan.net/pan/sensors#nd", [self.pan_id, addr_long, addr, parent])
+            print "Agent present: {0}".format(repr(agent))
 
         if self.is_PANID(packet):
             self.pan_id = pan_id = packet['parameter'].encode('hex').lstrip('0')
-            self.factory.service.networks[pan_id] = self
-            self.factory.service.startWAMPClient(pan_id)
-            self.state = "PUBLISH"
-            print "GOT PAN ID", self.pan_id, self.state
+            agent = self.factory.service.startAgent(self.pan_id)
+            agent.addCallback(publishPANID)
+
+        #    self.factory.service.networks[pan_id] = self
+        #    self.factory.service.startWAMPClient(pan_id)
+        #    self.state = "PUBLISH"
+        #    print "GOT PAN ID", self.pan_id, self.state
         if self.is_ND(packet):
             #print_debug(packet)
+            param = packet['parameter']
+            result = {}
+            result['source_addr_long'] = param['source_addr_long'].encode('hex')
+            result['source_addr'] = param['source_addr'].encode('hex')
+            result['parent_address'] = param['parent_address'].encode('hex')
+            result['node_identifier'] = param['node_identifier'] #.encode('hex')
+            result['device_type'] = param['device_type'].encode('hex')
+            result['status'] = param['status'].encode('hex')
             addr_long = packet['parameter']['source_addr_long'].encode('hex')
             addr = packet['parameter']['source_addr'].encode('hex')
             parent = packet['parameter']['parent_address'].encode('hex')
+            agent = self.factory.service.getAgent(self.pan_id)
             if agent:
                 agent.publish("http://api.tantan.net/pan/sensors#nd", [self.pan_id, addr_long, addr, parent])
-        if self.state == "SILENT":
-            self.getPanId()
+                agent.publish("http://api.tantan.net/pan/nd#"+self.pan_id, result)
+                result['pan_id'] = self.pan_id
+                agent.publish("http://api.tantan.net/pans/nd", result)
+        #if self.state == "SILENT":
+        #    self.getPanId()
         elif self.state == "PUBLISH":
             if self.is_RX(packet):
+                agent = self.factory.service.getAgent(self.pan_id)
                 rx = packet['rf_data']
                 self.handle_rx(packet, agent)
 

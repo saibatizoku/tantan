@@ -2,16 +2,16 @@ from twisted.internet import reactor, task, defer
 from twisted.internet.protocol import Protocol
 from twisted.internet.protocol import ReconnectingClientFactory
 from twisted.internet.endpoints import TCP4ClientEndpoint
-from twisted.internet.serialport import SerialPort
 
 from zope.interface import Interface, implements
 from autobahn.wamp1.protocol import WampClientFactory
 
 from pans import IPANClientFactory
-from uarts import SerialEcho
 from utils import compDictKeys
 from wamp import WAMPClientProtocol
 
+debug = True
+debugW = False
 
 class IAgentManager(Interface):
     """
@@ -55,6 +55,18 @@ class PANTcpAgentManager(object):
         agent.addErrback(failedConn)
         return agent
 
+    def removeAgent(self, pan_id):
+        if pan_id in self.agents:
+            try:
+                agent = self.agents[pan_id]
+                agent.sendClose()
+            except:
+                pass
+            del self.agents[pan_id]
+
+    def getAgent(self, pan_id):
+        return self.agents.get(pan_id, None)
+
     def hasDisconnectedAgents(self):
         agents = self.agents
         networks = self.service.config.get('networks', {})
@@ -62,7 +74,7 @@ class PANTcpAgentManager(object):
         return len(diff) > 0
 
     def checkAgents(self):
-        print "CHECKING AGENTS"
+        print "CHECKING AGENTS", self.agents.keys()
         #if self.hasDisconnectedAgents():
         for pan_id in self.agents:
             agent = self.agents.get(pan_id, None)
@@ -80,8 +92,10 @@ class PANWampAgentManager(PANTcpAgentManager):
 
     implements(IAgentManager)
 
+    client_protocol = WAMPClientProtocol
+
     def makeFactory(self, pan_id=None):
         factory = WampClientFactory("ws://localhost:9000", debugWamp = debugW)
-        factory.protocol = WAMPClientProtocol
+        factory.protocol = self.client_protocol
         factory.pan_id = pan_id
         return factory

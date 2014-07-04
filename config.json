@@ -5,7 +5,7 @@
     }, 
     "networks": {
         "aabb": {
-            "baud": 115200, 
+            "baud": 9600, 
             "port": "/dev/ttyUSB0", 
             "name": "ZigBee PAN"
         }

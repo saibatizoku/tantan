@@ -9,11 +9,11 @@ from twisted.python import components
 
 from zope.interface import Interface, implements
 
-from pans import IPANClientFactory, TanTanPANClientFactory
-from agents import IAgentManager, PANTcpAgentManager
-from service import IPANService, TanTanPANClientService
-from uarts import SerialEcho
-from utils import loadConfig
+from tantan.pans import IPANClientFactory, TanTanPANClientFactory
+from tantan.agents import IAgentManager, PANTcpAgentManager
+from tantan.service import IPANService, TanTanPANClientService
+from tantan.uarts import SerialEcho
+from tantan.utils import loadConfig
 
 
 components.registerAdapter(TanTanPANClientFactory,

@@ -19,15 +19,7 @@ class IPANService(Interface):
         """
         """
 
-    def startCOMM():
-        """
-        """
-
-    def closeAgent():
-        """
-        """
-
-    def closeCOMM():
+    def stopAgent():
         """
         """
 
@@ -48,8 +40,6 @@ class TanTanPANClientService(service.Service):
         self.managers = {}
         self.managers['agents'] = IAgentManager(self)
 
-        """
-        """
     def startAgent(self, pan_id):
         host = self.config['server']['host']
         port = self.config['server']['port']
@@ -59,10 +49,6 @@ class TanTanPANClientService(service.Service):
         return client
 
 
-    def closeAgent(self, pan_id):
-        """
-        """
-
     def startCOMM(self, pan_id):
         agents = self.managers['agents'].agents
         if pan_id in agents:
@@ -70,10 +56,6 @@ class TanTanPANClientService(service.Service):
         else:
             agent = None
         return self._startCOMM(agent)
-
-    def closeCOMM(self, pan_id):
-        """
-        """
 
     def get_pan_info(self, pan_id):
         return defer.succeed(self.config['networks'].get(pan_id, None))

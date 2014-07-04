@@ -14,14 +14,15 @@ from autobahn.wamp1.protocol import WampServerFactory, \
                                     WampClientFactory, \
                                     exportRpc
 
-from pans import IPANServerFactory, TanTanPANServerFactory
-from wamp import WAMPServerProtocol, WAMPClientProtocol
+from tantan.agents import IAgentManager, PANWampAgentManager
+from tantan.pans import IPANServerFactory, TanTanPANServerFactory
+from tantan.wamp import WAMPServerProtocol, WAMPClientProtocol
 
-debug = False
+debug = True
 debugW = True
 
 
-class IPANService(Interface):
+class IServerService(Interface):
     """ A client service made to connect Physical-Area-Networks to a
         central server over the network.
     """
@@ -29,11 +30,27 @@ class IPANService(Interface):
 
 class TanTanPANService(service.Service):
 
-    implements(IPANService)
+    implements(IServerService)
 
     def __init__(self, *args, **kwargs):
         self.agents = {}
         self.networks = {}
+        self.managers = {}
+        self.managers['agents'] = IAgentManager(self)
+
+    def startAgent(self, pan_id):
+        manager = self.managers['agents']
+        manager.agents[pan_id] = "CONNECTING"
+        client = manager.addAgent(pan_id, 'localhost', 9000)
+        return client
+
+    def stopAgent(self, pan_id):
+        manager = self.managers['agents']
+        manager.removeAgent(pan_id)
+
+    def getAgent(self, pan_id):
+        manager = self.managers['agents']
+        return manager.getAgent(pan_id)
 
     def getPAN(self, pan_id):
         return defer.succeed(self.networks.get(pan_id, None))
@@ -42,25 +59,7 @@ class TanTanPANService(service.Service):
         return defer.succeed(self.networks.keys())
 
     def startWAMPClient(self, pan_id):
-        factory = WampClientFactory("ws://localhost:9000", debugWamp = debugW)
-        factory.protocol = WAMPClientProtocol
-        factory.pan_id = pan_id
-        endpoint = TCP4ClientEndpoint(reactor, 'localhost', 9000)
-        client = endpoint.connect(factory)
-
-        def setConn(client):
-            print "CONN", client.transport.getPeer()
-            self.agents[pan_id] = client
-            return client
-
-        def failedConn(failure):
-            print "UART not found"
-            if pan_id in self.agents:
-                del self.agents[pan_id]
-            return None
-
-        client.addCallback(setConn)
-        client.addErrback(failedConn)
+        client = self.startAgent(pan_id)
         return client
 
     def startWAMPFactory(self):
@@ -94,8 +93,12 @@ class TanTanPANService(service.Service):
 
 
 components.registerAdapter(TanTanPANServerFactory,
-                           IPANService,
+                           IServerService,
                            IPANServerFactory)
+
+components.registerAdapter(PANWampAgentManager,
+                           IServerService,
+                           IAgentManager)
 
 
 application = service.Application('tantanserver')
