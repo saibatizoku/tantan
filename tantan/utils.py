@@ -11,7 +11,11 @@ def loadConfig(filepath):
         cfg = json.load(open(filepath, 'r'))
         pprint(cfg, depth=4)
     except:
-        cfg = {}
+        cfg = {
+                'info': {},
+                'networks': {},
+                'server': {}
+            }
     return cfg
 
 def saveConfig(cfg, filepath):
