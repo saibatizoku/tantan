@@ -6,16 +6,14 @@ from twisted.internet.endpoints import TCP4ClientEndpoint
 from zope.interface import Interface, implements
 from autobahn.wamp1.protocol import WampClientFactory
 
-from pans import IPANClientFactory
+from itantan import IAgentManager, IPANClientFactory
+
 from utils import compDictKeys
 from wamp import WAMPClientProtocol
 
 debug = True
 debugW = False
 
-class IAgentManager(Interface):
-    """
-    """
 
 
 class PANTcpAgentManager(object):

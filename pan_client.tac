@@ -9,19 +9,20 @@ from twisted.python import components
 
 from zope.interface import Interface, implements
 
-from tantan.pans import IPANClientFactory, TanTanPANClientFactory
-from tantan.agents import IAgentManager, PANTcpAgentManager
-from tantan.service import IPANService, TanTanPANClientService
+from tantan.agents import PANTcpAgentManager
+from tantan.pans import TanTanPANClientFactory
+from tantan.itantan import IAgentManager, IPANClientFactory, IServerService
+from tantan.service import TanTanPANClientService
 from tantan.uarts import SerialEcho
 from tantan.utils import loadConfig
 
 
 components.registerAdapter(TanTanPANClientFactory,
-                           IPANService,
+                           IServerService,
                            IPANClientFactory)
 
 components.registerAdapter(PANTcpAgentManager,
-                           IPANService,
+                           IServerService,
                            IAgentManager)
 
 application = service.Application('tantanclient')

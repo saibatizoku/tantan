@@ -19,5 +19,3 @@ class SerialEcho(Protocol):
     def dataReceived(self, data):
         print data.encode('hex')
         self.client.transport.write(data)
-
-

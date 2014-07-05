@@ -4,29 +4,16 @@ from twisted.internet.serialport import SerialPort
 
 from zope.interface import Interface, implements
 
-from agents import IAgentManager, PANTcpAgentManager
-from pans import IPANClientFactory
+from agents import PANTcpAgentManager
+from itantan import IAgentManager, IPANClientFactory, IServerService
 from pans import TanTanPANClientFactory
 from uarts import SerialEcho
 from utils import loadConfig
 
 
-class IPANService(Interface):
-    """ A client service made to connect Physical-Area-Networks to a
-        central server over the network.
-    """
-    def startAgent():
-        """
-        """
-
-    def stopAgent():
-        """
-        """
-
-
 class TanTanPANClientService(service.Service):
 
-    implements(IPANService)
+    implements(IServerService)
 
     def __init__(self, *args, **kwargs):
         print "PAN CLIENT ARGS; KWARGS: \n{0}\n{1}".format(

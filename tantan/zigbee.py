@@ -3,9 +3,8 @@ from twisted.application import service
 from twisted.internet import reactor, task, defer
 from twisted.internet.serialport import SerialPort
 
-from zope.interface import Interface, implements
-
 from txXBee.protocol import txXBee
+
 
 
 class PANZigBeeProtocol(txXBee):

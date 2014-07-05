@@ -14,8 +14,9 @@ from autobahn.wamp1.protocol import WampServerFactory, \
                                     WampClientFactory, \
                                     exportRpc
 
-from tantan.agents import IAgentManager, PANWampAgentManager
-from tantan.pans import IPANServerFactory, TanTanPANServerFactory
+from tantan.agents import PANWampAgentManager
+from tantan.itantan import IAgentManager, IPANServerFactory, IServerService
+from tantan.pans import TanTanPANServerFactory
 from tantan.wamp import WAMPServerProtocol, WAMPClientProtocol
 
 debug = True
