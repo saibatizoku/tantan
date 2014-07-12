@@ -7,10 +7,10 @@ from twisted.application.service import IServiceMaker
 from twisted.application import internet
 from twisted.application import service
 
-from tantan.agents import PANTcpAgentManager
+from tantan.agents.tcp import PANTcpAgentManager
 from tantan.itantan import IAgentManager, IServerService
 from tantan.itantan import IPANClientFactory
-from tantan.pans import TanTanPANClientFactory
+from tantan.pans.client import TanTanPANClientFactory
 from tantan.service import TanTanPANClientService
 from tantan.utils import loadConfig
 

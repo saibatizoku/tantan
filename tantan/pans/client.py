@@ -1,28 +1,13 @@
-from twisted.internet import protocol
+# -*- coding: utf-8 -*-
 from twisted.internet.protocol import Protocol
 from twisted.internet.protocol import ReconnectingClientFactory
+from twisted.python import components
 
 from zope.interface import Interface, implements
 
-from itantan import IPANServerFactory, IPANClientFactory
-from zigbee import PANZigBeeProtocol
+from tantan.itantan import IPANClientFactory
+from tantan.itantan import IServerService
 
-
-
-class TanTanPANServerFactory(protocol.ServerFactory):
-
-    implements(IPANServerFactory)
-
-    protocol = PANZigBeeProtocol
-
-    def __init__(self, service):
-        self.service = service
-
-    def getNetwork(self, pan_id=None):
-        return self.service.getPAN(pan_id)
-
-    def getNetworks(self, pan_id=None):
-        return self.service.getPANs()
 
 
 class TanTanPANClientProtocol(Protocol):
@@ -64,17 +49,6 @@ class TanTanPANClientFactory(ReconnectingClientFactory):
 
     def getNetworkInfo(self):
         return self.service.config['networks'].keys()
-
-    #def buildProtocol(self, addr):
-    #    print 'Connected.'
-    #    print 'Resetting reconnection delay'
-    #    self.resetDelay()
-    #    prot = TanTanPANClientProtocol()
-    #    prot.factory = self
-    #    return self
-
-    #def startedConnecting(self, connector):
-    #    #self.resetDelay()
 
     def clientConnectionLost(self, connector, reason):
         print 'Lost connection.  Reason:', reason

@@ -7,12 +7,12 @@ from twisted.internet.serialport import SerialPort
 from zope.interface import Interface, implements
 from autobahn.wamp1.protocol import WampServerFactory
 
-from agents import PANTcpAgentManager
-from itantan import IAgentManager, IServerService
-from itantan import IPANServerFactory, IPANClientFactory
-from uarts import SerialEcho
-from utils import loadConfig
-from wamp import WAMPServerProtocol
+from tantan.agents.tcp import PANTcpAgentManager
+from tantan.itantan import IAgentManager, IServerService
+from tantan.itantan import IPANServerFactory, IPANClientFactory
+from tantan.uarts import SerialEcho
+from tantan.utils import loadConfig
+from tantan.wamp import WAMPServerProtocol
 
 
 debugW = True
