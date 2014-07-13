@@ -16,22 +16,27 @@ from tantan.wamp import WAMPServerProtocol
 
 
 debugW = True
-
+WSURI_DEFAULT = u'localhost'
+WSPORT_DEFAULT = 9899
 
 class TanTanPANServerService(service.Service):
 
     implements(IServerService)
 
     def __init__(self, *args, **kwargs):
+        self.config = kwargs.get('config', {})
         self.agents = {}
         self.networks = {}
         self.managers = {}
         self.managers['agents'] = IAgentManager(self)
+        self.wamp = None
 
     def startAgent(self, pan_id):
+        wsuri = self.config.get('wsuri', WSURI_DEFAULT)
+        wsport = self.config.get('wsport', WSPORT_DEFAULT)
         manager = self.managers['agents']
         manager.agents[pan_id] = "CONNECTING"
-        client = manager.addAgent(pan_id, 'localhost', 9000)
+        client = manager.addAgent(pan_id, wsuri, wsport)
         return client
 
     def stopAgent(self, pan_id):
@@ -53,10 +58,13 @@ class TanTanPANServerService(service.Service):
         return client
 
     def startWAMPFactory(self):
-        factory = WampServerFactory("ws://ejeacuicola.mx:9000", debugWamp = debugW)
+        wsuri = self.config.get('wsuri', WSURI_DEFAULT)
+        wsport = self.config.get('wsport', WSPORT_DEFAULT)
+        wamp_uri = "ws://{0}:{1}".format(wsuri, wsport)
+        factory = WampServerFactory(wamp_uri, debugWamp = debugW)
         factory.protocol = WAMPServerProtocol
         factory.service = self
-        endpoint = TCP4ServerEndpoint(reactor, 9000)
+        endpoint = TCP4ServerEndpoint(reactor, wsport)
         server = endpoint.listen(factory)
 
         def setConn(server):
@@ -79,6 +87,12 @@ class TanTanPANServerService(service.Service):
         service.Service.startService(self)
 
     def stopService(self):
+        if self.wamp is not None:
+            try:
+                self.wamp.loseConnection()
+            except:
+                pass
+            self.wamp = None
         service.Service.stopService(self)
 
 
@@ -89,10 +103,7 @@ class TanTanPANClientService(service.Service):
     def __init__(self, *args, **kwargs):
         print "PAN CLIENT ARGS; KWARGS: \n{0}\n{1}".format(
                 repr(args), repr(kwargs))
-        if 'options' in kwargs:
-            self.config = kwargs['options']
-        else:
-            self.config = loadConfig('config.json')
+        self.config = kwargs.get('config', {})
         self.pan = {}
         self.agents = {}
         self.managers = {}

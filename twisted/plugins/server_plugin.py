@@ -16,7 +16,9 @@ from tantan.service import TanTanPANServerService
 
 
 class Options(usage.Options):
-    optParameters = [["port", "p", 1235, "The port number to listen on."]]
+    optParameters = [
+            ["port", "p", 7789, "The port number to listen on."],
+            ["wsport", "w", 9899, "The port number to listen on for WAMP."]]
 
 
 class MyServiceMaker(object):
@@ -32,7 +34,14 @@ class MyServiceMaker(object):
         application = service.Application('tantanserver')
         serviceCollection = service.IServiceCollection(application)
 
-        wsan_service = TanTanPANServerService()
+        wsan_service = TanTanPANServerService(config={
+            'server': {
+                'url': 'localhost',
+                'port': int(options['port']),
+                'wsuri': 'localhost',
+                'wsport': int(options['wsport'])
+                }
+            })
         wsan_service.setServiceParent(serviceCollection)
         pan_factory = TanTanPANServerFactory(wsan_service)
         tcp = internet.TCPServer(int(options["port"]), pan_factory)
