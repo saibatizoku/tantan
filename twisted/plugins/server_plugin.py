@@ -29,14 +29,6 @@ class MyServiceMaker(object):
         """
            Construct a TCPServer from a factory defined in myproject.
         """
-        components.registerAdapter(TanTanPANServerFactory,
-                                   IServerService,
-                                   IPANServerFactory)
-
-        components.registerAdapter(PANWampAgentManager,
-                                   IServerService,
-                                   IAgentManager)
-
         application = service.Application('tantanserver')
         serviceCollection = service.IServiceCollection(application)
 

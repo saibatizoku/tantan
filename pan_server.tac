@@ -3,20 +3,11 @@ from twisted.application import internet, service
 from twisted.internet import reactor, defer, task
 from twisted.python import components
 
-from tantan.agents import PANWampAgentManager
+from tantan.agents.wamp import PANWampAgentManager
 from tantan.itantan import IAgentManager, IPANServerFactory, IServerService
-from tantan.pans import TanTanPANServerFactory
+from tantan.pans.server import TanTanPANServerFactory
 from tantan.service import TanTanPANServerService
 
-
-
-components.registerAdapter(TanTanPANServerFactory,
-                           IServerService,
-                           IPANServerFactory)
-
-components.registerAdapter(PANWampAgentManager,
-                           IServerService,
-                           IAgentManager)
 
 
 application = service.Application('tantanserver')

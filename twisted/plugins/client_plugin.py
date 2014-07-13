@@ -32,14 +32,6 @@ class ClientServiceMaker(object):
         """
            Construct a TCPServer from a factory defined in myproject.
         """
-        components.registerAdapter(TanTanPANClientFactory,
-                                   IServerService,
-                                   IPANClientFactory)
-
-        components.registerAdapter(PANTcpAgentManager,
-                                   IServerService,
-                                   IAgentManager)
-
         application = service.Application('tantanclient')
         serviceCollection = service.IServiceCollection(application)
 
