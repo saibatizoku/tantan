@@ -12,8 +12,8 @@ class PANZigBeeProtocol(txXBee):
     def __init__(self, *args, **kwds):
         super(PANZigBeeProtocol, self).__init__(*args, **kwds)
         self.pan_id = None
-        self.lc = task.LoopingCall(self.getSomeData)
-        self.lc.start(10.0)
+        #self.lc = task.LoopingCall(self.getSomeData)
+        #self.lc.start(10.0)
         #self.pan_status = task.LoopingCall(self.obtainPAN)
         #self.pan_status.start(10.0)
 
@@ -23,6 +23,7 @@ class PANZigBeeProtocol(txXBee):
         self.getPanId()
 
     def connectionLost(self, reason):
+        #self.lc.stop()
         self.factory.service.stopAgent(self.pan_id)
 
         if self.pan_id and self.factory.service.networks.get(self.pan_id):
