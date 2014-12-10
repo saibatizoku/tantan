@@ -24,6 +24,9 @@ from txXBee.protocol import txXBee
 
 from autobahn.twisted.wamp import ApplicationSession
 
+from handlers import handle_rx
+from handlers import is_RX
+from handlers import is_PANID
 
 class McuProtocol(txXBee):
 
@@ -31,71 +34,20 @@ class McuProtocol(txXBee):
         super(McuProtocol, self).__init__(escaped=escaped)
         self.debug = debug
         self.session = session
+        self.pan_id = None
 
     def connectionMade(self):
         #pans = self.factory.getNetworkInfo()
         #self.factory.resetDelay()
-        print "Service PAN IDs" #, repr(pans)
+        self.getPanId()
 
     def handle_packet(self, packet):
         #print packet
-        if self.is_RX(packet):
-            self.handle_rx(packet)
-
-    def is_target_type(self, packet, field, target):
-        if field in packet and packet[field].lower() == target:
-            return True
-        return False
-
-    def is_RX(self, packet):
-        return self.is_target_type(packet, 'id', 'rx')
-
-    def get_zb_node_info(self, packet):
-        try:
-            resp = {}
-            resp['id'] = packet["source_addr_long"].encode('hex')
-            resp['laddr'] = packet["source_addr_long"].encode('hex')
-            resp['addr'] = packet["source_addr"].encode('hex')
-            resp['data'] = packet["rf_data"] or ''
-            return resp
-        except:
-            return None
-
-    def handle_rx(self, packet):
-        resp = {}
-        #resp['name'] = ZB_reverse.get(packet["source_addr_long"], "Unknown")
-        resp = self.get_zb_node_info(packet)
-        rout = "RX:"
-        for (key, item) in resp.items():
-            rout += "{0}-{1}:".format(key, item)
-        msg = "{0}:{1}:RX:".format(resp['id'], resp['addr'], resp['data']) + repr(resp['data'])
-        #print 'Evt id: {0}\nVal: {1}'.format(str(resp['name']), resp['data'].decode('utf8'))
-        evt = {'id': resp['id'],
-                'type': 'rx',
-                'data': resp['data'],
-                }
-        node_id = resp['id']
-        data = resp['data']
-        data_lines = data.splitlines()
-        #print "VAL LINES", val_lines
-        for l in data_lines:
-            try:
-                node_type, pin, sensor, value = l.split(":")
-                reading = {
-                        'node_id': node_id,
-                        'node_type': node_type,
-                        'pin': pin,
-                        'sensor': sensor,
-                        'value': float(value),
-                        }
-                print reading
-                #self.wsMcuFactory.dispatch("http://www.tantan.org/api/sensores#amb-rx", reading)
-                #uri = "/".join(["http://www.tantan.org/api/sensores/nodos#", node_id])
-                #self.wsMcuFactory.dispatch(uri, {'node_id': node_id, 'msg': l})
-            except:
-                topic = u".".join(["mx.neutro.energia.api.nodos", node_id])
-                print topic, repr(l.strip())
-                self.session.publish(topic, {'node_id': node_id, 'msg': l})
+        if is_PANID(self, packet):
+            self.pan_id = pan_id = packet['parameter'].encode('hex').lstrip('0')
+            print "GOT PAN ID", self.pan_id
+        if is_RX(self, packet):
+            handle_rx(self, packet)
 
     def connectionLost(self, reason):
         print "AGENT connection LOST" #, self.factory.pan_id, self.factory.service.pan.keys()
@@ -103,24 +55,6 @@ class McuProtocol(txXBee):
         #if self.factory.pan_id in pans:
         #    pans[self.factory.pan_id].protocol.transport.loseConnection()
 
-    def _lineReceived(self, line):
-        if self.debug:
-            print("Serial RX: {0}".format(line))
-
-        try:
-            ## parse data received from MCU
-            ##
-            data = [int(x) for x in line.split()]
-        except ValueError:
-            print('Unable to parse value {0}'.format(line))
-        else:
-            ## create payload for WAMP event
-            ##
-            payload = {u'id': data[0], u'value': data[1]}
-  
-            ## publish WAMP event to all subscribers on topic
-            ##
-            self.session.publish(u"com.myapp.mcu.on_analog_value", payload)
 
     def controlLed(self, turnOn):
         """
