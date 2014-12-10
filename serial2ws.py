@@ -68,6 +68,24 @@ class McuProtocol(txXBee):
             print("Serial TX: {0}".format(payload))
         self.transport.write(payload)
 
+    def getPanId(self):
+        reactor.callFromThread(self.send,
+                "at",
+                frame_id="\x02",
+                command="ID"
+                )
+
+    def sendND(self, evt=None):
+        self._sendND()
+        return 'ND Sent'
+
+    def _sendND(self):
+        reactor.callFromThread(self.send,
+                "remote_at",
+                frame_id="\x01",
+                command="ND",
+                )
+
 
 
 class McuComponent(ApplicationSession):
@@ -92,7 +110,7 @@ class McuComponent(ApplicationSession):
             print('Could not open serial port: {0}'.format(e))
             self.leave()
         else:
-            yield self.register(serialProtocol.controlLed, u"com.myapp.mcu.control_led")
+            yield self.register(serialProtocol.getPanId, u"mx.neutro.energia.api.nodos.pan_id")
 
 
 

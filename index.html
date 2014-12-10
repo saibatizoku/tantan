@@ -25,7 +25,8 @@
          function onAnalogValue(args) {
             var payload = args[0];
             console.log('payload', payload);
-            analog0.innerHTML = payload.msg;
+            analog0.innerHTML = payload.node_id;
+            analog1.innerHTML = payload.msg;
          }
          function RonAnalogValue(args) {
             eventCnt += 1;
@@ -107,8 +108,7 @@
 
                session = new_session;
 
-               session.subscribe("mx.neutro.energia.api.nodos.0013a20040b13727", onAnalogValue);
-               session.subscribe("mx.neutro.energia.api.nodos.0013a20040ad65de", onAnalogValue);
+               session.subscribe("mx.neutro.energia.api.nodos", onAnalogValue);
 
                eventCnt = 0;
 
