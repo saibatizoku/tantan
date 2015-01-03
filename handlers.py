@@ -35,34 +35,21 @@ def handle_rx(self, packet):
     node_id = resp['id']
     data = resp['data']
     data_lines = data.splitlines()
-    #print "VAL LINES", val_lines
+
     for l in data_lines:
-        try:
-            node_type, pin, sensor, value = l.split(":")
-            reading = {
-                    'node_id': node_id,
-                    'node_type': node_type,
-                    'pin': pin,
-                    'sensor': sensor,
-                    'value': float(value),
-                    }
-            print reading
-            #self.wsMcuFactory.dispatch("http://www.tantan.org/api/sensores#amb-rx", reading)
-            #uri = "/".join(["http://www.tantan.org/api/sensores/nodos#", node_id])
-            #self.wsMcuFactory.dispatch(uri, {'node_id': node_id, 'msg': l})
-        except:
-            topic_id = u"mx.neutro.energia.api.nodos"
-            topic = u".".join(["mx.neutro.energia.api.nodos", node_id])
-            vals = V1, PA1, FP1, P1, P2, P3, P4 = [float(val) for val in l.rstrip(' \0').split() ]
-            sensores = { 'v1': V1, 'pa1': PA1, 'fp1': FP1, 'p1': P1, 'p2': P2, 'p3': P3, 'p4': P4 }
-            print topic_id, repr(vals), sensores
-            self.session.publish(topic_id, {'node_id': node_id, 'msg': vals, 'sensores': sensores})
-            if not self.pan_id:
-                self.getPanId()
-            else:
-                topic_pan_id = u"mx.neutro.energia.api.redes"
-                print topic_pan_id, self.pan_id
-                self.session.publish(topic_pan_id, {'pan_id': self.pan_id, 'node_id': node_id})
+        topic_id = u"mx.neutro.energia.api.nodos"
+        topic = u".".join(["mx.neutro.energia.api.nodos", node_id])
+        vals = V1, PA1, FP1, P1, P2, P3, P4 = [float(val) for val in l.rstrip(' \0').split() ]
+        sens_k = [ 'v1', 'pa1', 'fp1', 'p1', 'p2', 'p3', 'p4' ]
+        sensores = dict(zip(sens_k, vals))
+#print topic_id, repr(vals), sensores
+        if self.pan_id:
+            topic_pan_id = u"mx.neutro.energia.api.redes"
+            print topic_pan_id, self.pan_id, topic_id, node_id, sensores
+            self.session.publish(topic_pan_id, {'pan_id': self.pan_id, 'node_id': node_id})
+            self.session.publish(topic_id, {'pan_id': self.pan_id, 'node_id': node_id, 'msg': vals, 'sensores': sensores})
+        else:
+            self.getPanId()
 
 def is_target_type(self, packet, field, target):
     if field in packet and packet[field].lower() == target:
