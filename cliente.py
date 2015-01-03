@@ -117,9 +117,7 @@ class McuComponent(ApplicationSession):
 if __name__ == '__main__':
 
     import sys, argparse
-
     ## parse command line arguments
-    ##
     parser = argparse.ArgumentParser()
 
     parser.add_argument("-d", "--debug", action = "store_true",
@@ -134,7 +132,7 @@ if __name__ == '__main__':
     parser.add_argument("--web", type = int, default = 0,
             help = 'Web port to use for embedded Web server. Use 0 to disable.')
 
-    parser.add_argument("--router", type = str, default = 'wss://ruta-energetica-2014.herokuapp.com',
+    parser.add_argument("--router", type = str, default = 'wss://ruta-energetica-2014.herokuapp.com/ws',
             help = 'If given, connect to this WAMP router. Else run an embedded router on 8080.')
 
     args = parser.parse_args()
@@ -150,7 +148,6 @@ if __name__ == '__main__':
 
 
     ## import Twisted reactor
-    ##
     if sys.platform == 'win32':
         ## on windows, we need to use the following reactor for serial support
         ## http://twistedmatrix.com/trac/ticket/3802
@@ -163,7 +160,6 @@ if __name__ == '__main__':
 
 
     ## create embedded web server for static files
-    ##
     if args.web:
         from twisted.web.server import Site
         from twisted.web.static import File
@@ -171,7 +167,6 @@ if __name__ == '__main__':
 
 
     ## run WAMP application component
-    ##
     from autobahn.twisted.wamp import ApplicationRunner
     router = args.router or 'ws://localhost:8080'
 
@@ -180,5 +175,4 @@ if __name__ == '__main__':
             standalone = not args.router)
 
     ## start the component and the Twisted reactor ..
-    ##
     runner.run(McuComponent)
