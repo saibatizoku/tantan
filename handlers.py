@@ -18,6 +18,32 @@
 ###############################################################################
 
 
+def parse_water(line):
+    values = [float(val) for val in line.rstrip(' \0').split() ]
+    # T0, T1, T2, T3, T4, OD1, OD2, OD3, OD4 = values
+    sensor_keys = [ 't0', 't1', 't2', 't3', 't4', 'od1', 'od2', 'od3', 'od4' ]
+    sensors = dict(zip(sensor_keys, values))
+    return sensors
+
+def publish_node_data(session, topic, data, debug=False):
+    if debug:
+        print "PUBLICANDO NODO {}".format(data['node_id'])
+        print "PUBLICANDO canales {}".format(topic)
+    session.publish(topic['pan_id'], {'pan_id': data['pan_id'], 'node_id': data['node_id']})
+    session.publish(topic['id'], {'pan_id': data['pan_id'], 'node_id': data['node_id'], 'sensores': data['json']})
+    session.publish(topic['nodo'], {'pan_id': data['pan_id'], 'node_id': data['node_id'], 'sensores': data['json']})
+    for k, v in data['json'].items():
+        topic_sensor = u".".join([topic['nodo'], k])
+        if (k.startswith("t") and v == -127.0) :
+            print "{} no PUBLICADO".format(k)
+        elif (k.startswith("od") and v > 100.0) :
+            print "{} no PUBLICADO".format(k)
+        else:
+            session.publish(topic_sensor, {'pan_id': data['pan_id'], 'node_id': data['node_id'], 'sensor': k, 'value': v})
+            if debug:
+                print "PUBLICANDO sensor {}: {}".format(topic_sensor, v)
+
+
 def handle_rx(self, packet):
     resp = {}
     resp = get_zb_node_info(self, packet)
@@ -38,23 +64,23 @@ def handle_rx(self, packet):
     data_lines = data.splitlines()
 
     for l in data_lines:
-        topic_id = u"mx.neutro.energia.api.nodos"
-        topic_nodo = u".".join(["mx.neutro.energia.api.nodos", node_id])
-        topic_pan_id = u"mx.neutro.energia.api.redes"
+        topic = {}
+        topic['id'] = u"mx.ejeacuicola.api.nodos"
+        topic['nodo'] = u".".join(["mx.ejeacuicola.api.nodos", node_id])
+        topic['pan_id'] = u"mx.ejeacuicola.api.redes"
         try:
-            vals = V1, V2, V3, V4, I1, I2, I3, I4, P1, P2, P3, P4, CMD, EST, SMF = [float(val) for val in l.rstrip(' \0').split() ]
-            sens_k = [ 'v1', 'v2', 'v3', 'v4', 'i1', 'i2', 'i3', 'i4', 'p1', 'p2', 'p3', 'p4', 'cmd', 'est', 'smf' ]
-            sensores = dict(zip(sens_k, vals))
-            print "Publicando a:\n\t{}\n\t{}\n\t{}".format(topic_pan_id, topic_id, topic_nodo)
+            parsed = parse_water(l)
+            if self.debug:
+                print "PARSED: {}".format(parsed)
+                print "Publicando a:\n\t{}\n\t{}\n\t{}".format(topic['pan_id'], topic['id'], topic['nodo'])
+                print "Sensores: {}".format(parsed)
             if self.pan_id:
-                print "PUBLICANDO PANID"
-                self.session.publish(topic_pan_id, {'pan_id': self.pan_id, 'node_id': node_id})
-                self.session.publish(topic_id, {'pan_id': self.pan_id, 'node_id': node_id, 'msg': vals, 'sensores': sensores})
-                self.session.publish(topic_nodo, {'pan_id': self.pan_id, 'node_id': node_id, 'msg': vals, 'sensores': sensores})
+                data = {'pan_id': self.pan_id, 'node_id': node_id, 'json': parsed}
+                publish_node_data(self.session, topic, data, self.debug)
             else:
                 self.getPanId()
         except:
-            print "FORMATO MALO"
+            print "FORMATO MALO: {}".format(l)
 
 def is_target_type(self, packet, field, target):
     if field in packet and packet[field].lower() == target:

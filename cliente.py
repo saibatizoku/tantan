@@ -97,7 +97,7 @@ class McuComponent(ApplicationSession):
             print('Could not open serial port: {0}'.format(e))
             self.leave()
         else:
-            yield self.register(serialProtocol.getPanId, u"mx.neutro.energia.api.nodos.pan_id")
+            yield self.register(serialProtocol.getPanId, u"mx.ejeacuicola.api.nodos.pan_id")
 
 
 
