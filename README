@@ -26,16 +26,17 @@ para redes [Twisted](http://www.twistedmatrix.com).y hace uso de [AutobahnPython
 Instalación
 -----------
 
-El paquete puede instalarse utilizando _easy_install__ o _pip_. Típicamente con el comando:
-
-    $ easy_install tantan
-
-    o
-
-    $ pip install tantan
-
-
-También es posible clonar el repositorio usando _git_
+Es necesario clonar el repositorio usando _git_
 
     $ git clone http://github.com/saibatizoku/tantan.git
+
+Una vez clonado, se accede a la carpeta:
+
+    $ cd tantan
+
+y el paquete puede instalarse utilizando _pip_. Típicamente con el comando:
+
+    $ pip install -r requirements.txt
+
+
 
